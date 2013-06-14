@@ -34,47 +34,57 @@ Partial Class MainForm
 	''' </summary>
 	Private Sub InitializeComponent()
 		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-		Me.button1 = New System.Windows.Forms.Button()
-		Me.button2 = New System.Windows.Forms.Button()
-		Me.button3 = New System.Windows.Forms.Button()
-		Me.button4 = New System.Windows.Forms.Button()
+		Me.Btn_HostRegister = New System.Windows.Forms.Button()
+		Me.Btn_HostView = New System.Windows.Forms.Button()
+		Me.Btn_HostPrint = New System.Windows.Forms.Button()
+		Me.Btn_HostList = New System.Windows.Forms.Button()
+		Me.Btn_Print = New System.Windows.Forms.Button()
 		Me.SuspendLayout
 		'
-		'button1
+		'Btn_HostRegister
 		'
-		Me.button1.Location = New System.Drawing.Point(209, 60)
-		Me.button1.Name = "button1"
-		Me.button1.Size = New System.Drawing.Size(75, 23)
-		Me.button1.TabIndex = 0
-		Me.button1.Text = "button1"
-		Me.button1.UseVisualStyleBackColor = true
+		Me.Btn_HostRegister.BackgroundImage = CType(resources.GetObject("Btn_HostRegister.BackgroundImage"),System.Drawing.Image)
+		Me.Btn_HostRegister.Location = New System.Drawing.Point(210, 34)
+		Me.Btn_HostRegister.Name = "Btn_HostRegister"
+		Me.Btn_HostRegister.Size = New System.Drawing.Size(170, 30)
+		Me.Btn_HostRegister.TabIndex = 0
+		Me.Btn_HostRegister.UseVisualStyleBackColor = true
 		'
-		'button2
+		'Btn_HostView
 		'
-		Me.button2.Location = New System.Drawing.Point(209, 114)
-		Me.button2.Name = "button2"
-		Me.button2.Size = New System.Drawing.Size(75, 23)
-		Me.button2.TabIndex = 1
-		Me.button2.Text = "button2"
-		Me.button2.UseVisualStyleBackColor = true
+		Me.Btn_HostView.BackgroundImage = CType(resources.GetObject("Btn_HostView.BackgroundImage"),System.Drawing.Image)
+		Me.Btn_HostView.Location = New System.Drawing.Point(210, 95)
+		Me.Btn_HostView.Name = "Btn_HostView"
+		Me.Btn_HostView.Size = New System.Drawing.Size(170, 30)
+		Me.Btn_HostView.TabIndex = 1
+		Me.Btn_HostView.UseVisualStyleBackColor = true
 		'
-		'button3
+		'Btn_HostPrint
 		'
-		Me.button3.Location = New System.Drawing.Point(209, 164)
-		Me.button3.Name = "button3"
-		Me.button3.Size = New System.Drawing.Size(75, 23)
-		Me.button3.TabIndex = 2
-		Me.button3.Text = "button3"
-		Me.button3.UseVisualStyleBackColor = true
+		Me.Btn_HostPrint.BackgroundImage = CType(resources.GetObject("Btn_HostPrint.BackgroundImage"),System.Drawing.Image)
+		Me.Btn_HostPrint.Location = New System.Drawing.Point(210, 152)
+		Me.Btn_HostPrint.Name = "Btn_HostPrint"
+		Me.Btn_HostPrint.Size = New System.Drawing.Size(170, 30)
+		Me.Btn_HostPrint.TabIndex = 2
+		Me.Btn_HostPrint.UseVisualStyleBackColor = true
 		'
-		'button4
+		'Btn_HostList
 		'
-		Me.button4.Location = New System.Drawing.Point(209, 213)
-		Me.button4.Name = "button4"
-		Me.button4.Size = New System.Drawing.Size(75, 23)
-		Me.button4.TabIndex = 3
-		Me.button4.Text = "button4"
-		Me.button4.UseVisualStyleBackColor = true
+		Me.Btn_HostList.BackgroundImage = CType(resources.GetObject("Btn_HostList.BackgroundImage"),System.Drawing.Image)
+		Me.Btn_HostList.Location = New System.Drawing.Point(210, 209)
+		Me.Btn_HostList.Name = "Btn_HostList"
+		Me.Btn_HostList.Size = New System.Drawing.Size(170, 30)
+		Me.Btn_HostList.TabIndex = 3
+		Me.Btn_HostList.UseVisualStyleBackColor = true
+		'
+		'Btn_Print
+		'
+		Me.Btn_Print.BackgroundImage = CType(resources.GetObject("Btn_Print.BackgroundImage"),System.Drawing.Image)
+		Me.Btn_Print.Location = New System.Drawing.Point(12, 34)
+		Me.Btn_Print.Name = "Btn_Print"
+		Me.Btn_Print.Size = New System.Drawing.Size(170, 30)
+		Me.Btn_Print.TabIndex = 4
+		Me.Btn_Print.UseVisualStyleBackColor = true
 		'
 		'MainForm
 		'
@@ -82,17 +92,23 @@ Partial Class MainForm
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"),System.Drawing.Image)
 		Me.ClientSize = New System.Drawing.Size(392, 293)
-		Me.Controls.Add(Me.button4)
-		Me.Controls.Add(Me.button3)
-		Me.Controls.Add(Me.button2)
-		Me.Controls.Add(Me.button1)
+		Me.Controls.Add(Me.Btn_Print)
+		Me.Controls.Add(Me.Btn_HostList)
+		Me.Controls.Add(Me.Btn_HostPrint)
+		Me.Controls.Add(Me.Btn_HostView)
+		Me.Controls.Add(Me.Btn_HostRegister)
 		Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
 		Me.Name = "MainForm"
 		Me.Text = "uex"
-		Me.ResumeLayout(false)
-	End Sub
-	Private button4 As System.Windows.Forms.Button
-	Private button3 As System.Windows.Forms.Button
-	Private button2 As System.Windows.Forms.Button
-	Private button1 As System.Windows.Forms.Button
+		Me.ResumeLayout(False)
+		
+			End Sub
+	Private Btn_HostRegister As System.Windows.Forms.Button
+	Private Btn_HostView As System.Windows.Forms.Button
+	Private Btn_HostPrint As System.Windows.Forms.Button
+	Private Btn_HostList As System.Windows.Forms.Button
+	Private Btn_Print As System.Windows.Forms.Button
+	
+	
 End Class
+

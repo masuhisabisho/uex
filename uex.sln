@@ -1,0 +1,18 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+# SharpDevelop 4.1.0.8000
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "uex", "uex.vbproj", "{3D384A2D-DBD5-446B-90D7-25B53A1D85E7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D384A2D-DBD5-446B-90D7-25B53A1D85E7}.Debug|x86.Build.0 = Debug|x86
+		{3D384A2D-DBD5-446B-90D7-25B53A1D85E7}.Debug|x86.ActiveCfg = Debug|x86
+		{3D384A2D-DBD5-446B-90D7-25B53A1D85E7}.Release|x86.Build.0 = Release|x86
+		{3D384A2D-DBD5-446B-90D7-25B53A1D85E7}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+EndGlobal

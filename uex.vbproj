@@ -56,10 +56,26 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HostList.Designer.vb">
+      <DependentUpon>HostList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HostList.vb" />
+    <Compile Include="HostRegister.Designer.vb">
+      <DependentUpon>HostRegister.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HostRegister.vb" />
+    <Compile Include="HostView.Designer.vb">
+      <DependentUpon>HostView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HostView.vb" />
     <Compile Include="MainForm.Designer.vb">
       <DependentUpon>MainForm.vb</DependentUpon>
     </Compile>
     <Compile Include="MainForm.vb" />
+    <Compile Include="Print.Designer.vb">
+      <DependentUpon>Print.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Print.vb" />
     <Compile Include="Program.vb" />
     <Compile Include="Properties\AssemblyInfo.vb" />
   </ItemGroup>
@@ -78,10 +94,23 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bmp" />
+    <Folder Include="資料" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="HostList.resx">
+      <DependentUpon>HostList.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HostRegister.resx">
+      <DependentUpon>HostRegister.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HostView.resx">
+      <DependentUpon>HostView.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Print.resx">
+      <DependentUpon>Print.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.Targets" />

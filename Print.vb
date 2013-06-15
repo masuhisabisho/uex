@@ -15,4 +15,12 @@ Public Partial Class Print
 		' TODO : Add constructor code after InitializeComponents
 		'
 	End Sub
+	
+	Sub TextBox1_TextChanged(sender As Object, e As EventArgs)
+		
+	End Sub
+	
+	Sub Print_Load(sender As Object, e As EventArgs)
+		
+	End Sub
 End Class

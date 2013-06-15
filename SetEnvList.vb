@@ -1,25 +1,26 @@
 ﻿Imports System.Data.OleDb
-
+'
 ' SharpDevelopによって生成
 ' ユーザ: madman190382
 ' 日付: 2013/06/15
-' 時刻: 14:15
+' 時刻: 18:09
 ' 
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
-
-
-Public Class SelectSql
+Public Class SetEnvList
+	Public shared envList As New Hashtable
+	
 	'****************************************************************************************************
 	'
-	'	Aquire data from mdb (multiple line)
+	'	Arrange evviroment data from mdb (multiple line)
 	'	sqlText = Sql command
-	'	dbSource = Database information
+	'	dbSource = Database connect information
 	'
 	'****************************************************************************************************
 	
-	Public Function SelectSql (dbSource As String, sqltext As String) As ArrayList
-		Dim listAl As New ArrayList
+	Public sub SelectEnvSql (dbSource As String, sqltext As String)
+		Dim envListArl As New ArrayList
+		Dim tempID As String = ""
 		
 		Dim sqlCon As New OleDbConnection
 		Dim sqlCommand As New OleDbCommand
@@ -34,12 +35,18 @@ Public Class SelectSql
 		
 		If sqlReader.HasRows = True Then
 			While sqlReader.Read()
-				Dim getResult As New Hashtable
-				For i As Integer = 0 To sqlReader.FieldCount -1 Step 1
-					getResult(sqlReader.GetName(i)) = sqlReader(i).ToString()
-				Next i
-				listAl.Add(getResult)
-				getResult = Nothing
+				If tempID = "" Then
+					tempID = sqlReader("tbl_env_grid").ToString
+				End If
+				
+				If tempID <> sqlReader("tbl_env_grid").ToString() Then
+					envList.Add(String.Format("{0:000}", Val(tempID)), envListArl)
+					tempID = sqlReader("tbl_env_grid").ToString()
+					envListArl = New ArrayList
+				End If
+				
+				envListArl.Add(New DictionaryEntry(sqlReader("tbl_env_label").ToString(), sqlReader("tbl_env_value").ToString()))
+				
 			End While
 			
 			sqlCommand.Dispose()
@@ -51,10 +58,7 @@ Public Class SelectSql
 			sqlCon = Nothing
 		End If
 		
-		Return listAl
-
-		listAl = Nothing
-		
+		envListArl = Nothing
 
 #If Not Debug Then
 Try			
@@ -63,6 +67,5 @@ MessageBox.Show (ex.Message)
 End Try
 #End If 
 				
-	End Function
-	
+	End sub
 End Class

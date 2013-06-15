@@ -49,6 +49,7 @@ Partial Class MainForm
 		Me.Btn_HostRegister.Size = New System.Drawing.Size(170, 30)
 		Me.Btn_HostRegister.TabIndex = 0
 		Me.Btn_HostRegister.UseVisualStyleBackColor = true
+		AddHandler Me.Btn_HostRegister.Click, AddressOf Me.Btn_HostRegister_Click
 		'
 		'Btn_HostView
 		'
@@ -85,6 +86,7 @@ Partial Class MainForm
 		Me.Btn_Print.Size = New System.Drawing.Size(170, 30)
 		Me.Btn_Print.TabIndex = 4
 		Me.Btn_Print.UseVisualStyleBackColor = true
+		AddHandler Me.Btn_Print.Click, AddressOf Me.Btn_Print_Click
 		'
 		'MainForm
 		'

@@ -50,6 +50,69 @@ Partial Class Print
 		Me.Cmb_Font = New System.Windows.Forms.ComboBox()
 		Me.Cmb_Size = New System.Windows.Forms.ComboBox()
 		Me.Grb_Contents = New System.Windows.Forms.GroupBox()
+		Me.Dtp_CeremonyDate = New System.Windows.Forms.DateTimePicker()
+		Me.Cmb_PointHostName3 = New System.Windows.Forms.ComboBox()
+		Me.Cmb_PointHostName4 = New System.Windows.Forms.ComboBox()
+		Me.Cmb_PointPS1 = New System.Windows.Forms.ComboBox()
+		Me.Cmb_PointName = New System.Windows.Forms.ComboBox()
+		Me.Cmb_PointDeadName = New System.Windows.Forms.ComboBox()
+		Me.Cmb_PointImibi = New System.Windows.Forms.ComboBox()
+		Me.Cmb_PointEndWord = New System.Windows.Forms.ComboBox()
+		Me.Cmb_PointCeremonyDate = New System.Windows.Forms.ComboBox()
+		Me.Cmb_PointAdd1 = New System.Windows.Forms.ComboBox()
+		Me.Cmb_PointHostType = New System.Windows.Forms.ComboBox()
+		Me.Cmb_PointHostName1 = New System.Windows.Forms.ComboBox()
+		Me.Cmb_PointHostName2 = New System.Windows.Forms.ComboBox()
+		Me.Txt_PS3 = New System.Windows.Forms.TextBox()
+		Me.Txt_PS6 = New System.Windows.Forms.TextBox()
+		Me.Txt_PS2 = New System.Windows.Forms.TextBox()
+		Me.Txt_PS5 = New System.Windows.Forms.TextBox()
+		Me.Txt_HostName1 = New System.Windows.Forms.TextBox()
+		Me.Txt_PS4 = New System.Windows.Forms.TextBox()
+		Me.Txt_HostName2 = New System.Windows.Forms.TextBox()
+		Me.Txt_HostName3 = New System.Windows.Forms.TextBox()
+		Me.Txt_HostName4 = New System.Windows.Forms.TextBox()
+		Me.Cmb_PointTitle = New System.Windows.Forms.ComboBox()
+		Me.Txt_PS1 = New System.Windows.Forms.TextBox()
+		Me.Cmb_HostType = New System.Windows.Forms.ComboBox()
+		Me.Txt_Add1 = New System.Windows.Forms.TextBox()
+		Me.Txt_Add2 = New System.Windows.Forms.TextBox()
+		Me.Cmb_EndWord = New System.Windows.Forms.ComboBox()
+		Me.Cmb_Imibi = New System.Windows.Forms.ComboBox()
+		Me.Cmb_Donation = New System.Windows.Forms.ComboBox()
+		Me.Txt_DeadName = New System.Windows.Forms.TextBox()
+		Me.Cmb_Time2 = New System.Windows.Forms.ComboBox()
+		Me.Cmb_Style = New System.Windows.Forms.ComboBox()
+		Me.Cmb_SeasonWord = New System.Windows.Forms.ComboBox()
+		Me.Cmb_Time1 = New System.Windows.Forms.ComboBox()
+		Me.Cmb_DeathWay = New System.Windows.Forms.ComboBox()
+		Me.Txt_Name = New System.Windows.Forms.TextBox()
+		Me.Cmb_Title = New System.Windows.Forms.ComboBox()
+		Me.Lbl_PS1 = New System.Windows.Forms.Label()
+		Me.Lbl_PS2 = New System.Windows.Forms.Label()
+		Me.Lbl_PS3 = New System.Windows.Forms.Label()
+		Me.Lbl_PS4 = New System.Windows.Forms.Label()
+		Me.Lbl_PS5 = New System.Windows.Forms.Label()
+		Me.Lbl_PS6 = New System.Windows.Forms.Label()
+		Me.Lbl_EndWord = New System.Windows.Forms.Label()
+		Me.Lbl_CeremonyDate = New System.Windows.Forms.Label()
+		Me.Lbl_Add1 = New System.Windows.Forms.Label()
+		Me.Lbl_Add2 = New System.Windows.Forms.Label()
+		Me.Lbl_HostType = New System.Windows.Forms.Label()
+		Me.Lbl_HostName1 = New System.Windows.Forms.Label()
+		Me.Lbl_HostName2 = New System.Windows.Forms.Label()
+		Me.Lbl_HostName3 = New System.Windows.Forms.Label()
+		Me.Lbl_HostName4 = New System.Windows.Forms.Label()
+		Me.Lbl_Style = New System.Windows.Forms.Label()
+		Me.Lbl_SeasonWord = New System.Windows.Forms.Label()
+		Me.Lbl_Time1 = New System.Windows.Forms.Label()
+		Me.Lbl_Title = New System.Windows.Forms.Label()
+		Me.Lbl_Name = New System.Windows.Forms.Label()
+		Me.Lbl_DeathWay = New System.Windows.Forms.Label()
+		Me.Lbl_Time2 = New System.Windows.Forms.Label()
+		Me.Lbl_DeadName = New System.Windows.Forms.Label()
+		Me.Lbl_Donation = New System.Windows.Forms.Label()
+		Me.Lbl_Imibi = New System.Windows.Forms.Label()
 		Me.panel1 = New System.Windows.Forms.Panel()
 		Me.Pnl_Main = New System.Windows.Forms.Panel()
 		Me.comboBox3 = New System.Windows.Forms.ComboBox()
@@ -58,35 +121,12 @@ Partial Class Print
 		Me.Lbl_Rate = New System.Windows.Forms.Label()
 		Me.Lbl_Num = New System.Windows.Forms.Label()
 		Me.Lbl_Thick = New System.Windows.Forms.Label()
-		Me.comboBox1 = New System.Windows.Forms.ComboBox()
-		Me.label1 = New System.Windows.Forms.Label()
-		Me.label2 = New System.Windows.Forms.Label()
-		Me.label3 = New System.Windows.Forms.Label()
-		Me.label4 = New System.Windows.Forms.Label()
-		Me.label5 = New System.Windows.Forms.Label()
-		Me.label6 = New System.Windows.Forms.Label()
-		Me.label7 = New System.Windows.Forms.Label()
-		Me.label8 = New System.Windows.Forms.Label()
-		Me.label9 = New System.Windows.Forms.Label()
-		Me.label10 = New System.Windows.Forms.Label()
-		Me.label11 = New System.Windows.Forms.Label()
-		Me.label12 = New System.Windows.Forms.Label()
-		Me.label13 = New System.Windows.Forms.Label()
-		Me.label14 = New System.Windows.Forms.Label()
-		Me.label15 = New System.Windows.Forms.Label()
-		Me.label16 = New System.Windows.Forms.Label()
-		Me.label17 = New System.Windows.Forms.Label()
-		Me.label18 = New System.Windows.Forms.Label()
-		Me.label19 = New System.Windows.Forms.Label()
-		Me.label24 = New System.Windows.Forms.Label()
-		Me.label25 = New System.Windows.Forms.Label()
-		Me.label26 = New System.Windows.Forms.Label()
-		Me.label27 = New System.Windows.Forms.Label()
-		Me.label28 = New System.Windows.Forms.Label()
-		Me.label29 = New System.Windows.Forms.Label()
+		Me.Pic_Main = New System.Windows.Forms.PictureBox()
+		Me.button1 = New System.Windows.Forms.Button()
 		Me.Grb_Common.SuspendLayout
 		Me.Grb_Contents.SuspendLayout
 		Me.panel1.SuspendLayout
+		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).BeginInit
 		Me.SuspendLayout
 		'
 		'Grb_Common
@@ -146,7 +186,7 @@ Partial Class Print
 		'
 		'Lbl_PosX
 		'
-		Me.Lbl_PosX.Location = New System.Drawing.Point(12, 123)
+		Me.Lbl_PosX.Location = New System.Drawing.Point(7, 123)
 		Me.Lbl_PosX.Name = "Lbl_PosX"
 		Me.Lbl_PosX.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_PosX.TabIndex = 12
@@ -154,7 +194,7 @@ Partial Class Print
 		'
 		'Lbl_Font
 		'
-		Me.Lbl_Font.Location = New System.Drawing.Point(12, 98)
+		Me.Lbl_Font.Location = New System.Drawing.Point(7, 98)
 		Me.Lbl_Font.Name = "Lbl_Font"
 		Me.Lbl_Font.Size = New System.Drawing.Size(69, 23)
 		Me.Lbl_Font.TabIndex = 11
@@ -162,7 +202,7 @@ Partial Class Print
 		'
 		'Lbl_PrintDir
 		'
-		Me.Lbl_PrintDir.Location = New System.Drawing.Point(12, 77)
+		Me.Lbl_PrintDir.Location = New System.Drawing.Point(7, 77)
 		Me.Lbl_PrintDir.Name = "Lbl_PrintDir"
 		Me.Lbl_PrintDir.Size = New System.Drawing.Size(69, 23)
 		Me.Lbl_PrintDir.TabIndex = 10
@@ -170,7 +210,7 @@ Partial Class Print
 		'
 		'Lbl_SizeH
 		'
-		Me.Lbl_SizeH.Location = New System.Drawing.Point(12, 57)
+		Me.Lbl_SizeH.Location = New System.Drawing.Point(7, 57)
 		Me.Lbl_SizeH.Name = "Lbl_SizeH"
 		Me.Lbl_SizeH.Size = New System.Drawing.Size(69, 23)
 		Me.Lbl_SizeH.TabIndex = 9
@@ -178,7 +218,7 @@ Partial Class Print
 		'
 		'Lbl_SizeW
 		'
-		Me.Lbl_SizeW.Location = New System.Drawing.Point(12, 37)
+		Me.Lbl_SizeW.Location = New System.Drawing.Point(7, 37)
 		Me.Lbl_SizeW.Name = "Lbl_SizeW"
 		Me.Lbl_SizeW.Size = New System.Drawing.Size(69, 23)
 		Me.Lbl_SizeW.TabIndex = 8
@@ -186,7 +226,7 @@ Partial Class Print
 		'
 		'Lbl_Size
 		'
-		Me.Lbl_Size.Location = New System.Drawing.Point(12, 18)
+		Me.Lbl_Size.Location = New System.Drawing.Point(7, 18)
 		Me.Lbl_Size.Name = "Lbl_Size"
 		Me.Lbl_Size.Size = New System.Drawing.Size(69, 23)
 		Me.Lbl_Size.TabIndex = 7
@@ -205,7 +245,6 @@ Partial Class Print
 		Me.Txt_PosX.Name = "Txt_PosX"
 		Me.Txt_PosX.Size = New System.Drawing.Size(40, 19)
 		Me.Txt_PosX.TabIndex = 5
-		AddHandler Me.Txt_PosX.TextChanged, AddressOf Me.TextBox1_TextChanged
 		'
 		'Cmb_Font
 		'
@@ -225,52 +264,580 @@ Partial Class Print
 		'
 		'Grb_Contents
 		'
-		Me.Grb_Contents.Controls.Add(Me.label29)
-		Me.Grb_Contents.Controls.Add(Me.label28)
-		Me.Grb_Contents.Controls.Add(Me.label27)
-		Me.Grb_Contents.Controls.Add(Me.label26)
-		Me.Grb_Contents.Controls.Add(Me.label25)
-		Me.Grb_Contents.Controls.Add(Me.label24)
-		Me.Grb_Contents.Controls.Add(Me.label19)
-		Me.Grb_Contents.Controls.Add(Me.label18)
-		Me.Grb_Contents.Controls.Add(Me.label17)
-		Me.Grb_Contents.Controls.Add(Me.label16)
-		Me.Grb_Contents.Controls.Add(Me.label15)
-		Me.Grb_Contents.Controls.Add(Me.label14)
-		Me.Grb_Contents.Controls.Add(Me.label13)
-		Me.Grb_Contents.Controls.Add(Me.label12)
-		Me.Grb_Contents.Controls.Add(Me.label11)
-		Me.Grb_Contents.Controls.Add(Me.label10)
-		Me.Grb_Contents.Controls.Add(Me.label9)
-		Me.Grb_Contents.Controls.Add(Me.label8)
-		Me.Grb_Contents.Controls.Add(Me.label7)
-		Me.Grb_Contents.Controls.Add(Me.label6)
-		Me.Grb_Contents.Controls.Add(Me.label5)
-		Me.Grb_Contents.Controls.Add(Me.label4)
-		Me.Grb_Contents.Controls.Add(Me.label3)
-		Me.Grb_Contents.Controls.Add(Me.label2)
-		Me.Grb_Contents.Controls.Add(Me.label1)
-		Me.Grb_Contents.Controls.Add(Me.comboBox1)
-		Me.Grb_Contents.Location = New System.Drawing.Point(3, 3)
+		Me.Grb_Contents.Controls.Add(Me.button1)
+		Me.Grb_Contents.Controls.Add(Me.Dtp_CeremonyDate)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointHostName3)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointHostName4)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointPS1)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointName)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointDeadName)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointImibi)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointEndWord)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointCeremonyDate)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointAdd1)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointHostType)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointHostName1)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointHostName2)
+		Me.Grb_Contents.Controls.Add(Me.Txt_PS3)
+		Me.Grb_Contents.Controls.Add(Me.Txt_PS6)
+		Me.Grb_Contents.Controls.Add(Me.Txt_PS2)
+		Me.Grb_Contents.Controls.Add(Me.Txt_PS5)
+		Me.Grb_Contents.Controls.Add(Me.Txt_HostName1)
+		Me.Grb_Contents.Controls.Add(Me.Txt_PS4)
+		Me.Grb_Contents.Controls.Add(Me.Txt_HostName2)
+		Me.Grb_Contents.Controls.Add(Me.Txt_HostName3)
+		Me.Grb_Contents.Controls.Add(Me.Txt_HostName4)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointTitle)
+		Me.Grb_Contents.Controls.Add(Me.Txt_PS1)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_HostType)
+		Me.Grb_Contents.Controls.Add(Me.Txt_Add1)
+		Me.Grb_Contents.Controls.Add(Me.Txt_Add2)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_EndWord)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_Imibi)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_Donation)
+		Me.Grb_Contents.Controls.Add(Me.Txt_DeadName)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_Time2)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_Style)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_SeasonWord)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_Time1)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_DeathWay)
+		Me.Grb_Contents.Controls.Add(Me.Txt_Name)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_Title)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_PS1)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_PS2)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_PS3)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_PS4)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_PS5)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_PS6)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_EndWord)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_CeremonyDate)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_Add1)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_Add2)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_HostType)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_HostName1)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_HostName2)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_HostName3)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_HostName4)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_Style)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_SeasonWord)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_Time1)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_Title)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_Name)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_DeathWay)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_Time2)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_DeadName)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_Donation)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_Imibi)
+		Me.Grb_Contents.Location = New System.Drawing.Point(6, 3)
 		Me.Grb_Contents.Name = "Grb_Contents"
-		Me.Grb_Contents.Size = New System.Drawing.Size(325, 468)
+		Me.Grb_Contents.Size = New System.Drawing.Size(325, 503)
 		Me.Grb_Contents.TabIndex = 2
 		Me.Grb_Contents.TabStop = false
 		Me.Grb_Contents.Text = "内容設定"
+		'
+		'Dtp_CeremonyDate
+		'
+		Me.Dtp_CeremonyDate.Location = New System.Drawing.Point(75, 228)
+		Me.Dtp_CeremonyDate.Name = "Dtp_CeremonyDate"
+		Me.Dtp_CeremonyDate.Size = New System.Drawing.Size(180, 19)
+		Me.Dtp_CeremonyDate.TabIndex = 15
+		'
+		'Cmb_PointHostName3
+		'
+		Me.Cmb_PointHostName3.FormattingEnabled = true
+		Me.Cmb_PointHostName3.Location = New System.Drawing.Point(260, 343)
+		Me.Cmb_PointHostName3.Name = "Cmb_PointHostName3"
+		Me.Cmb_PointHostName3.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointHostName3.TabIndex = 93
+		'
+		'Cmb_PointHostName4
+		'
+		Me.Cmb_PointHostName4.FormattingEnabled = true
+		Me.Cmb_PointHostName4.Location = New System.Drawing.Point(260, 363)
+		Me.Cmb_PointHostName4.Name = "Cmb_PointHostName4"
+		Me.Cmb_PointHostName4.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointHostName4.TabIndex = 92
+		'
+		'Cmb_PointPS1
+		'
+		Me.Cmb_PointPS1.FormattingEnabled = true
+		Me.Cmb_PointPS1.Location = New System.Drawing.Point(260, 382)
+		Me.Cmb_PointPS1.Name = "Cmb_PointPS1"
+		Me.Cmb_PointPS1.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointPS1.TabIndex = 91
+		'
+		'Cmb_PointName
+		'
+		Me.Cmb_PointName.FormattingEnabled = true
+		Me.Cmb_PointName.Location = New System.Drawing.Point(260, 89)
+		Me.Cmb_PointName.Name = "Cmb_PointName"
+		Me.Cmb_PointName.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointName.TabIndex = 90
+		'
+		'Cmb_PointDeadName
+		'
+		Me.Cmb_PointDeadName.FormattingEnabled = true
+		Me.Cmb_PointDeadName.Location = New System.Drawing.Point(260, 148)
+		Me.Cmb_PointDeadName.Name = "Cmb_PointDeadName"
+		Me.Cmb_PointDeadName.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointDeadName.TabIndex = 89
+		'
+		'Cmb_PointImibi
+		'
+		Me.Cmb_PointImibi.FormattingEnabled = true
+		Me.Cmb_PointImibi.Location = New System.Drawing.Point(260, 188)
+		Me.Cmb_PointImibi.Name = "Cmb_PointImibi"
+		Me.Cmb_PointImibi.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointImibi.TabIndex = 88
+		'
+		'Cmb_PointEndWord
+		'
+		Me.Cmb_PointEndWord.FormattingEnabled = true
+		Me.Cmb_PointEndWord.Location = New System.Drawing.Point(260, 208)
+		Me.Cmb_PointEndWord.Name = "Cmb_PointEndWord"
+		Me.Cmb_PointEndWord.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointEndWord.TabIndex = 87
+		'
+		'Cmb_PointCeremonyDate
+		'
+		Me.Cmb_PointCeremonyDate.FormattingEnabled = true
+		Me.Cmb_PointCeremonyDate.Location = New System.Drawing.Point(260, 228)
+		Me.Cmb_PointCeremonyDate.Name = "Cmb_PointCeremonyDate"
+		Me.Cmb_PointCeremonyDate.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointCeremonyDate.TabIndex = 86
+		'
+		'Cmb_PointAdd1
+		'
+		Me.Cmb_PointAdd1.FormattingEnabled = true
+		Me.Cmb_PointAdd1.Location = New System.Drawing.Point(260, 248)
+		Me.Cmb_PointAdd1.Name = "Cmb_PointAdd1"
+		Me.Cmb_PointAdd1.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointAdd1.TabIndex = 85
+		'
+		'Cmb_PointHostType
+		'
+		Me.Cmb_PointHostType.FormattingEnabled = true
+		Me.Cmb_PointHostType.Location = New System.Drawing.Point(260, 285)
+		Me.Cmb_PointHostType.Name = "Cmb_PointHostType"
+		Me.Cmb_PointHostType.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointHostType.TabIndex = 84
+		'
+		'Cmb_PointHostName1
+		'
+		Me.Cmb_PointHostName1.FormattingEnabled = true
+		Me.Cmb_PointHostName1.Location = New System.Drawing.Point(260, 304)
+		Me.Cmb_PointHostName1.Name = "Cmb_PointHostName1"
+		Me.Cmb_PointHostName1.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointHostName1.TabIndex = 83
+		'
+		'Cmb_PointHostName2
+		'
+		Me.Cmb_PointHostName2.FormattingEnabled = true
+		Me.Cmb_PointHostName2.Location = New System.Drawing.Point(260, 323)
+		Me.Cmb_PointHostName2.Name = "Cmb_PointHostName2"
+		Me.Cmb_PointHostName2.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointHostName2.TabIndex = 82
+		'
+		'Txt_PS3
+		'
+		Me.Txt_PS3.Location = New System.Drawing.Point(75, 420)
+		Me.Txt_PS3.Name = "Txt_PS3"
+		Me.Txt_PS3.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_PS3.TabIndex = 81
+		'
+		'Txt_PS6
+		'
+		Me.Txt_PS6.Location = New System.Drawing.Point(75, 477)
+		Me.Txt_PS6.Name = "Txt_PS6"
+		Me.Txt_PS6.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_PS6.TabIndex = 78
+		'
+		'Txt_PS2
+		'
+		Me.Txt_PS2.Location = New System.Drawing.Point(75, 401)
+		Me.Txt_PS2.Name = "Txt_PS2"
+		Me.Txt_PS2.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_PS2.TabIndex = 77
+		'
+		'Txt_PS5
+		'
+		Me.Txt_PS5.Location = New System.Drawing.Point(75, 458)
+		Me.Txt_PS5.Name = "Txt_PS5"
+		Me.Txt_PS5.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_PS5.TabIndex = 79
+		'
+		'Txt_HostName1
+		'
+		Me.Txt_HostName1.Location = New System.Drawing.Point(75, 306)
+		Me.Txt_HostName1.Name = "Txt_HostName1"
+		Me.Txt_HostName1.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_HostName1.TabIndex = 76
+		'
+		'Txt_PS4
+		'
+		Me.Txt_PS4.Location = New System.Drawing.Point(75, 439)
+		Me.Txt_PS4.Name = "Txt_PS4"
+		Me.Txt_PS4.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_PS4.TabIndex = 80
+		'
+		'Txt_HostName2
+		'
+		Me.Txt_HostName2.Location = New System.Drawing.Point(75, 325)
+		Me.Txt_HostName2.Name = "Txt_HostName2"
+		Me.Txt_HostName2.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_HostName2.TabIndex = 75
+		'
+		'Txt_HostName3
+		'
+		Me.Txt_HostName3.Location = New System.Drawing.Point(75, 344)
+		Me.Txt_HostName3.Name = "Txt_HostName3"
+		Me.Txt_HostName3.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_HostName3.TabIndex = 74
+		'
+		'Txt_HostName4
+		'
+		Me.Txt_HostName4.Location = New System.Drawing.Point(75, 363)
+		Me.Txt_HostName4.Name = "Txt_HostName4"
+		Me.Txt_HostName4.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_HostName4.TabIndex = 73
+		'
+		'Cmb_PointTitle
+		'
+		Me.Cmb_PointTitle.FormattingEnabled = true
+		Me.Cmb_PointTitle.Location = New System.Drawing.Point(260, 70)
+		Me.Cmb_PointTitle.Name = "Cmb_PointTitle"
+		Me.Cmb_PointTitle.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointTitle.TabIndex = 56
+		'
+		'Txt_PS1
+		'
+		Me.Txt_PS1.Location = New System.Drawing.Point(75, 382)
+		Me.Txt_PS1.Name = "Txt_PS1"
+		Me.Txt_PS1.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_PS1.TabIndex = 72
+		'
+		'Cmb_HostType
+		'
+		Me.Cmb_HostType.FormattingEnabled = true
+		Me.Cmb_HostType.Location = New System.Drawing.Point(75, 286)
+		Me.Cmb_HostType.Name = "Cmb_HostType"
+		Me.Cmb_HostType.Size = New System.Drawing.Size(180, 20)
+		Me.Cmb_HostType.TabIndex = 71
+		'
+		'Txt_Add1
+		'
+		Me.Txt_Add1.Location = New System.Drawing.Point(75, 248)
+		Me.Txt_Add1.Name = "Txt_Add1"
+		Me.Txt_Add1.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_Add1.TabIndex = 70
+		'
+		'Txt_Add2
+		'
+		Me.Txt_Add2.Location = New System.Drawing.Point(75, 267)
+		Me.Txt_Add2.Name = "Txt_Add2"
+		Me.Txt_Add2.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_Add2.TabIndex = 69
+		'
+		'Cmb_EndWord
+		'
+		Me.Cmb_EndWord.FormattingEnabled = true
+		Me.Cmb_EndWord.Location = New System.Drawing.Point(75, 208)
+		Me.Cmb_EndWord.Name = "Cmb_EndWord"
+		Me.Cmb_EndWord.Size = New System.Drawing.Size(180, 20)
+		Me.Cmb_EndWord.TabIndex = 66
+		'
+		'Cmb_Imibi
+		'
+		Me.Cmb_Imibi.FormattingEnabled = true
+		Me.Cmb_Imibi.Location = New System.Drawing.Point(75, 188)
+		Me.Cmb_Imibi.Name = "Cmb_Imibi"
+		Me.Cmb_Imibi.Size = New System.Drawing.Size(180, 20)
+		Me.Cmb_Imibi.TabIndex = 65
+		'
+		'Cmb_Donation
+		'
+		Me.Cmb_Donation.FormattingEnabled = true
+		Me.Cmb_Donation.Location = New System.Drawing.Point(75, 168)
+		Me.Cmb_Donation.Name = "Cmb_Donation"
+		Me.Cmb_Donation.Size = New System.Drawing.Size(180, 20)
+		Me.Cmb_Donation.TabIndex = 64
+		'
+		'Txt_DeadName
+		'
+		Me.Txt_DeadName.Location = New System.Drawing.Point(75, 149)
+		Me.Txt_DeadName.Name = "Txt_DeadName"
+		Me.Txt_DeadName.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_DeadName.TabIndex = 62
+		'
+		'Cmb_Time2
+		'
+		Me.Cmb_Time2.FormattingEnabled = true
+		Me.Cmb_Time2.Location = New System.Drawing.Point(75, 129)
+		Me.Cmb_Time2.Name = "Cmb_Time2"
+		Me.Cmb_Time2.Size = New System.Drawing.Size(180, 20)
+		Me.Cmb_Time2.TabIndex = 61
+		'
+		'Cmb_Style
+		'
+		Me.Cmb_Style.FormattingEnabled = true
+		Me.Cmb_Style.Location = New System.Drawing.Point(75, 10)
+		Me.Cmb_Style.Name = "Cmb_Style"
+		Me.Cmb_Style.Size = New System.Drawing.Size(180, 20)
+		Me.Cmb_Style.TabIndex = 60
+		'
+		'Cmb_SeasonWord
+		'
+		Me.Cmb_SeasonWord.FormattingEnabled = true
+		Me.Cmb_SeasonWord.Location = New System.Drawing.Point(75, 30)
+		Me.Cmb_SeasonWord.Name = "Cmb_SeasonWord"
+		Me.Cmb_SeasonWord.Size = New System.Drawing.Size(180, 20)
+		Me.Cmb_SeasonWord.TabIndex = 59
+		'
+		'Cmb_Time1
+		'
+		Me.Cmb_Time1.FormattingEnabled = true
+		Me.Cmb_Time1.Location = New System.Drawing.Point(75, 50)
+		Me.Cmb_Time1.Name = "Cmb_Time1"
+		Me.Cmb_Time1.Size = New System.Drawing.Size(180, 20)
+		Me.Cmb_Time1.TabIndex = 58
+		'
+		'Cmb_DeathWay
+		'
+		Me.Cmb_DeathWay.FormattingEnabled = true
+		Me.Cmb_DeathWay.Location = New System.Drawing.Point(75, 109)
+		Me.Cmb_DeathWay.Name = "Cmb_DeathWay"
+		Me.Cmb_DeathWay.Size = New System.Drawing.Size(180, 20)
+		Me.Cmb_DeathWay.TabIndex = 57
+		'
+		'Txt_Name
+		'
+		Me.Txt_Name.Location = New System.Drawing.Point(75, 90)
+		Me.Txt_Name.Name = "Txt_Name"
+		Me.Txt_Name.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_Name.TabIndex = 55
+		'
+		'Cmb_Title
+		'
+		Me.Cmb_Title.FormattingEnabled = true
+		Me.Cmb_Title.Location = New System.Drawing.Point(75, 70)
+		Me.Cmb_Title.Name = "Cmb_Title"
+		Me.Cmb_Title.Size = New System.Drawing.Size(180, 20)
+		Me.Cmb_Title.TabIndex = 52
+		'
+		'Lbl_PS1
+		'
+		Me.Lbl_PS1.Location = New System.Drawing.Point(5, 385)
+		Me.Lbl_PS1.Name = "Lbl_PS1"
+		Me.Lbl_PS1.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_PS1.TabIndex = 41
+		Me.Lbl_PS1.Text = "追伸１："
+		'
+		'Lbl_PS2
+		'
+		Me.Lbl_PS2.Location = New System.Drawing.Point(5, 405)
+		Me.Lbl_PS2.Name = "Lbl_PS2"
+		Me.Lbl_PS2.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_PS2.TabIndex = 40
+		Me.Lbl_PS2.Text = "追伸２："
+		'
+		'Lbl_PS3
+		'
+		Me.Lbl_PS3.Location = New System.Drawing.Point(5, 424)
+		Me.Lbl_PS3.Name = "Lbl_PS3"
+		Me.Lbl_PS3.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_PS3.TabIndex = 39
+		Me.Lbl_PS3.Text = "追伸３："
+		'
+		'Lbl_PS4
+		'
+		Me.Lbl_PS4.Location = New System.Drawing.Point(5, 443)
+		Me.Lbl_PS4.Name = "Lbl_PS4"
+		Me.Lbl_PS4.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_PS4.TabIndex = 38
+		Me.Lbl_PS4.Text = "追伸４："
+		'
+		'Lbl_PS5
+		'
+		Me.Lbl_PS5.Location = New System.Drawing.Point(5, 462)
+		Me.Lbl_PS5.Name = "Lbl_PS5"
+		Me.Lbl_PS5.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_PS5.TabIndex = 37
+		Me.Lbl_PS5.Text = "追伸５："
+		'
+		'Lbl_PS6
+		'
+		Me.Lbl_PS6.Location = New System.Drawing.Point(5, 481)
+		Me.Lbl_PS6.Name = "Lbl_PS6"
+		Me.Lbl_PS6.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_PS6.TabIndex = 36
+		Me.Lbl_PS6.Text = "追伸６："
+		'
+		'Lbl_EndWord
+		'
+		Me.Lbl_EndWord.Location = New System.Drawing.Point(5, 212)
+		Me.Lbl_EndWord.Name = "Lbl_EndWord"
+		Me.Lbl_EndWord.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_EndWord.TabIndex = 31
+		Me.Lbl_EndWord.Text = "結語："
+		'
+		'Lbl_CeremonyDate
+		'
+		Me.Lbl_CeremonyDate.Location = New System.Drawing.Point(5, 232)
+		Me.Lbl_CeremonyDate.Name = "Lbl_CeremonyDate"
+		Me.Lbl_CeremonyDate.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_CeremonyDate.TabIndex = 30
+		Me.Lbl_CeremonyDate.Text = "法要年月日："
+		'
+		'Lbl_Add1
+		'
+		Me.Lbl_Add1.Location = New System.Drawing.Point(5, 250)
+		Me.Lbl_Add1.Name = "Lbl_Add1"
+		Me.Lbl_Add1.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_Add1.TabIndex = 29
+		Me.Lbl_Add1.Text = "住所１："
+		'
+		'Lbl_Add2
+		'
+		Me.Lbl_Add2.Location = New System.Drawing.Point(5, 270)
+		Me.Lbl_Add2.Name = "Lbl_Add2"
+		Me.Lbl_Add2.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_Add2.TabIndex = 28
+		Me.Lbl_Add2.Text = "住所２："
+		'
+		'Lbl_HostType
+		'
+		Me.Lbl_HostType.Location = New System.Drawing.Point(5, 290)
+		Me.Lbl_HostType.Name = "Lbl_HostType"
+		Me.Lbl_HostType.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_HostType.TabIndex = 27
+		Me.Lbl_HostType.Text = "施主・喪主："
+		'
+		'Lbl_HostName1
+		'
+		Me.Lbl_HostName1.Location = New System.Drawing.Point(5, 309)
+		Me.Lbl_HostName1.Name = "Lbl_HostName1"
+		Me.Lbl_HostName1.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_HostName1.TabIndex = 26
+		Me.Lbl_HostName1.Text = "喪主名："
+		'
+		'Lbl_HostName2
+		'
+		Me.Lbl_HostName2.Location = New System.Drawing.Point(5, 328)
+		Me.Lbl_HostName2.Name = "Lbl_HostName2"
+		Me.Lbl_HostName2.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_HostName2.TabIndex = 25
+		Me.Lbl_HostName2.Text = "喪主名２："
+		'
+		'Lbl_HostName3
+		'
+		Me.Lbl_HostName3.Location = New System.Drawing.Point(5, 346)
+		Me.Lbl_HostName3.Name = "Lbl_HostName3"
+		Me.Lbl_HostName3.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_HostName3.TabIndex = 24
+		Me.Lbl_HostName3.Text = "喪主名３："
+		'
+		'Lbl_HostName4
+		'
+		Me.Lbl_HostName4.Location = New System.Drawing.Point(5, 366)
+		Me.Lbl_HostName4.Name = "Lbl_HostName4"
+		Me.Lbl_HostName4.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_HostName4.TabIndex = 23
+		Me.Lbl_HostName4.Text = "喪主名４："
+		'
+		'Lbl_Style
+		'
+		Me.Lbl_Style.Location = New System.Drawing.Point(5, 13)
+		Me.Lbl_Style.Name = "Lbl_Style"
+		Me.Lbl_Style.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_Style.TabIndex = 22
+		Me.Lbl_Style.Text = "文例："
+		'
+		'Lbl_SeasonWord
+		'
+		Me.Lbl_SeasonWord.Location = New System.Drawing.Point(5, 33)
+		Me.Lbl_SeasonWord.Name = "Lbl_SeasonWord"
+		Me.Lbl_SeasonWord.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_SeasonWord.TabIndex = 21
+		Me.Lbl_SeasonWord.Text = "季語："
+		'
+		'Lbl_Time1
+		'
+		Me.Lbl_Time1.Location = New System.Drawing.Point(5, 53)
+		Me.Lbl_Time1.Name = "Lbl_Time1"
+		Me.Lbl_Time1.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_Time1.TabIndex = 20
+		Me.Lbl_Time1.Text = "時期１："
+		'
+		'Lbl_Title
+		'
+		Me.Lbl_Title.Location = New System.Drawing.Point(5, 74)
+		Me.Lbl_Title.Name = "Lbl_Title"
+		Me.Lbl_Title.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_Title.TabIndex = 19
+		Me.Lbl_Title.Text = "続柄："
+		'
+		'Lbl_Name
+		'
+		Me.Lbl_Name.Location = New System.Drawing.Point(5, 94)
+		Me.Lbl_Name.Name = "Lbl_Name"
+		Me.Lbl_Name.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_Name.TabIndex = 18
+		Me.Lbl_Name.Text = "俗名："
+		'
+		'Lbl_DeathWay
+		'
+		Me.Lbl_DeathWay.Location = New System.Drawing.Point(5, 112)
+		Me.Lbl_DeathWay.Name = "Lbl_DeathWay"
+		Me.Lbl_DeathWay.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_DeathWay.TabIndex = 17
+		Me.Lbl_DeathWay.Text = "死亡告知："
+		'
+		'Lbl_Time2
+		'
+		Me.Lbl_Time2.Location = New System.Drawing.Point(5, 131)
+		Me.Lbl_Time2.Name = "Lbl_Time2"
+		Me.Lbl_Time2.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_Time2.TabIndex = 16
+		Me.Lbl_Time2.Text = "時期２："
+		'
+		'Lbl_DeadName
+		'
+		Me.Lbl_DeadName.Location = New System.Drawing.Point(5, 151)
+		Me.Lbl_DeadName.Name = "Lbl_DeadName"
+		Me.Lbl_DeadName.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_DeadName.TabIndex = 15
+		Me.Lbl_DeadName.Text = "戒名："
+		'
+		'Lbl_Donation
+		'
+		Me.Lbl_Donation.Location = New System.Drawing.Point(5, 171)
+		Me.Lbl_Donation.Name = "Lbl_Donation"
+		Me.Lbl_Donation.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_Donation.TabIndex = 14
+		Me.Lbl_Donation.Text = "供え物："
+		'
+		'Lbl_Imibi
+		'
+		Me.Lbl_Imibi.Location = New System.Drawing.Point(5, 192)
+		Me.Lbl_Imibi.Name = "Lbl_Imibi"
+		Me.Lbl_Imibi.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_Imibi.TabIndex = 13
+		Me.Lbl_Imibi.Text = "忌日："
 		'
 		'panel1
 		'
 		Me.panel1.Controls.Add(Me.Grb_Contents)
 		Me.panel1.Location = New System.Drawing.Point(10, 181)
 		Me.panel1.Name = "panel1"
-		Me.panel1.Size = New System.Drawing.Size(331, 474)
+		Me.panel1.Size = New System.Drawing.Size(331, 510)
 		Me.panel1.TabIndex = 3
 		'
 		'Pnl_Main
 		'
-		Me.Pnl_Main.Location = New System.Drawing.Point(347, 10)
+		Me.Pnl_Main.BackColor = System.Drawing.Color.Transparent
+		Me.Pnl_Main.Location = New System.Drawing.Point(347, 665)
 		Me.Pnl_Main.Name = "Pnl_Main"
-		Me.Pnl_Main.Size = New System.Drawing.Size(786, 645)
+		Me.Pnl_Main.Size = New System.Drawing.Size(786, 681)
 		Me.Pnl_Main.TabIndex = 4
 		'
 		'comboBox3
@@ -320,219 +887,30 @@ Partial Class Print
 		Me.Lbl_Thick.TabIndex = 14
 		Me.Lbl_Thick.Text = "印刷濃度："
 		'
-		'comboBox1
+		'Pic_Main
 		'
-		Me.comboBox1.FormattingEnabled = true
-		Me.comboBox1.Location = New System.Drawing.Point(146, 31)
-		Me.comboBox1.Name = "comboBox1"
-		Me.comboBox1.Size = New System.Drawing.Size(134, 20)
-		Me.comboBox1.TabIndex = 5
+		Me.Pic_Main.Location = New System.Drawing.Point(348, 13)
+		Me.Pic_Main.Name = "Pic_Main"
+		Me.Pic_Main.Size = New System.Drawing.Size(782, 632)
+		Me.Pic_Main.TabIndex = 15
+		Me.Pic_Main.TabStop = false
 		'
-		'label1
+		'button1
 		'
-		Me.label1.Location = New System.Drawing.Point(9, 177)
-		Me.label1.Name = "label1"
-		Me.label1.Size = New System.Drawing.Size(81, 18)
-		Me.label1.TabIndex = 13
-		Me.label1.Text = "忌日："
-		'
-		'label2
-		'
-		Me.label2.Location = New System.Drawing.Point(9, 159)
-		Me.label2.Name = "label2"
-		Me.label2.Size = New System.Drawing.Size(81, 18)
-		Me.label2.TabIndex = 14
-		Me.label2.Text = "供え物："
-		'
-		'label3
-		'
-		Me.label3.Location = New System.Drawing.Point(9, 141)
-		Me.label3.Name = "label3"
-		Me.label3.Size = New System.Drawing.Size(81, 18)
-		Me.label3.TabIndex = 15
-		Me.label3.Text = "戒名："
-		'
-		'label4
-		'
-		Me.label4.Location = New System.Drawing.Point(9, 123)
-		Me.label4.Name = "label4"
-		Me.label4.Size = New System.Drawing.Size(81, 18)
-		Me.label4.TabIndex = 16
-		Me.label4.Text = "時期２："
-		'
-		'label5
-		'
-		Me.label5.Location = New System.Drawing.Point(9, 105)
-		Me.label5.Name = "label5"
-		Me.label5.Size = New System.Drawing.Size(81, 18)
-		Me.label5.TabIndex = 17
-		Me.label5.Text = "死亡告知："
-		'
-		'label6
-		'
-		Me.label6.Location = New System.Drawing.Point(9, 87)
-		Me.label6.Name = "label6"
-		Me.label6.Size = New System.Drawing.Size(81, 18)
-		Me.label6.TabIndex = 18
-		Me.label6.Text = "俗名："
-		'
-		'label7
-		'
-		Me.label7.Location = New System.Drawing.Point(9, 69)
-		Me.label7.Name = "label7"
-		Me.label7.Size = New System.Drawing.Size(81, 18)
-		Me.label7.TabIndex = 19
-		Me.label7.Text = "続柄："
-		'
-		'label8
-		'
-		Me.label8.Location = New System.Drawing.Point(9, 51)
-		Me.label8.Name = "label8"
-		Me.label8.Size = New System.Drawing.Size(81, 18)
-		Me.label8.TabIndex = 20
-		Me.label8.Text = "時期１："
-		'
-		'label9
-		'
-		Me.label9.Location = New System.Drawing.Point(9, 33)
-		Me.label9.Name = "label9"
-		Me.label9.Size = New System.Drawing.Size(81, 18)
-		Me.label9.TabIndex = 21
-		Me.label9.Text = "季語："
-		'
-		'label10
-		'
-		Me.label10.Location = New System.Drawing.Point(9, 15)
-		Me.label10.Name = "label10"
-		Me.label10.Size = New System.Drawing.Size(81, 18)
-		Me.label10.TabIndex = 22
-		Me.label10.Text = "文例："
-		'
-		'label11
-		'
-		Me.label11.Location = New System.Drawing.Point(9, 339)
-		Me.label11.Name = "label11"
-		Me.label11.Size = New System.Drawing.Size(81, 18)
-		Me.label11.TabIndex = 23
-		Me.label11.Text = "喪主名４："
-		'
-		'label12
-		'
-		Me.label12.Location = New System.Drawing.Point(9, 321)
-		Me.label12.Name = "label12"
-		Me.label12.Size = New System.Drawing.Size(81, 18)
-		Me.label12.TabIndex = 24
-		Me.label12.Text = "喪主名３："
-		'
-		'label13
-		'
-		Me.label13.Location = New System.Drawing.Point(9, 303)
-		Me.label13.Name = "label13"
-		Me.label13.Size = New System.Drawing.Size(81, 18)
-		Me.label13.TabIndex = 25
-		Me.label13.Text = "喪主名２："
-		'
-		'label14
-		'
-		Me.label14.Location = New System.Drawing.Point(9, 285)
-		Me.label14.Name = "label14"
-		Me.label14.Size = New System.Drawing.Size(81, 18)
-		Me.label14.TabIndex = 26
-		Me.label14.Text = "喪主名："
-		'
-		'label15
-		'
-		Me.label15.Location = New System.Drawing.Point(9, 267)
-		Me.label15.Name = "label15"
-		Me.label15.Size = New System.Drawing.Size(81, 18)
-		Me.label15.TabIndex = 27
-		Me.label15.Text = "施主・喪主："
-		'
-		'label16
-		'
-		Me.label16.Location = New System.Drawing.Point(9, 249)
-		Me.label16.Name = "label16"
-		Me.label16.Size = New System.Drawing.Size(81, 18)
-		Me.label16.TabIndex = 28
-		Me.label16.Text = "住所２："
-		'
-		'label17
-		'
-		Me.label17.Location = New System.Drawing.Point(9, 231)
-		Me.label17.Name = "label17"
-		Me.label17.Size = New System.Drawing.Size(81, 18)
-		Me.label17.TabIndex = 29
-		Me.label17.Text = "住所１："
-		'
-		'label18
-		'
-		Me.label18.Location = New System.Drawing.Point(9, 213)
-		Me.label18.Name = "label18"
-		Me.label18.Size = New System.Drawing.Size(81, 18)
-		Me.label18.TabIndex = 30
-		Me.label18.Text = "法要年月日："
-		'
-		'label19
-		'
-		Me.label19.Location = New System.Drawing.Point(9, 195)
-		Me.label19.Name = "label19"
-		Me.label19.Size = New System.Drawing.Size(81, 18)
-		Me.label19.TabIndex = 31
-		Me.label19.Text = "結語："
-		'
-		'label24
-		'
-		Me.label24.Location = New System.Drawing.Point(9, 447)
-		Me.label24.Name = "label24"
-		Me.label24.Size = New System.Drawing.Size(81, 18)
-		Me.label24.TabIndex = 36
-		Me.label24.Text = "追伸６："
-		'
-		'label25
-		'
-		Me.label25.Location = New System.Drawing.Point(9, 429)
-		Me.label25.Name = "label25"
-		Me.label25.Size = New System.Drawing.Size(81, 18)
-		Me.label25.TabIndex = 37
-		Me.label25.Text = "追伸５："
-		'
-		'label26
-		'
-		Me.label26.Location = New System.Drawing.Point(9, 411)
-		Me.label26.Name = "label26"
-		Me.label26.Size = New System.Drawing.Size(81, 18)
-		Me.label26.TabIndex = 38
-		Me.label26.Text = "追伸４："
-		'
-		'label27
-		'
-		Me.label27.Location = New System.Drawing.Point(9, 393)
-		Me.label27.Name = "label27"
-		Me.label27.Size = New System.Drawing.Size(81, 18)
-		Me.label27.TabIndex = 39
-		Me.label27.Text = "追伸３："
-		'
-		'label28
-		'
-		Me.label28.Location = New System.Drawing.Point(9, 375)
-		Me.label28.Name = "label28"
-		Me.label28.Size = New System.Drawing.Size(81, 18)
-		Me.label28.TabIndex = 40
-		Me.label28.Text = "追伸２："
-		'
-		'label29
-		'
-		Me.label29.Location = New System.Drawing.Point(9, 357)
-		Me.label29.Name = "label29"
-		Me.label29.Size = New System.Drawing.Size(81, 18)
-		Me.label29.TabIndex = 41
-		Me.label29.Text = "追伸１："
+		Me.button1.Location = New System.Drawing.Point(262, 13)
+		Me.button1.Name = "button1"
+		Me.button1.Size = New System.Drawing.Size(54, 23)
+		Me.button1.TabIndex = 94
+		Me.button1.Text = "button1"
+		Me.button1.UseVisualStyleBackColor = true
+		AddHandler Me.button1.Click, AddressOf Me.Button1_Click
 		'
 		'Print
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 12!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.ClientSize = New System.Drawing.Size(1142, 664)
+		Me.ClientSize = New System.Drawing.Size(1142, 695)
+		Me.Controls.Add(Me.Pic_Main)
 		Me.Controls.Add(Me.panel1)
 		Me.Controls.Add(Me.comboBox4)
 		Me.Controls.Add(Me.textBox3)
@@ -549,39 +927,80 @@ Partial Class Print
 		Me.Grb_Common.ResumeLayout(false)
 		Me.Grb_Common.PerformLayout
 		Me.Grb_Contents.ResumeLayout(false)
+		Me.Grb_Contents.PerformLayout
 		Me.panel1.ResumeLayout(false)
+		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).EndInit
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
+	Private button1 As System.Windows.Forms.Button
+	Private Pic_Main As System.Windows.Forms.PictureBox
+	Private Dtp_CeremonyDate As System.Windows.Forms.DateTimePicker
+	Private Cmb_PointPS1 As System.Windows.Forms.ComboBox
+	Private Cmb_PointHostName4 As System.Windows.Forms.ComboBox
+	Private Cmb_PointHostName3 As System.Windows.Forms.ComboBox
+	Private Cmb_Title As System.Windows.Forms.ComboBox
+	Private Txt_Name As System.Windows.Forms.TextBox
+	Private Cmb_Time1 As System.Windows.Forms.ComboBox
+	Private Cmb_SeasonWord As System.Windows.Forms.ComboBox
+	Private Cmb_Style As System.Windows.Forms.ComboBox
+	Private Cmb_Time2 As System.Windows.Forms.ComboBox
+	Private Txt_DeadName As System.Windows.Forms.TextBox
+	Private Cmb_Donation As System.Windows.Forms.ComboBox
+	Private Cmb_Imibi As System.Windows.Forms.ComboBox
+	Private Cmb_EndWord As System.Windows.Forms.ComboBox
+	Private Txt_Add2 As System.Windows.Forms.TextBox
+	Private Txt_Add1 As System.Windows.Forms.TextBox
+	Private Cmb_HostType As System.Windows.Forms.ComboBox
+	Private Txt_PS1 As System.Windows.Forms.TextBox
+	Private Cmb_PointTitle As System.Windows.Forms.ComboBox
+	Private Txt_HostName4 As System.Windows.Forms.TextBox
+	Private Txt_HostName3 As System.Windows.Forms.TextBox
+	Private Txt_HostName2 As System.Windows.Forms.TextBox
+	Private Txt_PS4 As System.Windows.Forms.TextBox
+	Private Txt_HostName1 As System.Windows.Forms.TextBox
+	Private Txt_PS5 As System.Windows.Forms.TextBox
+	Private Txt_PS2 As System.Windows.Forms.TextBox
+	Private Txt_PS6 As System.Windows.Forms.TextBox
+	Private Txt_PS3 As System.Windows.Forms.TextBox
+	Private Cmb_PointHostName2 As System.Windows.Forms.ComboBox
+	Private Cmb_PointHostName1 As System.Windows.Forms.ComboBox
+	Private Cmb_PointHostType As System.Windows.Forms.ComboBox
+	Private Cmb_PointAdd1 As System.Windows.Forms.ComboBox
+	Private Cmb_PointCeremonyDate As System.Windows.Forms.ComboBox
+	Private Cmb_PointEndWord As System.Windows.Forms.ComboBox
+	Private Cmb_PointImibi As System.Windows.Forms.ComboBox
+	Private Cmb_PointDeadName As System.Windows.Forms.ComboBox
+	Private Cmb_PointName As System.Windows.Forms.ComboBox
 	Private Lbl_Thick As System.Windows.Forms.Label
 	Private Lbl_Num As System.Windows.Forms.Label
 	Private Lbl_Rate As System.Windows.Forms.Label
-	Private comboBox1 As System.Windows.Forms.ComboBox
-	Private label1 As System.Windows.Forms.Label
-	Private label2 As System.Windows.Forms.Label
-	Private label3 As System.Windows.Forms.Label
-	Private label4 As System.Windows.Forms.Label
-	Private label5 As System.Windows.Forms.Label
-	Private label6 As System.Windows.Forms.Label
-	Private label7 As System.Windows.Forms.Label
-	Private label8 As System.Windows.Forms.Label
-	Private label9 As System.Windows.Forms.Label
-	Private label10 As System.Windows.Forms.Label
-	Private label11 As System.Windows.Forms.Label
-	Private label12 As System.Windows.Forms.Label
-	Private label13 As System.Windows.Forms.Label
-	Private label14 As System.Windows.Forms.Label
-	Private label15 As System.Windows.Forms.Label
-	Private label16 As System.Windows.Forms.Label
-	Private label17 As System.Windows.Forms.Label
-	Private label18 As System.Windows.Forms.Label
-	Private label19 As System.Windows.Forms.Label
-	Private label24 As System.Windows.Forms.Label
-	Private label25 As System.Windows.Forms.Label
-	Private label26 As System.Windows.Forms.Label
-	Private label27 As System.Windows.Forms.Label
-	Private label28 As System.Windows.Forms.Label
-	Private label29 As System.Windows.Forms.Label
+	Private Cmb_DeathWay As System.Windows.Forms.ComboBox
+	Private Lbl_Imibi As System.Windows.Forms.Label
+	Private Lbl_Donation As System.Windows.Forms.Label
+	Private Lbl_DeadName As System.Windows.Forms.Label
+	Private Lbl_Time2 As System.Windows.Forms.Label
+	Private Lbl_DeathWay As System.Windows.Forms.Label
+	Private Lbl_Name As System.Windows.Forms.Label
+	Private Lbl_Title As System.Windows.Forms.Label
+	Private Lbl_Time1 As System.Windows.Forms.Label
+	Private Lbl_SeasonWord As System.Windows.Forms.Label
+	Private Lbl_Style As System.Windows.Forms.Label
+	Private Lbl_HostName4 As System.Windows.Forms.Label
+	Private Lbl_HostName3 As System.Windows.Forms.Label
+	Private Lbl_HostName2 As System.Windows.Forms.Label
+	Private Lbl_HostName1 As System.Windows.Forms.Label
+	Private Lbl_HostType As System.Windows.Forms.Label
+	Private Lbl_Add2 As System.Windows.Forms.Label
+	Private Lbl_Add1 As System.Windows.Forms.Label
+	Private Lbl_CeremonyDate As System.Windows.Forms.Label
+	Private Lbl_EndWord As System.Windows.Forms.Label
+	Private Lbl_PS6 As System.Windows.Forms.Label
+	Private Lbl_PS5 As System.Windows.Forms.Label
+	Private Lbl_PS4 As System.Windows.Forms.Label
+	Private Lbl_PS3 As System.Windows.Forms.Label
+	Private Lbl_PS2 As System.Windows.Forms.Label
+	Private Lbl_PS1 As System.Windows.Forms.Label
 	Private comboBox4 As System.Windows.Forms.ComboBox
 	Private textBox3 As System.Windows.Forms.TextBox
 	Private Lbl_Size As System.Windows.Forms.Label

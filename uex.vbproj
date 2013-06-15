@@ -79,6 +79,7 @@
     <Compile Include="Print.vb" />
     <Compile Include="Program.vb" />
     <Compile Include="Properties\AssemblyInfo.vb" />
+    <Compile Include="SetCombo.vb" />
     <Compile Include="SetEnvList.vb" />
   </ItemGroup>
   <ItemGroup>

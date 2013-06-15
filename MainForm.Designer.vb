@@ -100,8 +100,8 @@ Partial Class MainForm
 		Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
 		Me.Name = "MainForm"
 		Me.Text = "uex"
-		Me.ResumeLayout(False)
-		
+		AddHandler Load, AddressOf Me.MainFormLoad
+		Me.ResumeLayout(false)
 			End Sub
 	Private Btn_HostRegister As System.Windows.Forms.Button
 	Private Btn_HostView As System.Windows.Forms.Button

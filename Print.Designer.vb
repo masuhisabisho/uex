@@ -34,18 +34,12 @@ Partial Class Print
 	''' </summary>
 	Private Sub InitializeComponent()
 		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Print))
-		Me.panel1 = New System.Windows.Forms.Panel()
 		Me.groupBox1 = New System.Windows.Forms.GroupBox()
 		Me.groupBox2 = New System.Windows.Forms.GroupBox()
+		Me.panel1 = New System.Windows.Forms.Panel()
+		Me.Pnl_Main = New System.Windows.Forms.Panel()
+		Me.panel1.SuspendLayout
 		Me.SuspendLayout
-		'
-		'panel1
-		'
-		Me.panel1.BackColor = System.Drawing.Color.White
-		Me.panel1.Location = New System.Drawing.Point(173, 12)
-		Me.panel1.Name = "panel1"
-		Me.panel1.Size = New System.Drawing.Size(409, 312)
-		Me.panel1.TabIndex = 0
 		'
 		'groupBox1
 		'
@@ -58,26 +52,43 @@ Partial Class Print
 		'
 		'groupBox2
 		'
-		Me.groupBox2.Location = New System.Drawing.Point(13, 128)
+		Me.groupBox2.Location = New System.Drawing.Point(3, 3)
 		Me.groupBox2.Name = "groupBox2"
-		Me.groupBox2.Size = New System.Drawing.Size(154, 89)
+		Me.groupBox2.Size = New System.Drawing.Size(154, 458)
 		Me.groupBox2.TabIndex = 2
 		Me.groupBox2.TabStop = false
 		Me.groupBox2.Text = "groupBox2"
+		'
+		'panel1
+		'
+		Me.panel1.Controls.Add(Me.groupBox2)
+		Me.panel1.Location = New System.Drawing.Point(13, 108)
+		Me.panel1.Name = "panel1"
+		Me.panel1.Size = New System.Drawing.Size(163, 464)
+		Me.panel1.TabIndex = 3
+		'
+		'Pnl_Main
+		'
+		Me.Pnl_Main.Location = New System.Drawing.Point(198, 12)
+		Me.Pnl_Main.Name = "Pnl_Main"
+		Me.Pnl_Main.Size = New System.Drawing.Size(771, 560)
+		Me.Pnl_Main.TabIndex = 4
 		'
 		'Print
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 12!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.ClientSize = New System.Drawing.Size(594, 336)
-		Me.Controls.Add(Me.groupBox2)
-		Me.Controls.Add(Me.groupBox1)
+		Me.ClientSize = New System.Drawing.Size(1006, 595)
+		Me.Controls.Add(Me.Pnl_Main)
 		Me.Controls.Add(Me.panel1)
+		Me.Controls.Add(Me.groupBox1)
 		Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
 		Me.Name = "Print"
 		Me.Text = "Print"
+		Me.panel1.ResumeLayout(false)
 		Me.ResumeLayout(false)
 	End Sub
+	Private Pnl_Main As System.Windows.Forms.Panel
 	Private groupBox2 As System.Windows.Forms.GroupBox
 	Private groupBox1 As System.Windows.Forms.GroupBox
 	Private panel1 As System.Windows.Forms.Panel

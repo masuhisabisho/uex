@@ -56,6 +56,7 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SelectSql.vb" />
     <Compile Include="HostList.Designer.vb">
       <DependentUpon>HostList.vb</DependentUpon>
     </Compile>
@@ -80,20 +81,21 @@
     <Compile Include="Properties\AssemblyInfo.vb" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bmp\icon.bmp" />
-    <None Include="bmp\ps1.ico" />
-    <None Include="bmp\挨拶状印刷.bmp" />
-    <None Include="bmp\施主リスト.bmp" />
-    <None Include="bmp\施主登録.bmp" />
-    <None Include="bmp\施主閲覧.bmp" />
-    <None Include="bmp\法事予定リスト.bmp" />
-    <None Include="bmp\背景.bmp" />
+    <None Include="BitMap\icon.bmp" />
+    <None Include="BitMap\ps1.ico" />
+    <None Include="BitMap\挨拶状印刷.bmp" />
+    <None Include="BitMap\施主リスト.bmp" />
+    <None Include="BitMap\施主登録.bmp" />
+    <None Include="BitMap\施主閲覧.bmp" />
+    <None Include="BitMap\法事予定リスト.bmp" />
+    <None Include="BitMap\背景.bmp" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bmp" />
+    <Folder Include="BitMap" />
+    <Folder Include="DataBase" />
     <Folder Include="資料" />
   </ItemGroup>
   <ItemGroup>

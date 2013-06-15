@@ -7,3 +7,6 @@ C:\Users\madman190382\Documents\SharpDevelop Projects\uex\bin\Debug\uex.pdb
 C:\Users\madman190382\Documents\SharpDevelop Projects\uex\obj\x86\Debug\uex.exe
 C:\Users\madman190382\Documents\SharpDevelop Projects\uex\obj\x86\Debug\uex.pdb
 C:\Users\madman190382\Documents\SharpDevelop Projects\uex\obj\x86\Debug\uex.HostRegister.resources
+C:\Users\madman190382\Documents\SharpDevelop Projects\uex\obj\x86\Debug\uex.HostList.resources
+C:\Users\madman190382\Documents\SharpDevelop Projects\uex\obj\x86\Debug\uex.HostView.resources
+C:\Users\madman190382\Documents\SharpDevelop Projects\uex\obj\x86\Debug\uex.Print.resources

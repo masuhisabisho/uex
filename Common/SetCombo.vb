@@ -29,7 +29,7 @@ Public Class SetCombo
 		
 		Dim beforeText As String = targetCmb.Text
 		
-		targetCmb.BeginUpdate()
+		targetCmb.BeginUpdate()								'Hold update avoid flicker in screen
 		
 		Dim dataTable As New DataTable()					'<-- ???
 		dataTable.Columns.add("Key", GetType(String))
@@ -48,7 +48,7 @@ Public Class SetCombo
 
         targetCmb.DisplayMember = "Key"
         targetCmb.ValueMember = "Value"
-        targetCmb.EndUpdate()
+        targetCmb.EndUpdate()								'Start update
 
         If defaultVal <> "" Then
             targetCmb.SelectedValue = defaultVal

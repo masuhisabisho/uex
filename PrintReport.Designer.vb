@@ -55,7 +55,6 @@ Partial Class PrintReport
 		Me.Lbl_Day = New System.Windows.Forms.Label()
 		Me.Lbl_year = New System.Windows.Forms.Label()
 		Me.Cmb_Day = New System.Windows.Forms.ComboBox()
-		Me.Pnl_Main = New System.Windows.Forms.Panel()
 		Me.Cmb_Month = New System.Windows.Forms.ComboBox()
 		Me.Cmb_Year = New System.Windows.Forms.ComboBox()
 		Me.Cmb_PointHostName3 = New System.Windows.Forms.ComboBox()
@@ -128,10 +127,12 @@ Partial Class PrintReport
 		Me.Lbl_Num = New System.Windows.Forms.Label()
 		Me.Lbl_Thick = New System.Windows.Forms.Label()
 		Me.Pic_Main = New System.Windows.Forms.PictureBox()
+		Me.panel2 = New System.Windows.Forms.Panel()
 		Me.Grb_Common.SuspendLayout
 		Me.Grb_Contents.SuspendLayout
 		Me.panel1.SuspendLayout
 		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).BeginInit
+		Me.panel2.SuspendLayout
 		Me.SuspendLayout
 		'
 		'Grb_Common
@@ -274,7 +275,6 @@ Partial Class PrintReport
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Day)
 		Me.Grb_Contents.Controls.Add(Me.Lbl_year)
 		Me.Grb_Contents.Controls.Add(Me.Cmb_Day)
-		Me.Grb_Contents.Controls.Add(Me.Pnl_Main)
 		Me.Grb_Contents.Controls.Add(Me.Cmb_Month)
 		Me.Grb_Contents.Controls.Add(Me.Cmb_Year)
 		Me.Grb_Contents.Controls.Add(Me.Cmb_PointHostName3)
@@ -391,14 +391,6 @@ Partial Class PrintReport
 		Me.Cmb_Day.Name = "Cmb_Day"
 		Me.Cmb_Day.Size = New System.Drawing.Size(36, 20)
 		Me.Cmb_Day.TabIndex = 97
-		'
-		'Pnl_Main
-		'
-		Me.Pnl_Main.BackColor = System.Drawing.Color.Transparent
-		Me.Pnl_Main.Location = New System.Drawing.Point(24, 483)
-		Me.Pnl_Main.Name = "Pnl_Main"
-		Me.Pnl_Main.Size = New System.Drawing.Size(786, 681)
-		Me.Pnl_Main.TabIndex = 4
 		'
 		'Cmb_Month
 		'
@@ -970,20 +962,31 @@ Partial Class PrintReport
 		'
 		'Pic_Main
 		'
-		Me.Pic_Main.ErrorImage = CType(resources.GetObject("Pic_Main.ErrorImage"),System.Drawing.Image)
+		Me.Pic_Main.BackColor = System.Drawing.Color.White
+		Me.Pic_Main.ErrorImage = Nothing
 		Me.Pic_Main.InitialImage = CType(resources.GetObject("Pic_Main.InitialImage"),System.Drawing.Image)
-		Me.Pic_Main.Location = New System.Drawing.Point(383, 9)
+		Me.Pic_Main.Location = New System.Drawing.Point(12, 15)
 		Me.Pic_Main.Name = "Pic_Main"
-		Me.Pic_Main.Size = New System.Drawing.Size(747, 680)
-		Me.Pic_Main.TabIndex = 15
+		Me.Pic_Main.Size = New System.Drawing.Size(768, 669)
+		Me.Pic_Main.TabIndex = 16
 		Me.Pic_Main.TabStop = false
+		'
+		'panel2
+		'
+		Me.panel2.AutoScroll = true
+		Me.panel2.AutoScrollMargin = New System.Drawing.Size(5, 5)
+		Me.panel2.Controls.Add(Me.Pic_Main)
+		Me.panel2.Location = New System.Drawing.Point(375, 10)
+		Me.panel2.Name = "panel2"
+		Me.panel2.Size = New System.Drawing.Size(790, 687)
+		Me.panel2.TabIndex = 17
 		'
 		'PrintReport
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 12!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.ClientSize = New System.Drawing.Size(1142, 695)
-		Me.Controls.Add(Me.Pic_Main)
+		Me.ClientSize = New System.Drawing.Size(1176, 714)
+		Me.Controls.Add(Me.panel2)
 		Me.Controls.Add(Me.panel1)
 		Me.Controls.Add(Me.Cmb_Thickness)
 		Me.Controls.Add(Me.Txt_Copy)
@@ -994,6 +997,7 @@ Partial Class PrintReport
 		Me.Controls.Add(Me.Lbl_Rate)
 		Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
 		Me.Name = "PrintReport"
+		Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
 		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Print"
 		AddHandler Load, AddressOf Me.Print_Load
@@ -1003,9 +1007,11 @@ Partial Class PrintReport
 		Me.Grb_Contents.PerformLayout
 		Me.panel1.ResumeLayout(false)
 		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).EndInit
+		Me.panel2.ResumeLayout(false)
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
+	Private panel2 As System.Windows.Forms.Panel
 	Private Lbl_year As System.Windows.Forms.Label
 	Private Lbl_Day As System.Windows.Forms.Label
 	Private Lbl_Month As System.Windows.Forms.Label
@@ -1096,7 +1102,6 @@ Partial Class PrintReport
 	Private Cmb_Font As System.Windows.Forms.ComboBox
 	Private Txt_PosX As System.Windows.Forms.TextBox
 	Private Txt_PosY As System.Windows.Forms.TextBox
-	Private Pnl_Main As System.Windows.Forms.Panel
 	Private Grb_Contents As System.Windows.Forms.GroupBox
 	Private Grb_Common As System.Windows.Forms.GroupBox
 	Private panel1 As System.Windows.Forms.Panel

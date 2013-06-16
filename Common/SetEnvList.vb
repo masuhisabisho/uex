@@ -10,15 +10,10 @@
 Public Class SetEnvList
 	Public shared envList As New Hashtable
 	
-	'****************************************************************************************************
-	'
-	'	Arrange evviroment data from mdb (multiple line)
-	'	sqlText = Sql command
-	'	dbSource = Database connect information
-	'
-	'****************************************************************************************************
-	
-	Public sub SelectEnvSql (dbSource As String, sqltext As String)
+''''■SetEnvSql
+''' <summary>Set enviroment data on memories</summary>
+''' <returns>Void</returns>
+	Public sub SelectEnvSql ()
 		Dim envListArl As New ArrayList
 		Dim tempID As String = ""
 		
@@ -26,9 +21,9 @@ Public Class SetEnvList
 		Dim sqlCommand As New OleDbCommand
 		Dim sqlReader As OleDbDataReader
 
-		sqlCon.ConnectionString = dbSource
+		sqlCon.ConnectionString = MainForm.dbSource
 		sqlCommand.Connection = sqlCon
-		sqlCommand.CommandText = sqltext
+		sqlCommand.CommandText = " SELECT tbl_env_grid, tbl_env_label, tbl_env_value FROM tbl_env ORDER BY tbl_env_grid, tbl_env_id "
 		
 		sqlCon.Open()
 		sqlReader = sqlCommand.ExecuteReader()
@@ -48,6 +43,8 @@ Public Class SetEnvList
 				envListArl.Add(New DictionaryEntry(sqlReader("tbl_env_label").ToString(), sqlReader("tbl_env_value").ToString()))
 				
 			End While
+			
+			envList.Add(String.Format("{0:000}", Val(tempID)), envListArl)		'Storage the last list
 			
 			sqlCommand.Dispose()
 			sqlReader.Close()

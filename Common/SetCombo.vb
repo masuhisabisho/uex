@@ -7,11 +7,14 @@
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
 Public Class SetCombo
-	'****************************************************************************************************
-	'
-	'	Set values on specific Combo
-	'
-	'****************************************************************************************************
+''''■SetCombo
+''' <summary>Set combo values</summary>
+''' <param name="targetCmb">One you want to set</param>
+''' <param name="3nvListHt">Datasource</param>
+''' <param name="defaultStr">Default value of combo lable</param>
+''' <param name="defaultVal">Default value of combo value</param>
+''' <param name="isVisibleNull">Set nothing on combo as the first value</param>
+''' <returns>Void</returns>
 	Public Sub SetCombo(targetCmb As ComboBox, envListHt As ArrayList, defaultStr As String, defaultVal As String, isVisibleNull As Boolean)
 		
 		Dim setArray As New ArrayList

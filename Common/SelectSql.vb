@@ -65,4 +65,45 @@ End Try
 				
 	End Function
 	
+''''■GetOneSql
+''' <summary>Get data only from one field</summary>
+''' <param name="sqlText">Sql command</param>
+''' <returns>db data from specific one field of db by String</returns>
+	Public function GetOneSql(sqltext As string) As String
+		
+		Dim result As String = ""
+		
+		If sqltext <> "" Then
+			
+			Dim sqlCon As New OleDbConnection
+			Dim sqlCommand As New OleDbCommand
+			Dim sqlreader As OleDbDataReader
+			
+			sqlCon.ConnectionString = MainForm.dbSource
+			sqlCommand.Connection = sqlCon
+			sqlCommand.CommandText = sqltext
+			
+			sqlCon.Open()
+			sqlreader = sqlCommand.ExecuteReader()
+			
+			If sqlreader.HasRows = True Then
+				While sqlreader.Read()
+						result = sqlreader(0).ToString()
+				End While
+			End If
+			
+			sqlCommand.Dispose()
+			sqlreader.Close()
+			sqlCon.Close()
+			
+			sqlCommand = Nothing
+			sqlreader = Nothing
+			sqlCon = Nothing
+			
+		End If
+		
+		Return result
+		
+	End Function
+	
 End Class

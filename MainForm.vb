@@ -14,8 +14,9 @@ Public Partial Class MainForm
 		' The Me.InitializeComponent call is required for Windows Forms designer support.
 		Me.InitializeComponent()
 		' TODO : Add constructor code after InitializeComponents
+		'Set enviroment data on memories
 		Dim f As New SetEnvList
-		f.SelectEnvSql(dbSource, " SELECT tbl_env_grid, tbl_env_label, tbl_env_value FROM tbl_env ORDER BY tbl_env_grid, tbl_env_id ")
+		f.SelectEnvSql()
 	End Sub
 	
 	Sub MainFormLoad(sender As Object, e As EventArgs)
@@ -30,7 +31,7 @@ Public Partial Class MainForm
 	End Sub
 	
 	Public Sub Btn_Print_Click(sender As Object, e As EventArgs)
-		Dim f As New Print
+		Dim f As New PrintReport
 		f.Showdialog()
 	End Sub
 	

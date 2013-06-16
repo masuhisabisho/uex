@@ -56,7 +56,14 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SelectSql.vb" />
+    <Compile Include="Common\Calender.Designer.vb">
+      <DependentUpon>Calender.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Calender.vb" />
+    <Compile Include="Common\Common.vb" />
+    <Compile Include="Common\SelectSql.vb" />
+    <Compile Include="Common\SetCombo.vb" />
+    <Compile Include="Common\SetEnvList.vb" />
     <Compile Include="HostList.Designer.vb">
       <DependentUpon>HostList.vb</DependentUpon>
     </Compile>
@@ -73,14 +80,12 @@
       <DependentUpon>MainForm.vb</DependentUpon>
     </Compile>
     <Compile Include="MainForm.vb" />
-    <Compile Include="Print.Designer.vb">
-      <DependentUpon>Print.vb</DependentUpon>
+    <Compile Include="PrintReport.Designer.vb">
+      <DependentUpon>PrintReport.vb</DependentUpon>
     </Compile>
-    <Compile Include="Print.vb" />
+    <Compile Include="PrintReport.vb" />
     <Compile Include="Program.vb" />
     <Compile Include="Properties\AssemblyInfo.vb" />
-    <Compile Include="SetCombo.vb" />
-    <Compile Include="SetEnvList.vb" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BitMap\icon.bmp" />
@@ -98,9 +103,13 @@
   <ItemGroup>
     <Folder Include="BitMap" />
     <Folder Include="DataBase" />
+    <Folder Include="Common" />
     <Folder Include="資料" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Common\Calender.resx">
+      <DependentUpon>Calender.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="HostList.resx">
       <DependentUpon>HostList.vb</DependentUpon>
     </EmbeddedResource>
@@ -113,8 +122,8 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Print.resx">
-      <DependentUpon>Print.vb</DependentUpon>
+    <EmbeddedResource Include="PrintReport.resx">
+      <DependentUpon>PrintReport.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.Targets" />

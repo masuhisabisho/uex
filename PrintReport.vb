@@ -51,25 +51,74 @@ Public Partial Class PrintReport
 		'Format form
 		Call ClearForm(0)
 		
-		'Aquire basic sentences
+		'Aquire basic txts
 		Dim s As New SelectSql
-		Dim mainSentence As New ArrayList
-		mainSentence = s.GetSqlArray(" SELECT tbl_sentence_sentence FROM tbl_sentence WHERE tbl_sentence_grid = 0 ORDER BY tbl_sentence_order ")
+		Dim mainTxt As New ArrayList
+		mainTxt = s.GetSqlArray(" SELECT tbl_txt_txt FROM tbl_txt WHERE tbl_txt_grid = 0 ORDER BY tbl_txt_order ")
 
 		Dim g(27) As System.Drawing.Graphics
 		Dim cnt As Integer = 1400
 		
 		With Pic_Main
-			.Size = New Size(1500, 800)			'TODO: New sizeはわかった、Bitmapの値はなんなのか？要確認
-			.Image = New Bitmap(1500,800)
+			.Size = New Size(1500, 668)			'TODO: New sizeはわかった、Bitmapの値はなんなのか？要確認
+			.Image = New Bitmap(1500,668)
 		End With
-		For i As Integer = 0 To mainSentence.Count - 1 Step 1
+'		For i As Integer = 0 To maintxt.Count - 1 Step 1
+'			g(i) = System.Drawing.Graphics.FromImage(Pic_Main.Image)
+'			g(i).SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+'			g(i).DrawString(maintxt(i)("tbl_txt_txt"), New Font("ＭＳ Ｐ明朝", 24), Brushes.Black, cnt, 70, New StringFormat(StringFormatFlags.DirectionVertical))
+'			cnt = cnt - 50	
+'		Next i
+'		g(maintxt.Count - 1).Dispose()
+
+		'案
+		'たてか横か
+		'DB内の文字列を取り出し文字に分割、配列に格納して更に配列に格納	
+		'***開始位置 -> ソース内に持っておくものとする
+		'***列ピッチ -> メインの文章のピッチ（基本のピッチ）はソース内に持っておくものとする
+		'挿入文字が通常より大きいときは列ピッチも合わせて変更する
+		'選択文字の挿入があるかまた位置はどこか
+		'挿入される値を持つオブジェクト
+		'行ピッチ -> 1) 上から並べるだけ
+		'			2) ピッチ整えて天地を合わせる -> ピッチ計算必要　ピッチに使える幅 = 最大幅 - フォントサイズ　これをピッチ数（フォント数-1）で割る
+		'列ピッチの変更 -> 住所等　別の位置に変わる時
+		'開始位置の変更 ->　文を下げたりする時
+
+		'Split txts into words
+		Dim arrayCount As Integer = mainTxt.Count - 1
+		Dim wordStorager(arrayCount) As Array
+		For i As Integer = 0 To arrayCount - 1
+			Dim wordCounter As String = CStr(mainTxt(i)("tbl_txt_txt"))
+			Dim subStorager(CInt(wordCounter.Length) - 1) As String
+			For j As Integer = 0 To wordCounter.Length - 1　　
+				subStorager(j) = wordCounter.Substring(j, 1)
+			Next j
+			wordStorager(i) = subStorager
+		Next i
+		
+		'Check word pitch
+		For i As Integer = 0 To arrayCount Step 1
+			Dim pitchSpace As Integer = 0
+			pitchSpace = 525 - (30 * wordStorager(i).Length)
+			pitchSpace = 
+		Next i
+			
+			'天地均等の場合、場所に指定がある場合　フラグ？
+			'上から並べていく、
+		
+
+		Dim yPos As Integer = 70
+
+		For i As Integer = 0 To 14 Step 1
 			g(i) = System.Drawing.Graphics.FromImage(Pic_Main.Image)
 			g(i).SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-			g(i).DrawString(mainSentence(i)("tbl_sentence_sentence"), New Font("HGS明朝E", 24), Brushes.Black, cnt, 20, New StringFormat(StringFormatFlags.DirectionVertical))
-			cnt = cnt - 50	
+			g(i).DrawString("謹", New Font("ＭＳ Ｐ明朝", 32), Brushes.Black, cnt, yPos, New StringFormat(StringFormatFlags.DirectionVertical))
+			
+			yPos = yPos + 38
 		Next i
-		g(mainSentence.Count - 1).Dispose()
+
+
+
 
 '		'Test -> OK
 '		Dim g As System.Drawing.Graphics

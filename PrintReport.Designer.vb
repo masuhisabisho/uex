@@ -965,9 +965,9 @@ Partial Class PrintReport
 		Me.Pic_Main.BackColor = System.Drawing.Color.White
 		Me.Pic_Main.ErrorImage = Nothing
 		Me.Pic_Main.InitialImage = CType(resources.GetObject("Pic_Main.InitialImage"),System.Drawing.Image)
-		Me.Pic_Main.Location = New System.Drawing.Point(12, 15)
+		Me.Pic_Main.Location = New System.Drawing.Point(3, 2)
 		Me.Pic_Main.Name = "Pic_Main"
-		Me.Pic_Main.Size = New System.Drawing.Size(768, 669)
+		Me.Pic_Main.Size = New System.Drawing.Size(768, 668)
 		Me.Pic_Main.TabIndex = 16
 		Me.Pic_Main.TabStop = false
 		'

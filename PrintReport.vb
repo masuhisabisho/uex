@@ -68,7 +68,7 @@ Public Partial Class PrintReport
 		sqlText &= " ,tbl_txt_xpos "			'行ピッチの変更					ある時 = 値・ない時 = 9999
 		sqlText &= "  FROM tbl_txt "
 		sqlText &= "  WHERE "
-		sqlText &= "  tbl_txt_grid = 0 " 'パラメーターで選択
+		sqlText &= "  tbl_txt_grid = 0 " 		'TODO: パラメーターで選択
 		sqlText &= "  ORDER BY "
 		sqlText &= "  tbl_txt_order "
 	
@@ -97,12 +97,12 @@ Public Partial Class PrintReport
 		'http://penguinlab.jp/blog/post/117
 
 		'文章を単語に分割する
-		Dim lineCounter As Integer = mainTxt.Count - 1									'メインセンテンスの行数
-		Dim wordCounter As Integer = 0 													'メインセンテンスの全ての行の文字数
-		Dim wordStorager(lineCounter) As Array									
+		Dim lineCounter As Integer = mainTxt.Count - 1								'メインセンテンスの行数
+		Dim wordCounter As Integer = 0 												'メインセンテンスの全ての行の文字数
+		Dim wordStorager(lineCounter) As Array
 		
 		'メインセンテンスの単語を格納（列ごとに単語に分割した配列に入っている）
-		For i As Integer = 0 To lineCounter - 1
+		For i As Integer = 0 To lineCounter
 			Dim subStorager(CStr(mainTxt(i)("tbl_txt_txt")).Length) As String
 
 			For j As Integer = 0 To CStr(mainTxt(i)("tbl_txt_txt")).Length Step 1
@@ -110,58 +110,67 @@ Public Partial Class PrintReport
 				wordInLine = CStr(mainTxt(i)("tbl_txt_txt"))
 	
 				If j = 0 Then
-					subStorager(0) = wordInLine.Length.ToString()						'ある任意の行の文字数（配列数）を格納
+					subStorager(0) = wordInLine.Length.ToString()					'ある任意の行の文字数（配列数）を格納
 					Continue For
 				End If
 				subStorager(j) = wordInLine.Substring(j-1, 1)
 				wordCounter = wordCounter + 1	
 			Next j
-			wordStorager(i) = subStorager										'文字配列を配列に格納
+			wordStorager(i) = subStorager											'文字配列を配列に格納
 			
 		Next i
-		
-		Dim g(wordCounter) As System.Drawing.Graphics						'メインセンテンスの全ての文字数文のオブジェクトを宣言
+			
+		Dim g(wordCounter) As System.Drawing.Graphics								'メインセンテンスの全ての文字数文のオブジェクトを宣言
 		
 		'TODO: 動的にグラフィックオブジェクトを作成する	現状基本の行数と文字数は取れる	
 		'初期設定の取り込み
 		Dim defSetStr As String = mainTxt.Item(0)("tbl_txt_defset") '0) 縦 = 0・横 = 1, 1) ポイント 2) x座標（幅）, 3) y座標上,　4) y座標下, 5) 基本の改行ピッチ
 		Dim defSetAr() As String = defSetStr.Split(",")
-		'文字ピッチの取得
-		Dim basicPitch As Integer = PointPitCal(defSetAr(1)
+		'文字ピッチの取得(y軸文字位置用定数）
+		Dim basicPitch As Integer = PointPitCal(defSetAr(1))						'TODO: おそらく見直しになる
 		'TODO: 縦書きの時
 		If defSetAr(0) = "0" Then
-			Dim xPitch As Integer = 1700
-			Dim yPitch As Integer = 40
+			Dim xPitch As Single = CSng(defSetAr(2))	
+			Dim yPitch As Single = CSng(defSetAr(3))
 			For i As Integer = 0  To lineCounter Step 1
-				'挿入文字があるか
 				Dim txtInsAr() As String = CStr(mainTxt(i)("tbl_txt_ins")).Split(",")
-				If txtInsAr(0) = "9999" Then	'挿入文字無し
+				'挿入文字があるか
+				If txtInsAr(0) = "9999" Then										'挿入文字無し
 					'文章スタイルはどれか
+					'TODO: 文字のピッチを計算
 					Select Case CInt(mainTxt(i)("tbl_txt_ystyle"))
 						Case 0	'上
-							Dim str As Integer  = CInt(wordStorager(i).GetValue(0))
-							If CInt(wordStorager(i).GetValue(0)) < 25 Then				'文字が範囲以内ならそのまま上から置いていく
 								For j As Integer = 0 To CInt(wordStorager(i).GetValue(0)) Step 1
 									If j = 0 Then
 										Continue For
 									End If
 									g(j) = System.Drawing.Graphics.FromImage(Pic_Main.Image)
-									g(j).SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-									g(j).DrawString(wordStorager(i)(j), New Font("MS 明朝", 24), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
-									yPitch = yPitch + 35							'yピッチ増加
+									g(j).SmoothingMode = Drawing2D.SmoothingMode.AntiAlias	'TODO フォント選択実装
+									g(j).DrawString(wordStorager(i)(j), New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
+									yPitch = yPitch + basicPitch					'yピッチ増加
 								Next j
-								yPitch = 40											'yピッチ初期化
-								xPitch = xPitch - 50								'改行（左へ）
-							End If						
+								yPitch = CSng(defSetAr(3))							'yピッチ初期化
+								xPitch = xPitch - CSng(defSetAr(5))					'改行（左へ）
 						Case 1	'下
 							'TODO
 						Case 2	'天地
-							'TODO: 文字のピッチを計算
-							g(j) = System.Drawing.Graphics.FromImage(Pic_Main.Image)
-									g(j).SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-									g(j).DrawString(wordStorager(i)(j), New Font("MS 明朝", 24), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
-									yPitch = yPitch + 35							'yピッチ増加
-					End Select
+							'END: 天地の場合の文字のピッチを計算
+							Dim properPit As Single = PitchCalEven(CSng(defSetAr(3)), CSng(defSetAr(4)), wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
+							
+							For j As Integer = 0 To CInt(wordStorager(i).GetValue(0)) Step 1
+								If j = 0 Then
+									Continue For
+								End If
+								Dim fontPx() As Single = FontSizeCal(wordStorager(i)(j), "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
+								g(j) = System.Drawing.Graphics.FromImage(Pic_Main.Image)
+								g(j).SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+								g(j).DrawString(wordStorager(i)(j), New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
+								yPitch = yPitch + (fontPx(0) + properPit)			'yピッチ増加
+							Next j
+							yPitch = CSng(defSetAr(3))							'yピッチ初期化
+							xPitch = xPitch - CSng(defSetAr(5))						'改行（左へ）
+							
+						End Select
 				Else
 				'TODO: 挿入文字があるとき
 				
@@ -178,6 +187,9 @@ Public Partial Class PrintReport
 		
 		g(wordCounter).Dispose()
 		g(wordCounter) = Nothing
+		
+		Font.Dispose()
+		Font = Nothing
 		
 		End Sub
 
@@ -212,6 +224,33 @@ Public Partial Class PrintReport
 '		Next i	
 #Region "Pitch"
 
+''''■FontSizeCal
+''' <summary>文字の縦横高さを測る</summary>
+''' <param name="word">計測したい文字</param>
+''' <param name="font">フォント</param>
+''' <param name="point">ポイント</param>
+''' <returns>文字の縦・横を返す</returns>
+Public Function FontSizeCal(word As String, font As String, point As Integer) As Array
+	Dim resultAl(1) As Single 
+	Dim stringFont As New Font(font, point, GraphicsUnit.Pixel)
+	Dim stringSize As New SizeF
+	
+	Dim gr As Graphics = CreateGraphics()
+	stringSize = gr.MeasureString(word, stringFont)
+	resultAl(0) = stringSize.Height
+	resultAl(1) = stringSize.Width
+	
+	gr.Dispose()
+	stringFont.Dispose()
+	
+	gr = Nothing
+	stringFont = Nothing
+	stringSize = Nothing
+	
+	Return resultAl
+	
+End Function
+
 ''''■PointPitCal
 ''' <summary>任意のポイントに対する必要なピッチ</summary>
 ''' <param name="point">ポイント数</param>
@@ -220,34 +259,60 @@ Public Function PointPitCal(point As Integer) As Integer
 	Dim resultPit As Integer = 0
 	'ポイント　-> ピクセル変換
 	Dim wordPix As Integer = CInt(point * (96 / 72))
-	resultPit = wordPix + 4
+	resultPit = wordPix + 4														'文字間隔は4pxに（暫定）
 	Return resultPit
 	
 End Function
 	
-''''■PitchCal
+''''■PitchCalEven
 ''' <summary>天地の時のピッチを計算</summary>
 ''' <param name="topYPos">開始位置</param>
 ''' <param name="bottomYPos">修了位置</param>
 ''' <param name="wordAr">単語配列</param>
+''' <param name="wordAr">フォント</param>		<- 追加　2013/06/23
 ''' <param name="point">ポイント数</param>
 ''' <returns>ピッチ数を返す（ピッチが取れない時はマイナス）</returns>
-Public Function PitchCal(topYPos As Integer, bottomYPos As Integer, wordAr As Array, point As Integer) As Integer
-	Dim resultPitch As Integer = 0
+Public Function PitchCalEven(topYPos As Single, bottomYPos As Single, wordAr As Array, font as string, point As Integer) As Single
+	Dim resultPitch As Single = 0
 	'配列数をカウント
-	Dim arCounter As Double = wordAr.Length
+	Dim arCounter As Single = CSng(wordAr(0))
+	Dim firstWord(1) As Single
+	Dim lastWord(1) As Single
+	
 	'ポイント　-> ピクセル変換
-	Dim wordPix As Double = point * (96 / 72) 
-	'文字の長さ
-	Dim arLength As  Double = arCounter * wordPix
-	'文字収納可能範囲
-	Dim wordArea As Double = CDbl(bottomYPos - topYPos)
-	'文字の長さと収納可能範囲を検証
-	If (wordArea - arlength) > 0 Then	'ピッチを取れる余裕がある時
-		resultPitch = CInt((wordPix - arLength) / (arCounter - 1))
+	'Dim wordPixSize As Single = CSng(point * (96 / 72)) 						2013/06/23 out mb
+	
+	'文字の長さの取得(最初と最後は決まっている為）
+	Dim wordsLength() As Single = {0, 0}
+	Dim wordsHeight As Single = 0
+	For i As Integer = 0 To wordAr.Length - 1
+		Select Case i
+		    Case 0
+		    	Continue For
+		    Case 1
+		    	firstWord = FontSizeCal(CStr(wordAr(i)), font, point)
+		    Case CInt(wordAr.Length -1)
+		    	lastWord = FontSizeCal(CStr(wordAr(i)), font, point)
+		    Case Else
+		    	wordsLength = FontSizeCal(CStr(wordAr(i)), font, point)
+				wordsHeight = wordsHeight + wordsLength(0) 
+		End Select
+	Next i
+	
+	'最後の文字の位置を決める
+	Dim lastWordPos As Single = bottomYPos - lastWord(0)
+	
+	'文字の長さの取得(最初と最後は決まっている為）										2013/06/23 out mb	
+	'Dim arLength As  Single = (arCounter - 2) * wordPixSize
+
+	'文字収納範囲
+	Dim wordArea As Single = lastWordPos - firstWord(0)
+	'文字の長さと収納範囲を検証
+	If (wordArea - (wordsHeight)) > 0 Then										'ピッチを取れる余裕がある時
+		resultPitch = (wordArea - wordsHeight) / (arCounter - 1)
 		Return resultPitch
-	Else								'余裕がない時（ビチビチの時　マイナスの値でピッチ幅を減らす）
-		resultPitch = CInt((System.Math.Abs(wordArea - arLength) / (arCounter - 1)) * -1)
+	Else																		'余裕がない時（ビチビチの時　マイナスの値でピッチ幅を減らす）
+		resultPitch = (System.Math.Abs(wordArea - wordsHeight) / (arCounter - 1)) * -1
 		Return resultPitch
 	End If
 	

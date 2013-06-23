@@ -128,6 +128,7 @@ Partial Class PrintReport
 		Me.Lbl_Thick = New System.Windows.Forms.Label()
 		Me.Pic_Main = New System.Windows.Forms.PictureBox()
 		Me.panel2 = New System.Windows.Forms.Panel()
+		Me.label1 = New System.Windows.Forms.Label()
 		Me.Grb_Common.SuspendLayout
 		Me.Grb_Contents.SuspendLayout
 		Me.panel1.SuspendLayout
@@ -975,11 +976,21 @@ Partial Class PrintReport
 		'
 		Me.panel2.AutoScroll = true
 		Me.panel2.AutoScrollMargin = New System.Drawing.Size(5, 5)
+		Me.panel2.Controls.Add(Me.label1)
 		Me.panel2.Controls.Add(Me.Pic_Main)
 		Me.panel2.Location = New System.Drawing.Point(375, 10)
 		Me.panel2.Name = "panel2"
 		Me.panel2.Size = New System.Drawing.Size(790, 687)
 		Me.panel2.TabIndex = 17
+		'
+		'label1
+		'
+		Me.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+		Me.label1.Location = New System.Drawing.Point(11, 525)
+		Me.label1.Name = "label1"
+		Me.label1.Size = New System.Drawing.Size(752, 4)
+		Me.label1.TabIndex = 17
+		Me.label1.Text = "label1"
 		'
 		'PrintReport
 		'
@@ -1011,6 +1022,7 @@ Partial Class PrintReport
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
+	Private label1 As System.Windows.Forms.Label
 	Private panel2 As System.Windows.Forms.Panel
 	Private Lbl_year As System.Windows.Forms.Label
 	Private Lbl_Day As System.Windows.Forms.Label

@@ -59,13 +59,13 @@ Public Partial Class PrintReport
 												'インチ = 0.0254m
 		sqlText &= "  tbl_txt_txt "				'メインの文章 　
 		sqlText &= " ,tbl_txt_defset "			'初期設定							0) 縦 = 0・横 = 1, 1) ポイント 2) x座標（幅）, 3) y座標上,　4) y座標下, 5) 基本の改行ピッチ(コンマで区切る）
-		sqlText &= " ,tbl_txt_ypos "			'開始位置の変更（文を下げたりする時）ある時 = 値・無い時 = 9999
+		sqlText &= " ,tbl_txt_newypos "			'開始位置の変更（文を下げたりする時）ある時 = 値・無い時 = 9999
 		sqlText &= " ,tbl_txt_ystyle "			'列スタイル 						上から並べる = 0・下から並べる  = 1・天地を合わせる = 2
 		sqlText &= " ,tbl_txt_ins "				'挿入文字の有無					ある時 = 値(コンマで区切る）無い時 9999, 9999, 9999
 		sqlText &= " ,tbl_txt_target0 "			'挿入文字							ターゲットオブジェクト, ポイントオブジェクト
 		sqlText &= " ,tbl_txt_target1 "			'挿入文字							ターゲットオブジェクト, ポイントオブジェクト
 		sqlText &= " ,tbl_txt_target2"			'挿入文字							ターゲットオブジェクト, ポイントオブジェクト
-		sqlText &= " ,tbl_txt_xpos "			'行ピッチの変更					ある時 = 値・ない時 = 9999
+		sqlText &= " ,tbl_txt_newxpos "			'行ピッチの変更					ある時 = 値・ない時 = 9999
 		sqlText &= "  FROM tbl_txt "
 		sqlText &= "  WHERE "
 		sqlText &= "  tbl_txt_grid = 0 " 		'TODO: パラメーターで選択
@@ -81,18 +81,20 @@ Public Partial Class PrintReport
 		End With
 
 		'文字描画仕様
-		'DB内の文字列を取り出し文字に分割、配列に格納して更に配列に格納	
-		'***初期設定(縦か横か, x座標, y座標上,　y座標下, 基本の改行ピッチ）
+		'END: DB内の文字列を取り出し文字に分割、配列に格納して更に配列に格納
+		'END: 初期設定(縦か横か, x座標, y座標上,　y座標下, 基本の改行ピッチ）
+		
 		'開始位置（y座標）の変更 ->　あるかどうか？
 		'（文を下げたりする時）
-		'列スタイル -> 1) 上から並べる
+		'END: 列スタイル -> 1) 上から並べる							
 		'			  2) 下から並べる
 		'			  3) ピッチ整えて天地を合わせる -> ピッチに使える幅 = 最大幅 - フォントサイズ　これをピッチ数（フォント数-1）で割る
+		
 		'挿入文字あるかどうか？ -> 1) 場所は？　　挿入される値を持つオブジェクト, それのポイント設定するオブジェクト, フォントサイズの確認
 		'						2) 次へ
 		'行ピッチ変更（フォント変更） -> 1) あるならば最大のものにあわせる（基本のピッチに足す）
 		'			  				 2)　次へ
-		'行ピッチの変更（改行） -> 1) 最後の分からのx座標は？
+		'TODO: 行ピッチの変更（改行） -> 1) 最後の分からのx座標は？
 		'（住所等　別の位置に変わる時）
 		'http://penguinlab.jp/blog/post/117
 
@@ -119,10 +121,7 @@ Public Partial Class PrintReport
 			wordStorager(i) = subStorager											'文字配列を配列に格納
 			
 		Next i
-			
-		Dim g(wordCounter) As System.Drawing.Graphics								'メインセンテンスの全ての文字数文のオブジェクトを宣言
-		
-		'TODO: 動的にグラフィックオブジェクトを作成する	現状基本の行数と文字数は取れる	
+	
 		'初期設定の取り込み
 		Dim defSetStr As String = mainTxt.Item(0)("tbl_txt_defset") '0) 縦 = 0・横 = 1, 1) ポイント 2) x座標（幅）, 3) y座標上,　4) y座標下, 5) 基本の改行ピッチ
 		Dim defSetAr() As String = defSetStr.Split(",")
@@ -137,37 +136,81 @@ Public Partial Class PrintReport
 				'挿入文字があるか
 				If txtInsAr(0) = "9999" Then										'挿入文字無し
 					'文章スタイルはどれか
-					'TODO: 文字のピッチを計算
 					Select Case CInt(mainTxt(i)("tbl_txt_ystyle"))
 						Case 0	'上
+							'END: 上の場合の文字ピッチを計算
+							Dim properPit As Single = PitchCal(CSng(defSetAr(3)), CSng(defSetAr(4)), wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), 0)
+							If properPit = 0 Then									'1) 文字ピッチ用スペースがある時
 								For j As Integer = 0 To CInt(wordStorager(i).GetValue(0)) Step 1
 									If j = 0 Then
 										Continue For
 									End If
-									g(j) = System.Drawing.Graphics.FromImage(Pic_Main.Image)
-									g(j).SmoothingMode = Drawing2D.SmoothingMode.AntiAlias	'TODO フォント選択実装
-									g(j).DrawString(wordStorager(i)(j), New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
-									yPitch = yPitch + basicPitch					'yピッチ増加
+									Dim g As System.Drawing.Graphics
+									g = System.Drawing.Graphics.FromImage(Pic_Main.Image)
+									g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias	'TODO: フォント選択実装（全てのフォントがあたるところ）
+									g.DrawString(wordStorager(i)(j), New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
+									
+									g.Dispose()
+									g = Nothing
+									
+									yPitch = yPitch + basicPitch					'yピッチ増加 CHK: 位置取得方法見直しの可能性大
 								Next j
 								yPitch = CSng(defSetAr(3))							'yピッチ初期化
 								xPitch = xPitch - CSng(defSetAr(5))					'改行（左へ）
+								
+							Else													'2) 文字ピッチ用スペースがない時
+								Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
+								yPitch = CSng(defSetAr(3))							'yピッチ初期化
+								xPitch = xPitch - CSng(defSetAr(5))					'改行（左へ）
+								
+							End if
 						Case 1	'下
-							'TODO
-						Case 2	'天地
-							'END: 天地の場合の文字のピッチを計算
-							Dim properPit As Single = PitchCalEven(CSng(defSetAr(3)), CSng(defSetAr(4)), wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
+							'END: 下の場合の文字ピッチを計算
+							Dim properPit As Single = PitchCal(CSng(defSetAr(3)), CSng(defSetAr(4)), wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), 0) 'TODO: フォント
 							
-							For j As Integer = 0 To CInt(wordStorager(i).GetValue(0)) Step 1
-								If j = 0 Then
-									Continue For
-								End If
-								Dim fontPx() As Single = FontSizeCal(wordStorager(i)(j), "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
-								g(j) = System.Drawing.Graphics.FromImage(Pic_Main.Image)
-								g(j).SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-								g(j).DrawString(wordStorager(i)(j), New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
-								yPitch = yPitch + (fontPx(0) + properPit)			'yピッチ増加
-							Next j
-							yPitch = CSng(defSetAr(3))							'yピッチ初期化
+							If properPit = 0 Then									'1) 文字ピッチ用スペースがある時
+								Dim fontPx() As Single = FontSizeCal(wordStorager(i)(1), "ＭＳ Ｐ明朝", defSetAr(1))
+								Dim bottomPos As Single  = CSng(defSetAr(4)) - fontPx(0)	'一番したの文字位置を取得
+								
+								For j As Integer = 0 To CInt(wordStorager(i).GetValue(0)) Step 1
+									If j = 0 Then
+										Continue For
+									End If
+
+ 									Dim g As System.Drawing.Graphics
+									g = System.Drawing.Graphics.FromImage(Pic_Main.Image)
+									g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias	'TODO: フォント選択実装（全てのフォントがあたるところ）
+									g.DrawString(wordStorager(i)(j), New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
+									
+									g.Dispose()
+									g = Nothing
+									
+									yPitch = yPitch - basicPitch					'yピッチ増加　CHK: 位置取得方法見直しの可能性大
+
+								Next j
+							Else													'2) 文字ピッチ用スペースがある時
+								Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
+							End If
+								yPitch = CSng(defSetAr(3))							'yピッチ初期化
+								xPitch = xPitch - CSng(defSetAr(5))					'改行（左へ）
+
+						Case 2	'天地
+							'END: 天地の場合の文字ピッチを計算
+							Dim properPit As Single = PitchCal(CSng(defSetAr(3)), CSng(defSetAr(4)), wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), 2) 'TODO フォント
+
+'							For j As Integer = 0 To CInt(wordStorager(i).GetValue(0)) Step 1
+'								If j = 0 Then
+'									Continue For
+'								End If
+'								Dim fontPx() As Single = FontSizeCal(wordStorager(i)(j), "ＭＳ Ｐ明朝", CInt(defSetAr(1))) 'TODO:
+'								g(j) = System.Drawing.Graphics.FromImage(Pic_Main.Image)
+'								g(j).SmoothingMode = Drawing2D.SmoothingMode.AntiAlias 'TODO:
+'								g(j).DrawString(wordStorager(i)(j), New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
+'								yPitch = yPitch + (fontPx(0) + properPit)			'yピッチ増加
+'							Next j
+
+							Call createWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
+							yPitch = CSng(defSetAr(3))								'yピッチ初期化
 							xPitch = xPitch - CSng(defSetAr(5))						'改行（左へ）
 							
 						End Select
@@ -175,7 +218,6 @@ Public Partial Class PrintReport
 				'TODO: 挿入文字があるとき
 				
 				End If
-				
 				'TODO: フォントサイズが違う時列ピッチを修正
 				
 
@@ -184,15 +226,57 @@ Public Partial Class PrintReport
 		Else
 			'TODO: 横書きの時
 		End If
-		
-		g(wordCounter).Dispose()
-		g(wordCounter) = Nothing
-		
-		Font.Dispose()
-		Font = Nothing
-		
-		End Sub
 
+		
+	End Sub
+
+	'TODO:　改行ピッチ関数 
+''''■CheckNewYPos
+''' <summary>改行ピッチの変更があるかどうか確認</summary>
+''' <param name="word">文字配列</param>
+''' <param name="font">フォント</param>
+''' <param name="point">フォントサイズ</param>
+''' <param name="xpos">x軸初期値</param>
+''' <param name="ypos">y軸初期値</param>
+''' <param name="properPit">文字ピッチ</param>
+''' <param name="g">あれば改行分に必要なピッチを返す（ない時は0）</param>  <- 廃止
+''' <returns>Void</returns>
+	Public Function checkNewYPos(newYpos As Single) As Single
+		
+		
+	End Function
+	 
+''''■CreateWord
+''' <summary>文字を描画して行く</summary>
+''' <param name="word">文字配列</param>
+''' <param name="font">フォント</param>
+''' <param name="point">フォントサイズ</param>
+''' <param name="xpos">x軸初期値</param>
+''' <param name="ypos">y軸初期値</param>
+''' <param name="properPit">文字ピッチ</param>
+''' <param name="g">グラフィックオブジェクト</param>  <- 廃止
+''' <returns>Void</returns>
+	Public Sub  CreateWord(word As Array, font As String, point As Integer, xPos As Single, yPos As Single, properPit As Single)', g() As System.Drawing.Graphics)
+		For i As Integer = 0 To CInt(word.Length - 1) Step 1
+			If i = 0 Then
+				Continue For
+			End If
+			Dim fontPx() As Single = FontSizeCal(word(i), font, point)
+			'Dim g(CInt(word.Length - 1)) As System.Drawing.Graphics
+			Dim g As System.Drawing.Graphics
+			g = System.Drawing.Graphics.FromImage(Pic_Main.Image)
+			g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+			g.DrawString(word(i), New Font(font, point, FontStyle.Regular), Brushes.Black, xPos, yPos, New StringFormat(StringFormatFlags.DirectionVertical))
+			
+			g.Dispose()
+			g = Nothing
+			
+			yPos = yPos + (fontPx(0) + properPit)		'yピッチ増加
+
+		Next i
+
+	End Sub
+#Region "Test graphic"
 '		'Test -> OK
 '		Dim g As System.Drawing.Graphics
 '		With Pic_Main
@@ -204,9 +288,6 @@ Public Partial Class PrintReport
 '		g.DrawString("謹啓", New Font("MS 明朝", 35), Brushes.Red, -7, 0, New StringFormat(StringFormatFlags.DirectionVertical))
 '		g.Dispose()
 		
-
-	
-	
 '		For i As Integer = 0 To maintxt.Count - 1 Step 1
 '			g(i) = System.Drawing.Graphics.FromImage(Pic_Main.Image)
 '			g(i).SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
@@ -222,6 +303,7 @@ Public Partial Class PrintReport
 '			
 '			yPos = yPos + 38
 '		Next i	
+#End Region
 #Region "Pitch"
 
 ''''■FontSizeCal
@@ -269,13 +351,12 @@ End Function
 ''' <param name="topYPos">開始位置</param>
 ''' <param name="bottomYPos">修了位置</param>
 ''' <param name="wordAr">単語配列</param>
-''' <param name="wordAr">フォント</param>		<- 追加　2013/06/23
+''' <param name="font">フォント</param>		<- 追加　2013/06/23
 ''' <param name="point">ポイント数</param>
 ''' <returns>ピッチ数を返す（ピッチが取れない時はマイナス）</returns>
-Public Function PitchCalEven(topYPos As Single, bottomYPos As Single, wordAr As Array, font as string, point As Integer) As Single
+Public Function PitchCal(topYPos As Single, bottomYPos As Single, wordAr As Array, font as string, point As Integer, pattern As Integer) As Single
 	Dim resultPitch As Single = 0
-	'配列数をカウント
-	Dim arCounter As Single = CSng(wordAr(0))
+	Dim arCounter As Single = CSng(wordAr(0))									'文字数を取得
 	Dim firstWord(1) As Single
 	Dim lastWord(1) As Single
 	
@@ -285,13 +366,13 @@ Public Function PitchCalEven(topYPos As Single, bottomYPos As Single, wordAr As 
 	'文字の長さの取得(最初と最後は決まっている為）
 	Dim wordsLength() As Single = {0, 0}
 	Dim wordsHeight As Single = 0
-	For i As Integer = 0 To wordAr.Length - 1
+	For i As Integer = 0 To CInt(arCounter)
 		Select Case i
 		    Case 0
 		    	Continue For
 		    Case 1
 		    	firstWord = FontSizeCal(CStr(wordAr(i)), font, point)
-		    Case CInt(wordAr.Length -1)
+		    Case CInt(arCounter)
 		    	lastWord = FontSizeCal(CStr(wordAr(i)), font, point)
 		    Case Else
 		    	wordsLength = FontSizeCal(CStr(wordAr(i)), font, point)
@@ -308,9 +389,15 @@ Public Function PitchCalEven(topYPos As Single, bottomYPos As Single, wordAr As 
 	'文字収納範囲
 	Dim wordArea As Single = lastWordPos - firstWord(0)
 	'文字の長さと収納範囲を検証
+	
 	If (wordArea - (wordsHeight)) > 0 Then										'ピッチを取れる余裕がある時
 		resultPitch = (wordArea - wordsHeight) / (arCounter - 1)
-		Return resultPitch
+		Select Case pattern
+		    Case 0 Or 1
+		    	Return 0														'上・下の時余裕がある場合はピッチは通常
+		    Case 2
+				Return resultPitch
+		End Select
 	Else																		'余裕がない時（ビチビチの時　マイナスの値でピッチ幅を減らす）
 		resultPitch = (System.Math.Abs(wordArea - wordsHeight) / (arCounter - 1)) * -1
 		Return resultPitch

@@ -15,7 +15,29 @@ Public Partial Class PrintReport
 		' TODO : Add constructor code after InitializeComponents
 		'
 	End Sub
-	
+#Region "文字描画仕様"
+		'文字描画仕様
+		'END: DB内の文字列を取り出し文字に分割、配列に格納して更に配列に格納
+		'END: 初期設定(縦か横か, x座標, y座標上,　y座標下, 基本の改行ピッチ）
+		
+		'開始位置（y座標）の変更 ->　あるかどうか？
+		'（文を下げたりする時）
+		'END: 列スタイル -> 1) 上から並べる	
+		'			       2) 下から並べる
+		'			       3) ピッチ整えて天地を合わせる -> ピッチに使える幅 = 最大幅 - フォントサイズ　これをピッチ数（フォント数-1）で割る
+		
+		'TODO: 挿入文字あるかどうか？ -> 1) 場所は？　　挿入される値を持つオブジェクト, それのポイント設定するオブジェクト, フォントサイズの確認
+		'						2) 次へ
+		'メインテキストを読み込む時に実装する
+		'行ピッチ変更（フォント変更） -> 1) あるならば最大のものにあわせる（基本のピッチに足す）
+		'			  				 2)　次へ
+		'END: 行ピッチの変更（改行） -> 1) 最後の分からのx座標は？
+		'（住所等　別の位置に変わる時）
+		
+		'TODO: NEW フォントはやはりメインセンテンスの分はDBにおいておいたほうがよい。仕様を変更する
+		'http://penguinlab.jp/blog/post/117
+#End Region
+		
 	Sub Print_Load(sender As Object, e As EventArgs)
 		'Set font
 		'TODO: Choose several fonts for set up
@@ -58,54 +80,59 @@ Public Partial Class PrintReport
 		Dim mainTxt As New ArrayList
 												'インチ = 0.0254m
 		sqlText &= "  tbl_txt_txt "				'メインの文章 　
-		sqlText &= " ,tbl_txt_defset "			'初期設定							0) 縦 = 0・横 = 1, 1) ポイント 2) x座標（幅）, 3) y座標上,　4) y座標下, 5) 基本の改行ピッチ(コンマで区切る）
 		sqlText &= " ,tbl_txt_newypos "			'開始位置の変更（文を下げたりする時）ある時 = 値・無い時 = 9999
 		sqlText &= " ,tbl_txt_ystyle "			'列スタイル 						上から並べる = 0・下から並べる  = 1・天地を合わせる = 2
 		sqlText &= " ,tbl_txt_ins "				'挿入文字の有無					ある時 = 値(コンマで区切る）無い時 9999, 9999, 9999
+		sqlText &= " ,tbl_txt_inspoint "		'挿入文字のフォントサイズ			ある時 = 値, 値, 値（不要なところは9999）無い時 = 空白
 		sqlText &= " ,tbl_txt_target0 "			'挿入文字							ターゲットオブジェクト, ポイントオブジェクト
 		sqlText &= " ,tbl_txt_target1 "			'挿入文字							ターゲットオブジェクト, ポイントオブジェクト
 		sqlText &= " ,tbl_txt_target2"			'挿入文字							ターゲットオブジェクト, ポイントオブジェクト
 		sqlText &= " ,tbl_txt_newxpos "			'行ピッチの変更					ある時 = 値・ない時 = 9999
+		sqlText &= " ,tbl_txt_newpoint "		'フォントサイズ変更	
 		sqlText &= "  FROM tbl_txt "
 		sqlText &= "  WHERE "
-		sqlText &= "  tbl_txt_grid = 0 " 		'TODO: パラメーターで選択
+		sqlText &= "  tbl_txt_grid = 0 " 		'TODO: パラメーターで選択 = Cmbで
 		sqlText &= "  ORDER BY "
 		sqlText &= "  tbl_txt_order "
 	
 		mainTxt = s.GetSqlArray(sqlText)
-
+		
+		
+		Dim split() As String = Cstr(mainTxt(0)("tbl_txt_target0")).Split(",")
+		Dim cmb As ComboBox = CType(split(0), ComboBox)
+		Dim result As String = cmb.SelectedValue
+		
+		
+		Dim defset As String = ""
+		sqlText =  " SELECT "
+		sqlText &= " tbl_defset"
+		sqlText &= " FROM tbl_defset"			'初期設定							(0) 縦 = 0・横 = 1, (1) ポイント (2) x座標（幅）, (3) y座標上,　(4) y座標下, (5) 基本の改行ピッチ
+		sqlText &= " WHERE tbl_defset_id = 0"	'TODO: tbl_defset_idは上と連動させる
+		
+		defset = s.GetOneSql(sqlText)
+		
 		'Set PictureBox size
 		With Pic_Main
-			.Size = New Size(1800, 668)			'TODO: New sizeはわかった、Bitmapの値はなんなのか？要確認
+			.Size = New Size(1800, 668)			'CHK: New sizeはわかった、Bitmapの値はなんなのか？要確認
 			.Image = New Bitmap(1800,668)
 		End With
 
-		'文字描画仕様
-		'END: DB内の文字列を取り出し文字に分割、配列に格納して更に配列に格納
-		'END: 初期設定(縦か横か, x座標, y座標上,　y座標下, 基本の改行ピッチ）
-		
-		'開始位置（y座標）の変更 ->　あるかどうか？
-		'（文を下げたりする時）
-		'END: 列スタイル -> 1) 上から並べる							
-		'			  2) 下から並べる
-		'			  3) ピッチ整えて天地を合わせる -> ピッチに使える幅 = 最大幅 - フォントサイズ　これをピッチ数（フォント数-1）で割る
-		
-		'挿入文字あるかどうか？ -> 1) 場所は？　　挿入される値を持つオブジェクト, それのポイント設定するオブジェクト, フォントサイズの確認
-		'						2) 次へ
-		'行ピッチ変更（フォント変更） -> 1) あるならば最大のものにあわせる（基本のピッチに足す）
-		'			  				 2)　次へ
-		'TODO: 行ピッチの変更（改行） -> 1) 最後の分からのx座標は？
-		'（住所等　別の位置に変わる時）
-		'http://penguinlab.jp/blog/post/117
-
 		'文章を単語に分割する
 		Dim lineCounter As Integer = mainTxt.Count - 1								'メインセンテンスの行数
-		Dim wordCounter As Integer = 0 												'メインセンテンスの全ての行の文字数
+		Dim wordCounter As Integer = 0 												'メインセンテンスの全ての行の文字数を格納する
 		Dim wordStorager(lineCounter) As Array
 		
 		'メインセンテンスの単語を格納（列ごとに単語に分割した配列に入っている）
 		For i As Integer = 0 To lineCounter
-			Dim subStorager(CStr(mainTxt(i)("tbl_txt_txt")).Length) As String
+			Dim subStorager(CStr(mainTxt(i)("tbl_txt_txt")).Length) As String		'分割した単語（行単位）を一時保存する配列
+			Dim insChecker() As String = CStr(mainTxt(i)("tbl_txt_inspoint")).Split(",")
+			Dim insFlg As Boolean = False
+			'TODO: 挿入文字があるか判定する		挿入場所,　文字数、フォントサイズ, 文字（任意の数）を獲得する
+			'ターゲットを入れる
+			If insChecker(0) <> "9999" Then
+				
+				
+			End If
 
 			For j As Integer = 0 To CStr(mainTxt(i)("tbl_txt_txt")).Length Step 1
 				Dim wordInLine As String = ""
@@ -123,8 +150,7 @@ Public Partial Class PrintReport
 		Next i
 	
 		'初期設定の取り込み
-		Dim defSetStr As String = mainTxt.Item(0)("tbl_txt_defset") '0) 縦 = 0・横 = 1, 1) ポイント 2) x座標（幅）, 3) y座標上,　4) y座標下, 5) 基本の改行ピッチ
-		Dim defSetAr() As String = defSetStr.Split(",")
+		Dim defSetAr() As String = defSet.Split(",")
 		'文字ピッチの取得(y軸文字位置用定数）
 		Dim basicPitch As Integer = PointPitCal(defSetAr(1))						'TODO: おそらく見直しになる
 		'TODO: 縦書きの時
@@ -133,8 +159,8 @@ Public Partial Class PrintReport
 			Dim yPitch As Single = CSng(defSetAr(3))
 			For i As Integer = 0  To lineCounter Step 1
 				Dim txtInsAr() As String = CStr(mainTxt(i)("tbl_txt_ins")).Split(",")
-				'挿入文字があるか
-				If txtInsAr(0) = "9999" Then										'挿入文字無し
+'				'挿入文字があるか
+'				If txtInsAr(0) = "9999" Then										'挿入文字無し
 					'文章スタイルはどれか
 					Select Case CInt(mainTxt(i)("tbl_txt_ystyle"))
 						Case 0	'上
@@ -156,13 +182,24 @@ Public Partial Class PrintReport
 									yPitch = yPitch + basicPitch					'yピッチ増加 CHK: 位置取得方法見直しの可能性大
 								Next j
 								yPitch = CSng(defSetAr(3))							'yピッチ初期化
-								xPitch = xPitch - CSng(defSetAr(5))					'改行（左へ）
-								
+																					'x軸のイレギュラー改行を確認する
+								Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
+								If newXPos <> 0 Then 
+									xPitch = newXPos
+								Else
+									xPitch = xPitch - CSng(defSetAr(5))				'通常改行（左へ）
+								End If 
 							Else													'2) 文字ピッチ用スペースがない時
 								Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
-								yPitch = CSng(defSetAr(3))							'yピッチ初期化
-								xPitch = xPitch - CSng(defSetAr(5))					'改行（左へ）
 								
+								yPitch = CSng(defSetAr(3))							'yピッチ初期化
+								
+								Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
+								If newXPos <> 0 Then 
+									xPitch = newXPos								'イレギュラー改行
+								Else
+									xPitch = xPitch - CSng(defSetAr(5))				'通常改行（左へ）
+								End if
 							End if
 						Case 1	'下
 							'END: 下の場合の文字ピッチを計算
@@ -186,14 +223,26 @@ Public Partial Class PrintReport
 									g = Nothing
 									
 									yPitch = yPitch - basicPitch					'yピッチ増加　CHK: 位置取得方法見直しの可能性大
-
+									
+									Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
+									If newXPos <> 0 Then 
+										xPitch = newXPos							'イレギュラー改行
+									Else
+										xPitch = xPitch - CSng(defSetAr(5))			'通常改行（左へ）
+									End If
 								Next j
 							Else													'2) 文字ピッチ用スペースがある時
 								Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
-							End If
+							
 								yPitch = CSng(defSetAr(3))							'yピッチ初期化
-								xPitch = xPitch - CSng(defSetAr(5))					'改行（左へ）
-
+								
+								Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
+								If newXPos <> 0 Then 
+									xPitch = newXPos								'イレギュラー改行
+								Else
+									xPitch = xPitch - CSng(defSetAr(5))				'通常改行（左へ）
+								End If 
+							End If
 						Case 2	'天地
 							'END: 天地の場合の文字ピッチを計算
 							Dim properPit As Single = PitchCal(CSng(defSetAr(3)), CSng(defSetAr(4)), wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), 2) 'TODO フォント
@@ -211,15 +260,16 @@ Public Partial Class PrintReport
 
 							Call createWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
 							yPitch = CSng(defSetAr(3))								'yピッチ初期化
-							xPitch = xPitch - CSng(defSetAr(5))						'改行（左へ）
 							
+							Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
+								If newXPos <> 0 Then 
+									xPitch = newXPos								'イレギュラー改行
+								Else
+									xPitch = xPitch - CSng(defSetAr(5))				'通常改行（左へ）
+								End If 
 						End Select
-				Else
-				'TODO: 挿入文字があるとき
-				
-				End If
-				'TODO: フォントサイズが違う時列ピッチを修正
-				
+'				Else
+'				End If
 
 			Next i
 			
@@ -229,21 +279,25 @@ Public Partial Class PrintReport
 
 		
 	End Sub
-
-	'TODO:　改行ピッチ関数 
+''''■CheckInsWord
+''' <summary>挿入文字を取り出し</summary>
+''' <param name=""></param>
+''' <returns></returns>
+	Public Function CheckInsWord() As String
+		
+	End Function
+	'END:　改行ピッチ関数 
 ''''■CheckNewYPos
 ''' <summary>改行ピッチの変更があるかどうか確認</summary>
-''' <param name="word">文字配列</param>
-''' <param name="font">フォント</param>
-''' <param name="point">フォントサイズ</param>
-''' <param name="xpos">x軸初期値</param>
-''' <param name="ypos">y軸初期値</param>
-''' <param name="properPit">文字ピッチ</param>
-''' <param name="g">あれば改行分に必要なピッチを返す（ない時は0）</param>  <- 廃止
-''' <returns>Void</returns>
-	Public Function checkNewYPos(newYpos As Single) As Single
-		
-		
+''' <param name="newPos">ニューポジションが格納された変数</param>
+''' <returns>新しい開始位置（無いときは0を返す）</returns>
+	Public Function checkNewXPos(newXpos As Single) As Single
+		Dim resultPos As Single = 0
+		If newXpos <> 9999 Then
+			resultPos = newXpos
+			Return resultPos
+		End If
+			Return 0
 	End Function
 	 
 ''''■CreateWord

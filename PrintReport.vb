@@ -37,7 +37,9 @@ Public Partial Class PrintReport
 		'TODO: NEW フォントはやはりメインセンテンスの分はDBにおいておいたほうがよい。仕様を変更する
 		'http://penguinlab.jp/blog/post/117
 #End Region
-		
+
+    Dim optWord As New Hashtable
+
 	Sub Print_Load(sender As Object, e As EventArgs)
 		'Set font
 		'TODO: Choose several fonts for set up
@@ -78,17 +80,15 @@ Public Partial Class PrintReport
 		Dim s As New SelectSql
 		Dim sqlText as String = " SELECT "
 		Dim mainTxt As New ArrayList
-												'インチ = 0.0254m
+												'**参考　インチ = 0.0254m
 		sqlText &= "  tbl_txt_txt "				'メインの文章 　
 		sqlText &= " ,tbl_txt_newypos "			'開始位置の変更（文を下げたりする時）ある時 = 値・無い時 = 9999
 		sqlText &= " ,tbl_txt_ystyle "			'列スタイル 						上から並べる = 0・下から並べる  = 1・天地を合わせる = 2
-		sqlText &= " ,tbl_txt_ins "				'挿入文字の有無					ある時 = 値(コンマで区切る）無い時 9999, 9999, 9999
-		sqlText &= " ,tbl_txt_inspoint "		'挿入文字のフォントサイズ			ある時 = 値, 値, 値（不要なところは9999）無い時 = 空白
-		sqlText &= " ,tbl_txt_target0 "			'挿入文字							ターゲットオブジェクト, ポイントオブジェクト
-		sqlText &= " ,tbl_txt_target1 "			'挿入文字							ターゲットオブジェクト, ポイントオブジェクト
-		sqlText &= " ,tbl_txt_target2"			'挿入文字							ターゲットオブジェクト, ポイントオブジェクト
-		sqlText &= " ,tbl_txt_newxpos "			'行ピッチの変更					ある時 = 値・ない時 = 9999
-		sqlText &= " ,tbl_txt_newpoint "		'フォントサイズ変更	
+		sqlText &= " ,tbl_txt_inspos "			'挿入文字の有無					ある時 = 値(コンマで区切る）無い時 9999, 9999, 9999
+		sqlText &= " ,tbl_txt_targetword "		'挿入文字							文字コンボの値を格納したHashTableのキー名
+		sqlText &= " ,tbl_txt_targetpoint "		'挿入文字							フォントサイズの値を格納したHashTableのキー名
+		sqlText &= " ,tbl_txt_newxpos "			'新行ピッチ						ある時 = 値・ない時 = 9999
+		sqlText &= " ,tbl_txt_newpoint "		'新フォントサイズ	
 		sqlText &= "  FROM tbl_txt "
 		sqlText &= "  WHERE "
 		sqlText &= "  tbl_txt_grid = 0 " 		'TODO: パラメーターで選択 = Cmbで
@@ -96,59 +96,116 @@ Public Partial Class PrintReport
 		sqlText &= "  tbl_txt_order "
 	
 		mainTxt = s.GetSqlArray(sqlText)
-		
-		
-		Dim split() As String = Cstr(mainTxt(0)("tbl_txt_target0")).Split(",")
-		Dim cmb As ComboBox = CType(split(0), ComboBox)
-		Dim result As String = cmb.SelectedValue
-		
-		
+
 		Dim defset As String = ""
 		sqlText =  " SELECT "
 		sqlText &= " tbl_defset"
 		sqlText &= " FROM tbl_defset"			'初期設定							(0) 縦 = 0・横 = 1, (1) ポイント (2) x座標（幅）, (3) y座標上,　(4) y座標下, (5) 基本の改行ピッチ
 		sqlText &= " WHERE tbl_defset_id = 0"	'TODO: tbl_defset_idは上と連動させる
 		
+    'TODO: 初期設定を格納しておく(DB?)
+'    Dim basicSet(,) As String = { _
+'                                  {"1"} _
+'                                , {"2"} _
+'                                , {"3"} _
+'                                , {"4"} _
+'                                , {"5"} _
+'                                , {"6"} _
+'                                , {"7"} _
+'                                , {"8"} _
+'                                , {"9"} _
+'                                , {"10"} _
+'                                , {"11"} _
+'                                , {"12"} _
+'                                , {"13"} _
+'                                , {"14"} _
+'                                , {"15"} _
+'                                , {"16"} _
+'    }
+		
+		
 		defset = s.GetOneSql(sqlText)
 		
 		'Set PictureBox size
 		With Pic_Main
-			.Size = New Size(1800, 668)			'CHK: New sizeはわかった、Bitmapの値はなんなのか？要確認
+			.Size = New Size(1800, 668)												'CHK: New sizeはわかった、Bitmapの値はなんなのか？要確認
 			.Image = New Bitmap(1800,668)
 		End With
-
-		'文章を単語に分割する
-		Dim lineCounter As Integer = mainTxt.Count - 1								'メインセンテンスの行数
+		
+'****************************************************************************************************
+'
+'		'DB内の文章を単語に分割する
+'
+'****************************************************************************************************
+	Dim lineCounter As Integer = mainTxt.Count - 1								'メインセンテンスの行数
 		Dim wordCounter As Integer = 0 												'メインセンテンスの全ての行の文字数を格納する
 		Dim wordStorager(lineCounter) As Array
+		Dim insWord As Array
 		
-		'メインセンテンスの単語を格納（列ごとに単語に分割した配列に入っている）
 		For i As Integer = 0 To lineCounter
-			Dim subStorager(CStr(mainTxt(i)("tbl_txt_txt")).Length) As String		'分割した単語（行単位）を一時保存する配列
-			Dim insChecker() As String = CStr(mainTxt(i)("tbl_txt_inspoint")).Split(",")
-			Dim insFlg As Boolean = False
-			'TODO: 挿入文字があるか判定する		挿入場所,　文字数、フォントサイズ, 文字（任意の数）を獲得する
-			'ターゲットを入れる
-			If insChecker(0) <> "9999" Then
-				
-				
+			Dim insPos() As String													'挿入文字位置パラメータを格納する配列 
+			Dim insFlg As Boolean = False											'挿入文字フラグ
+			
+			If mainTxt(i)("tbl_txt_inspos") <> "" Then								'END: 挿入文字があるか確認する	
+				insPos = CStr(mainTxt(i)("tbl_txt_inspos")).Split(",")				'文字数 = Key0、フォントサイズ = Key1, 挿入位置 = Key2文字（任意の数）を獲得する
+				insWord = CheckInsWord(mainTxt(i)("tbl_txt_inspos"), _
+										mainTxt(i)("tbl_txt_targetword"), _
+										mainTxt(i)("tbl_txt_targetpoint") _
+										)
+				insFlg = True
 			End If
+			
+			Dim loopCounter As Integer = CInt(CStr(mainTxt(i)("tbl_txt_txt")).Length)
 
-			For j As Integer = 0 To CStr(mainTxt(i)("tbl_txt_txt")).Length Step 1
-				Dim wordInLine As String = ""
-				wordInLine = CStr(mainTxt(i)("tbl_txt_txt"))
-	
+			If insFlg = True Then													'挿入フラグが立っている時、挿入文字分をループカウンターに加算
+				For j As Integer = 0 To 2 Step 1
+					If Val(insPos(j)) <> CDbl(9999) Then
+						loopCounter = loopCounter + insWord(j)(0)
+					End If
+				Next j
+			End If
+			
+			Dim subStorager(loopCounter) As String									'分割した単語（行単位）を一時保存する配列
+			Dim wordInLine As String = CStr(mainTxt(i)("tbl_txt_txt")) 'メインセンテンス
+			Dim k As Integer = 0													'挿入文字用カウンター（挿入がある時）
+			Dim m As Integer = 0													'通常文字用カウンター（挿入がある時）
+			
+			For j As Integer = 0 To loopCounter - 1 Step 1
 				If j = 0 Then
-					subStorager(0) = wordInLine.Length.ToString()					'ある任意の行の文字数（配列数）を格納
+					subStorager(0) = loopCounter.ToString()							'ある任意の行の文字数（配列数）を格納
 					Continue For
 				End If
-				subStorager(j) = wordInLine.Substring(j-1, 1)
-				wordCounter = wordCounter + 1	
+				
+				If insFlg = True  Then												'挿入がある時は挿入文字を差し込んでいく
+					If Val(insPos(k)(0)) + 1 =  j Then
+						For l As Integer = 3 To Val(insWord(k)(0)) + 2
+							subStorager(j) = insWord(k)(l)
+							wordCounter = wordCounter + 1							'CHK: 不要かも
+							j = j + 1
+						Next l
+						j = j -1 													'カウンターを１つ戻す（Nextで一つ増える為）
+						k = k + 1
+						Continue For
+					Else	
+						subStorager(j) = wordInLine.Substring(m, 1)	
+						wordCounter = wordCounter + 1
+						m = m + 1
+					End If
+				Else
+					subStorager(j) = wordInLine.Substring(j-1, 1)
+					wordCounter = wordCounter + 1
+				End If
 			Next j
+			
 			wordStorager(i) = subStorager											'文字配列を配列に格納
 			
 		Next i
-	
+		
+'****************************************************************************************************
+'
+'		'文字を描画していく
+'
+'****************************************************************************************************
 		'初期設定の取り込み
 		Dim defSetAr() As String = defSet.Split(",")
 		'文字ピッチの取得(y軸文字位置用定数）
@@ -158,119 +215,141 @@ Public Partial Class PrintReport
 			Dim xPitch As Single = CSng(defSetAr(2))	
 			Dim yPitch As Single = CSng(defSetAr(3))
 			For i As Integer = 0  To lineCounter Step 1
-				Dim txtInsAr() As String = CStr(mainTxt(i)("tbl_txt_ins")).Split(",")
-'				'挿入文字があるか
-'				If txtInsAr(0) = "9999" Then										'挿入文字無し
-					'文章スタイルはどれか
-					Select Case CInt(mainTxt(i)("tbl_txt_ystyle"))
-						Case 0	'上
-							'END: 上の場合の文字ピッチを計算
-							Dim properPit As Single = PitchCal(CSng(defSetAr(3)), CSng(defSetAr(4)), wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), 0)
-							If properPit = 0 Then									'1) 文字ピッチ用スペースがある時
-								For j As Integer = 0 To CInt(wordStorager(i).GetValue(0)) Step 1
-									If j = 0 Then
-										Continue For
-									End If
-									Dim g As System.Drawing.Graphics
-									g = System.Drawing.Graphics.FromImage(Pic_Main.Image)
-									g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias	'TODO: フォント選択実装（全てのフォントがあたるところ）
-									g.DrawString(wordStorager(i)(j), New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
+				Dim txtInsAr() As String = CStr(mainTxt(i)("tbl_txt_inspos")).Split(",")
+				'文章スタイルはどれか
+				Select Case CInt(mainTxt(i)("tbl_txt_ystyle"))
+					Case 0	'上
+						'END: 上の場合の文字ピッチを計算
+						Dim properPit As Single = PitchCal(CSng(defSetAr(3)), _
+															CSng(defSetAr(4)), _
+															wordStorager(i), _
+															"ＭＳ Ｐ明朝", _
+															CInt(defSetAr(1)), _
+															0 _
+															)
+						If properPit = 0 Then										'1) 文字ピッチ用スペースがある時
+							For j As Integer = 0 To CInt(wordStorager(i).GetValue(0)) Step 1
+								If j = 0 Then
+									Continue For
+								End If
+								
+								Dim g As System.Drawing.Graphics
+								g = System.Drawing.Graphics.FromImage(Pic_Main.Image)
+								g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias	'TODO: フォント選択実装（全てのフォントがあたるところ）
+								g.DrawString(wordStorager(i)(j), _
+											New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), _
+											Brushes.Black, _
+											xPitch, _
+											yPitch, _
+											New StringFormat(StringFormatFlags.DirectionVertical) _
+											)
 									
-									g.Dispose()
-									g = Nothing
+								g.Dispose()
+								g = Nothing
 									
-									yPitch = yPitch + basicPitch					'yピッチ増加 CHK: 位置取得方法見直しの可能性大
-								Next j
+								yPitch = yPitch + basicPitch						'yピッチ増加 CHK: 位置取得方法見直しの可能性大
+							Next j
 								yPitch = CSng(defSetAr(3))							'yピッチ初期化
 																					'x軸のイレギュラー改行を確認する
-								Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
-								If newXPos <> 0 Then 
-									xPitch = newXPos
-								Else
-									xPitch = xPitch - CSng(defSetAr(5))				'通常改行（左へ）
-								End If 
-							Else													'2) 文字ピッチ用スペースがない時
-								Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
-								
-								yPitch = CSng(defSetAr(3))							'yピッチ初期化
-								
-								Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
-								If newXPos <> 0 Then 
-									xPitch = newXPos								'イレギュラー改行
-								Else
-									xPitch = xPitch - CSng(defSetAr(5))				'通常改行（左へ）
-								End if
-							End if
-						Case 1	'下
-							'END: 下の場合の文字ピッチを計算
-							Dim properPit As Single = PitchCal(CSng(defSetAr(3)), CSng(defSetAr(4)), wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), 0) 'TODO: フォント
+							Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
+							If newXPos <> 0 Then 
+								xPitch = newXPos
+							Else
+								xPitch = xPitch - CSng(defSetAr(5))					'通常改行（左へ）
+							End If 
 							
-							If properPit = 0 Then									'1) 文字ピッチ用スペースがある時
-								Dim fontPx() As Single = FontSizeCal(wordStorager(i)(1), "ＭＳ Ｐ明朝", defSetAr(1))
-								Dim bottomPos As Single  = CSng(defSetAr(4)) - fontPx(0)	'一番したの文字位置を取得
+						Else														'2) 文字ピッチ用スペースがない時
+							Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
 								
-								For j As Integer = 0 To CInt(wordStorager(i).GetValue(0)) Step 1
-									If j = 0 Then
-										Continue For
-									End If
-
- 									Dim g As System.Drawing.Graphics
-									g = System.Drawing.Graphics.FromImage(Pic_Main.Image)
-									g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias	'TODO: フォント選択実装（全てのフォントがあたるところ）
-									g.DrawString(wordStorager(i)(j), New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
-									
-									g.Dispose()
-									g = Nothing
-									
-									yPitch = yPitch - basicPitch					'yピッチ増加　CHK: 位置取得方法見直しの可能性大
-									
-									Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
-									If newXPos <> 0 Then 
-										xPitch = newXPos							'イレギュラー改行
-									Else
-										xPitch = xPitch - CSng(defSetAr(5))			'通常改行（左へ）
-									End If
-								Next j
-							Else													'2) 文字ピッチ用スペースがある時
-								Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
-							
-								yPitch = CSng(defSetAr(3))							'yピッチ初期化
-								
-								Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
-								If newXPos <> 0 Then 
-									xPitch = newXPos								'イレギュラー改行
-								Else
-									xPitch = xPitch - CSng(defSetAr(5))				'通常改行（左へ）
-								End If 
-							End If
-						Case 2	'天地
-							'END: 天地の場合の文字ピッチを計算
-							Dim properPit As Single = PitchCal(CSng(defSetAr(3)), CSng(defSetAr(4)), wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), 2) 'TODO フォント
-
-'							For j As Integer = 0 To CInt(wordStorager(i).GetValue(0)) Step 1
-'								If j = 0 Then
-'									Continue For
-'								End If
-'								Dim fontPx() As Single = FontSizeCal(wordStorager(i)(j), "ＭＳ Ｐ明朝", CInt(defSetAr(1))) 'TODO:
-'								g(j) = System.Drawing.Graphics.FromImage(Pic_Main.Image)
-'								g(j).SmoothingMode = Drawing2D.SmoothingMode.AntiAlias 'TODO:
-'								g(j).DrawString(wordStorager(i)(j), New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
-'								yPitch = yPitch + (fontPx(0) + properPit)			'yピッチ増加
-'							Next j
-
-							Call createWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
 							yPitch = CSng(defSetAr(3))								'yピッチ初期化
 							
 							Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
+							If newXPos <> 0 Then 
+								xPitch = newXPos									'イレギュラー改行
+							Else
+								xPitch = xPitch - CSng(defSetAr(5))					'通常改行（左へ）
+							End if
+						End if
+						
+					Case 1	'下
+						'END: 下の場合の文字ピッチを計算
+						Dim properPit As Single = PitchCal(CSng(defSetAr(3)), CSng(defSetAr(4)), wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), 0) 'TODO: フォント
+						
+						If properPit = 0 Then										'1) 文字ピッチ用スペースがある時
+							Dim fontPx() As Single = FontSizeCal(wordStorager(i)(1), "ＭＳ Ｐ明朝", defSetAr(1))
+							Dim bottomPos As Single  = CSng(defSetAr(4)) - fontPx(0)	'一番したの文字位置を取得
+							
+							For j As Integer = 0 To CInt(wordStorager(i).GetValue(0)) Step 1
+								If j = 0 Then
+									Continue For
+								End If
+
+ 								Dim g As System.Drawing.Graphics
+								g = System.Drawing.Graphics.FromImage(Pic_Main.Image)
+								g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias	'TODO: フォント選択実装（全てのフォントがあたるところ）
+								g.DrawString(wordStorager(i)(j), _
+											New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), _
+											Brushes.Black, _
+											xPitch, _
+											yPitch, _
+											New StringFormat(StringFormatFlags.DirectionVertical) _
+											)	
+								
+								g.Dispose()
+								g = Nothing
+									
+								yPitch = yPitch - basicPitch						'yピッチ増加　CHK: 位置取得方法見直しの可能性大
+									
+								Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
 								If newXPos <> 0 Then 
 									xPitch = newXPos								'イレギュラー改行
 								Else
 									xPitch = xPitch - CSng(defSetAr(5))				'通常改行（左へ）
-								End If 
-						End Select
-'				Else
-'				End If
+								End If
+							Next j
+						Else														'2) 文字ピッチ用スペースがある時
+							Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
+							
+							yPitch = CSng(defSetAr(3))								'yピッチ初期化
+								
+							Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
+							If newXPos <> 0 Then 
+								xPitch = newXPos									'イレギュラー改行
+							Else
+								xPitch = xPitch - CSng(defSetAr(5))					'通常改行（左へ）
+							End If 
+						End If
+						
+					Case 2	'天地
+						'END: 天地の場合の文字ピッチを計算
+						Dim properPit As Single = PitchCal(CSng(defSetAr(3)), _
+															CSng(defSetAr(4)), _
+															wordStorager(i), _
+															"ＭＳ Ｐ明朝", _
+															CInt(defSetAr(1)), 2 _
+															) '						'TODO フォント
+'						Functionに置き換え
+'						For j As Integer = 0 To CInt(wordStorager(i).GetValue(0)) Step 1
+'							If j = 0 Then
+'								Continue For
+'							End If
+'							Dim fontPx() As Single = FontSizeCal(wordStorager(i)(j), "ＭＳ Ｐ明朝", CInt(defSetAr(1))) 'TODO:
+'							g(j) = System.Drawing.Graphics.FromImage(Pic_Main.Image)
+'							g(j).SmoothingMode = Drawing2D.SmoothingMode.AntiAlias 'TODO:
+'							g(j).DrawString(wordStorager(i)(j), New Font("ＭＳ Ｐ明朝", CInt(defSetAr(1)), FontStyle.Regular), Brushes.Black, xPitch, yPitch, New StringFormat(StringFormatFlags.DirectionVertical))
+'							yPitch = yPitch + (fontPx(0) + properPit)			'yピッチ増加
+'						Next j
 
+						Call createWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
+						yPitch = CSng(defSetAr(3))									'yピッチ初期化
+							
+						Dim newXPos As Single = checkNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
+							If newXPos <> 0 Then 
+								xPitch = newXPos									'イレギュラー改行
+							Else
+								xPitch = xPitch - CSng(defSetAr(5))					'通常改行（左へ）
+							End If 
+						End Select
 			Next i
 			
 		Else
@@ -278,14 +357,67 @@ Public Partial Class PrintReport
 		End If
 
 		
-	End Sub
+    End Sub
+'****************************************************************************************************
+'
+'		'関数群
+'
+'****************************************************************************************************
+
 ''''■CheckInsWord
 ''' <summary>挿入文字を取り出し</summary>
-''' <param name=""></param>
-''' <returns></returns>
-	Public Function CheckInsWord() As String
-		
-	End Function
+''' <param name="insPos">挿入があるかどうか</param>
+''' <param name="targetWord">挿入文字の値の入ったのHashTableのキー名</param>
+''' <param name="targetPoint">ポイントの値の入ったのHashTableのキー名</param>
+''' <returns>文字数 = 0, フォントサイズ = 1, 挿入位置 = 2 を獲得する</returns>
+    Public Function CheckInsWord(insPos As String, targetWord As String, targetPoint As String) As Array
+    	'END: 文字数, フォント, フォントサイズを獲得する
+    	'END: 挿入位置も格納しておく
+        Dim returnAr(2) As Array
+
+        Dim splitInsPos() As String
+        Dim splitTargetWord() As String
+        Dim splitTargetPoint() As String
+        Dim newInsPos As Integer 
+        splitInsPos = insPos.Split(",")												'挿入位置。2番目は1番の後から2番目までの間の不変文字の数（以降同じ）
+        splitTargetWord = targetWord.Split(",")										'分割された挿入文字
+        splitTargetPoint = targetPoint.Split(",")									'それぞれのフォントサイズ
+        
+        For i As Integer = 0 To 2 Step 1											'現状1行に3挿入までにする
+        	If splitInsPos(i) <> "9999" Then
+        		Dim word As String = optWord(splitTargetWord(i))
+        		Dim wordPoint As String = optWord(splitTargetPoint(i))
+        		Dim wordLength As Integer = CInt(word.Length)  						'文字数をフォントサイズを格納す分が２つ
+        		Dim resultAr(wordLength + 2) As String
+        		Dim k As Integer = 0
+        		
+        		For j As Integer = 0 To wordLength + 2 Step 1
+        			If j = 0 Then
+        				resultAr(j) = wordLength									'文字数を一番目のキーに格納
+        			ElseIf j = 1 Then
+        				resultAr(j) = wordPoint										'フォントサイズを二番目のキーに格納
+        			ElseIf j = 2 Then
+        				If i = 0 Then
+        					resultAr(j) = splitInsPos(i)							'挿入位置を三番目のキーに格納
+        					newInsPos = CInt(splitInsPos(i)) + wordLength
+        				Else
+        					resultAr(j) =  newInsPos + CInt(splitInsPos(i)) 		'2番目以降の相対位置を絶対位置に確定する
+        					newInsPos = CInt(resultAr(j)) + wordLength
+        				End If
+        			Else
+        				resultAr(j) = word.Substring(k, 1)
+        				k = k + 1
+        			End If
+        		Next j
+        		
+        		returnAr(i) = resultAr
+        		
+        	End If
+        Next i
+        
+        Return returnAr
+
+    End Function
 	'END:　改行ピッチ関数 
 ''''■CheckNewYPos
 ''' <summary>改行ピッチの変更があるかどうか確認</summary>
@@ -400,7 +532,7 @@ Public Function PointPitCal(point As Integer) As Integer
 	
 End Function
 	
-''''■PitchCalEven
+''''■PitchCal
 ''' <summary>天地の時のピッチを計算</summary>
 ''' <param name="topYPos">開始位置</param>
 ''' <param name="bottomYPos">修了位置</param>
@@ -465,63 +597,108 @@ End Function
 ''' <summary>Format form</summary>
 ''' <param name="reportType">Kind of paper sytle</param>
 ''' <returns>Void</returns>	
-Public Sub ClearForm(reportType As Integer)
-	Dim currentDt As String()
-	currentDt = Today.ToString("yyyy/M/d").Split("/")
-		Select Case reportType
-			Case 0		'奉書挨拶状
-				With Me
-					'Common part
-					.Cmb_Size.SelectedValue = 0								'TODO: Indexで統一？
-					.Cmb_Font.SelectedIndex = 70
-					.Cmb_Magnify.SelectedValue = 100
-					.Cmb_Thickness.SelectedValue = 40
-					.Txt_Copy.Text = "1"
-					'Specific part
-					.Cmb_Style.SelectedValue = 0
-					.Cmb_SeasonWord.SelectedValue = " 厳寒の候"				'TODO: Get along with season
-					.Cmb_Time1.SelectedValue = "先般"
-					.Cmb_Title.SelectedValue = "亡父"
-					.Txt_Name.Text = "儀"
-					.Cmb_DeathWay.SelectedValue = "死去"
-					.Cmb_Time2.SelectedValue = "本日"
-					.Cmb_Time2.Enabled = False
-					.Txt_DeadName.Text = ""
-					.Txt_DeadName.Enabled = False
-					.Cmb_Donation.SelectedValue = 0
-					.Cmb_Imibi.SelectedValue = "忌明の法要"
-					.Cmb_EndWord.SelectedValue = "敬具"
-					.Cmb_Year.SelectedValue = currentDt(0)
-					.Cmb_Month.SelectedValue = currentDt(1)
-					.Cmb_Day.SelectedValue = currentDt(2)
-					.Cmb_HostType.SelectedValue = "施主"
-					.Cmb_HostType.Enabled = False
-					.Txt_PS1.Text = "追伸"									'TODO: From SQL
-					.Txt_PS2.Text = "ｘｘｘｘｘｘｘｘｘｘｘのお印までに粗品を" 	'TODO: From SQL
-					.Txt_PS3.Text = "お届けさせて頂きました" 					'TODO: From SQL
-					.Txt_PS4.Text = "御受納下さいます様お願い申し上げます" 		'TODO: From SQL
-					'Font
-					.Cmb_PointTitle.SelectedIndex = 34
-					.Cmb_PointName.SelectedIndex	 = 34
-					.Cmb_PointDeadName.SelectedIndex = 0
-					.Cmb_PointDeadName.Enabled = False
-					.Cmb_PointImibi.SelectedIndex = 34
-					.Cmb_PointEndWord.SelectedIndex= 34
-					.Cmb_PointCeremonyDate.SelectedIndex = 22
-					.Cmb_PointAdd1.SelectedIndex = 19
-					.Cmb_PointHostType.SelectedValue = 0
-					.Cmb_PointHostType.Enabled = False
-					.Cmb_PointHostName1.SelectedIndex = 34
-					.Cmb_PointHostName2.SelectedIndex = 34
-					.Cmb_PointHostName3.SelectedIndex = 34
-					.Cmb_PointHostName4.SelectedIndex = 34
-					.Cmb_PointPS1.SelectedIndex = 17
-				End With
-		    Case 1
-				
-		End Select
-		
-	End Sub
+    Public Sub ClearForm(reportType As Integer)
+
+        Dim currentDt As String()
+        currentDt = Today.ToString("yyyy/M/d").Split("/")
+        Select Case reportType
+        	Case 0      '奉書挨拶状
+                With Me
+                    'CHK: 配列に基本設定を入れておく -> それをセレクトで選択して読む
+                    'Common part
+                    .Cmb_Size.SelectedValue = 0         'TODO: Indexで統一？
+                    .Cmb_Font.SelectedIndex = 70        'CHK: 拡大率の問題
+
+                    '下記３つ現画面で廃止予定
+                    .Cmb_Magnify.SelectedValue = 100
+                    .Cmb_Thickness.SelectedValue = 40
+                    .Txt_Copy.Text = "1"
+                    
+                    '初期設定の値は下の通り
+                    'Specific part
+                    .Cmb_Style.SelectedValue = 0                            'TODO: basicSetから読む
+                    '.Cmb_SeasonWord.SelectedValue = "厳寒の候"             	'TODO: 月によって読む値を考える
+                    .Cmb_SeasonWord.SelectedIndex = 1
+                    .Cmb_Time1.SelectedValue = "先般"
+                    .Cmb_Title.SelectedValue = "亡父"
+                    .Txt_Name.Text = "儀"
+                    .Cmb_DeathWay.SelectedValue = "死去"
+                    .Cmb_Time2.SelectedValue = "本日"
+                    .Cmb_Time2.Enabled = False
+                    .Txt_DeadName.Text = ""
+                    .Txt_DeadName.Enabled = False
+                    .Cmb_Donation.SelectedValue = 0
+                    .Cmb_Imibi.SelectedValue = "忌明の法要"
+                    .Cmb_EndWord.SelectedValue = "敬具"
+                    .Cmb_Year.SelectedValue = currentDt(0)
+                    .Cmb_Month.SelectedValue = currentDt(1)
+                    .Cmb_Day.SelectedValue = currentDt(2)
+                    .Cmb_HostType.SelectedValue = "施主"
+                    .Cmb_HostType.Enabled = False
+                    .Txt_PS1.Text = "追伸"                                      'TODO: From SQL
+                    .Txt_PS2.Text = "ｘｘｘｘｘｘｘｘｘｘｘのお印までに粗品を"  'TODO: From SQL
+                    .Txt_PS3.Text = "お届けさせて頂きました"                    'TODO: From SQL
+                    .Txt_PS4.Text = "御受納下さいます様お願い申し上げます"      'TODO: From SQL
+
+                    'Font Size
+                    .Cmb_PointTitle.SelectedIndex = 10						'★
+                    .Cmb_PointName.SelectedIndex = 34
+                    .Cmb_PointDeadName.SelectedIndex = 0
+                    .Cmb_PointDeadName.Enabled = False
+                    .Cmb_PointImibi.SelectedIndex = 34
+                    .Cmb_PointEndWord.SelectedIndex = 34
+                    .Cmb_PointCeremonyDate.SelectedIndex = 22
+                    .Cmb_PointAdd1.SelectedIndex = 19
+                    .Cmb_PointHostType.SelectedValue = 0
+                    .Cmb_PointHostType.Enabled = False
+                    .Cmb_PointHostName1.SelectedIndex = 34
+                    .Cmb_PointHostName2.SelectedIndex = 34
+                    .Cmb_PointHostName3.SelectedIndex = 34
+                    .Cmb_PointHostName4.SelectedIndex = 34
+                    .Cmb_PointPS1.SelectedIndex = 17
+
+                    '挿入等に使う
+                    'Specific Part（HashTableに格納）
+                    optWord("Cmb_Style") = .Cmb_Style.SelectedValue
+                    optWord("Cmb_SeasonWord")= .Cmb_SeasonWord.SelectedValue
+                    optWord("Cmb_Time1") = .Cmb_Time1.SelectedValue
+                    optWord("Cmb_Title") = .Cmb_Title.SelectedValue
+                    optWord("Txt_Name") = .Txt_Name.Text
+                    optWord("Cmb_DeathWay") = .Cmb_DeathWay.SelectedValue
+                    optWord("Cmb_Time2") = .Cmb_Time2.SelectedValue
+                    optWord("Cmb_Donation") = .Cmb_Donation.SelectedValue
+                    optWord("Cmb_Imibi") = .Cmb_Imibi.SelectedValue
+                    optWord("Cmb_EndWord") = .Cmb_EndWord.SelectedValue
+                    optWord("Cmb_Year") = .Cmb_Year.SelectedValue
+                    optWord("Cmb_Month") = .Cmb_Month.SelectedValue
+                    optWord("Cmb_Day") = .Cmb_Day.SelectedValue
+                    optWord("Cmb_HostType") = .Cmb_HostType.SelectedValue
+                    optWord("Txt_PS1") = .Txt_PS1.Text
+                    optWord("Txt_PS1") = .Txt_PS2.Text
+                    optWord("Txt_PS1") = .Txt_PS3.Text
+                    optWord("Txt_PS1") = .Txt_PS4.Text
+
+                    'Font Size（HashTableに格納）
+                    optWord("Cmb_PointTitle") = .Cmb_PointTitle.SelectedItem  '★
+                    optWord("Cmb_PointName") = .Cmb_PointName.SelectedValue
+                    optWord("Cmb_PointDeadName") = .Cmb_PointDeadName.SelectedValue
+                    optWord("Cmb_PointImibi") = .Cmb_PointImibi.SelectedValue
+                    optWord("Cmb_PointEndWord") = .Cmb_PointEndWord.SelectedValue
+                    optWord("Cmb_PointDeremonyDate") = .Cmb_PointCeremonyDate.SelectedIndex
+                    optWord("Cmb_PointAdd1") = .Cmb_PointAdd1
+                    optWord("Cmb_PointHostType") = .Cmb_PointHostType
+                    optWord("Cmb_PointHostName1") = .Cmb_PointHostName1.SelectedValue
+                    optWord("Cmb_PointHostName2") = .Cmb_PointHostName2.SelectedValue
+                    optWord("Cmb_PointHostName3") = .Cmb_PointHostName2.SelectedValue
+                    optWord("Cmb_PointHostName4") = .Cmb_PointHostName4.SelectedValue
+                    optWord("Cmb_PointPS1") = .Cmb_PointPS1.SelectedValue
+                End With
+
+            Case 1
+
+        End Select
+        
+    End Sub
 #End Region	
 
 	Private Sub Btn_Dtp_Click(sender As Object, e As EventArgs)
@@ -541,4 +718,17 @@ Public Sub ClearForm(reportType As Integer)
 		End If
 	End Sub	
 	
+	
+#Region "Comment Original"
+'''■
+''' <summary></summary>
+''' <param name=""></param>
+''' <param name=""></param>
+''' <param name=""></param>
+''' <param name=""></param>
+''' <param name=""></param>
+''' <param name=""></param>
+''' <param name=""></param>
+''' <returns></returns>
+#End Region
 End Class

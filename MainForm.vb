@@ -33,6 +33,8 @@ Public Partial Class MainForm
 	Public Sub Btn_Print_Click(sender As Object, e As EventArgs)
 		Dim f As New PrintReport
 		f.Showdialog()
+		f.Dispose()
+		f = Nothing
 	End Sub
 	
 End Class

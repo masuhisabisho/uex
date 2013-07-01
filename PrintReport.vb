@@ -223,7 +223,7 @@ Public Partial Class PrintReport
 			For i As Integer = 0  To lineCounter Step 1
 				Select Case CInt(mainTxt(i)("tbl_txt_ystyle"))
 					Case 0	'上
-						'END: 挿入文字のフォントサイズを考慮する
+						'END: 挿入文字のフォントサイズを確認する（異なったサイズ無いか？）
 						If PointDiffChecker(wordStorager(i)(1)) = True Then			'全て同じの時
 							'END: 上の場合の文字ピッチを計算
 							Dim properPit As Single = PitchCal(CSng(defSetAr(3)), _
@@ -233,7 +233,7 @@ Public Partial Class PrintReport
 															CInt(defSetAr(1)), _
 															0 _
 															)
-'コメントアウト/移動 No. 0
+'コメントアウト/移動 No. 0		'TODO: イレギュラーサイズ時の描画方法を考える
 							Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
 						
 							yPitch = CSng(defSetAr(3))									'yピッチ初期化
@@ -242,7 +242,7 @@ Public Partial Class PrintReport
 							
 							If newXPos <> 0 Then
 								xPitch = newXPos										'イレギュラー改行
-							Else
+							Else														'TODO: 文字サイズ＋ピッチへ
 								xPitch = xPitch - CSng(defSetAr(5))						'通常改行（左へ）
 							End If
 						Else
@@ -341,21 +341,21 @@ Public Partial Class PrintReport
 ''' <summary>コンマ区切りフォントサイズをバラして異なったフォントサイズがあるか確かめる</summary>
 ''' <param name="pointStrager">コンマ区切りフォントサイズ文字列</param>
 ''' <returns>True = 全て同じ False = 異なるものあり</returns>
-Public Function PointDiffChecker(pointStrager As String) As Boolean
-	Dim splitPoint() As String = pointStrager.Split(",")
-	Dim tempSplitPoint As String = splitPoint(0)
+	Public Function PointDiffChecker(pointStrager As String) As Boolean
+		Dim splitPoint() As String = pointStrager.Split(",")
+		Dim tempSplitPoint As String = splitPoint(0)
 	
-	For i As Integer = 1 To splitPoint.Length - 1 Step 1
-		If tempSplitPoint <> splitPoint(i) Then
-			Return False
-		Else
-			tempSplitPoint = splitPoint(i)
-		End If
-	Next i
+		For i As Integer = 1 To splitPoint.Length - 1 Step 1
+			If tempSplitPoint <> splitPoint(i) Then
+				Return False
+			Else
+				tempSplitPoint = splitPoint(i)
+			End If
+		Next i
 	
-	Return True
+		Return True
 	
-End Function
+	End Function
 
 '''■PointCollector
 ''' <summary>フォントを変数にコンマ区切りでまとめる</summary>
@@ -508,20 +508,24 @@ End Function
 ''' 		2) xPosを計算する
 ''' </summary>
 ''' <param name="word">文字配列(0 = 文字数, 1 = それぞれのフォントサイズ）</param>
-''' <param name="font"></param>
-''' <param name="topYPos"></param>
-''' <param name="bottomYPos"></param>
-''' <param name="lastXPos"></param>
-''' <param name=""></param>
-''' <param name=""></param>
-''' <returns>適切なyPos, xPosを返す</returns>
-	Public Function SetIrregXYpos(word As Array, font As String, topYPos As Single, bottomYPos As Single, lastXPos As Single) As Single
+''' <param name="font">フォント（フォントサイズ含む）</param>
+''' <param name="topYPos">y軸最上位置</param>
+''' <param name="bottomYPos">y軸最下位置</param>
+''' <param name="curXPitch">x軸の改行ピッチ</param>
+''' <param name="lastXPos">最後のx軸位置</param>
+''' <param name="maxWidth">最大のフォント幅（参照）</param>
+''' <returns>適切なyPos = 0, xPos = 1を返す</returns>
+Public Function SetIrregXYpos(word As Array, font As String, _
+								topYPos As Single, bottomYPos As Single, _
+								curXPitch As Single, lastXPos As Single, _
+								ByRef maxWidth As Single _
+							) As Single(,)
 		
-		Dim eachPos(word(0) - 1) As Single						'y軸の文字位置データ
+		Dim eachPos(1, word(0) - 1) As Single										'y軸(0)/x軸(1)の文字位置データ
+		Dim tempMaxWidth As Single = 0
+		Dim eachXYSize(CInt(word(0)) - 1) As Array
 		
 		Dim splitPoint() As String = word(1).Split(",")
-		Dim eachXYSize(CInt(word(0)) - 1) As Array
-		Dim maxWidth As Single = 0
 		Dim freeSpace As Single = bottomYPos - topYPos
 		Dim onePitch As Single = 0
 		
@@ -529,27 +533,41 @@ End Function
 		For i As Integer = 2 To CInt(word(0)) - 1 Step 1							'それぞれの文字サイズを獲得する
 			eachXYSize(j) = FontSizeCal(word(i), font, CInt(splitPoint(i)))
 			If j = 0 Then
-				maxWidth = eachXYSize(j)(1)
+				tempMaxWidth = eachXYSize(j)(1)
 			End If
 			If j <> 0 Then
-				If maxWidth < eachXYSize(j)(1) Then
-					maxWidth = eachXYSize(j)(1)										'文字幅の最大値を獲得する
+				If tempMaxWidth < eachXYSize(j)(1) Then
+					tempMaxWidth = eachXYSize(j)(1)
 				End If
 			End If
+			
+			maxWidth = tempMaxWidth													'★END: 文字幅の最大値を渡す
 			freeSpace = freeSpace - Csng(eachXYSize(j)(0))							'ピッチに取れるスペースを獲得する
 			j = j + 1
 		Next i
-		
-		onePitch = freeSpace / (CInt(word(0) - 1))									'y軸の文字ピッチに使えるスペース
-		
+		If freeSpace > 0  Then
+			onePitch = freeSpace / CSng(CInt(word(0) - 1))							'y軸の文字ピッチに使えるスペース END: マイナス時の計算
+		Else
+			onePitch = (Math.Abs(freeSpace) / CSng(CInt(word(0) - 1))) * -1 
+		End If
 		Dim k As Integer = 0
-		For i As Integer = 0 To CInt(word(0)) -1 Step 1								'y軸上の文字位置を決めていく
+		For i As Integer = 0 To CInt(word(0)) -1 Step 1								'★END: y軸上の文字位置を決めていく
 			If i = 0  Then
-				eachPos(i) = topYPos
+				eachPos(0, i) = topYPos
 			Else
-				eachPos(i) = eachPos(i - 1) + eachXYSize(k)(0) + onePitch
+				eachPos(0, i) = eachPos(0, i - 1) + eachXYSize(k)(0) + onePitch
 			End If
 		Next i
+																					'★END: 一番大きいフォントの位置よりそれぞれのｘ軸位置を決める
+		For i As Integer = 0 To CInt(word(0)) -1 Step 1								'END: x軸は右から左へマイナス
+			If eachXYSize(i)(1) < tempMaxWidth Then
+				eachPos(1, i) = (lastXPos - curXPitch - tempMaxWidth) - ((tempMaxWidth - CSng(eachPos(1, i))) / 2)
+			Else
+				eachPos(1, i) = lastXPos - curXPitch - tempMaxWidth
+			End If
+		Next i
+		
+		Return eachPos
 		
 	End Function
 

@@ -515,7 +515,7 @@ Public Partial Class PrintReport
 ''' <param name="lastXPos">最後のx軸位置</param>
 ''' <param name="maxWidth">最大のフォント幅（参照）</param>
 ''' <returns>適切なyPos = 0, xPos = 1を返す</returns>
-Public Function SetIrregXYpos(word As Array, font As String, _
+Public Function SetIrregXYPos(word As Array, font As String, _
 								topYPos As Single, bottomYPos As Single, _
 								curXPitch As Single, lastXPos As Single, _
 								ByRef maxWidth As Single _

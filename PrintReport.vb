@@ -202,8 +202,8 @@ Public Partial Class PrintReport
 					Call PointCollector(defSetAr(1), pointStrager)
 				End If
 			Next j
-			subStorager(1) = pointStrager
-			wordStorager(i) = subStorager											'文字配列を配列に格納
+			subStorager(1) = pointStrager											'フォントサイズを格納（コンマ文字列）
+			wordStorager(i) = subStorager											'文字１つ１つを配列に格納
 			insFlg = False
 		Next i
 		
@@ -214,7 +214,7 @@ Public Partial Class PrintReport
 '
 '****************************************************************************************************
 		'文字ピッチの取得(y軸文字位置用定数）
-		Dim basicPitch As Integer = PointPitCal(defSetAr(1))						'END: おそらく見直しになる -> OKかな？ 2013/6/29 mb
+		Dim basicPitch As Integer = PointPitCal(defSetAr(1))							'CHK: おそらく見直しになる -> OKかな？ 2013/6/29 mb
 		'TODO: 縦書きの時
 		If defSetAr(0) = "0" Then
 			Dim xPitch As Single = CSng(defSetAr(2))	
@@ -223,9 +223,9 @@ Public Partial Class PrintReport
 			For i As Integer = 0  To lineCounter Step 1
 				Select Case CInt(mainTxt(i)("tbl_txt_ystyle"))
 					Case 0	'上
-						'END: 挿入文字のフォントサイズを確認する（異なったサイズ無いか？）
-						If PointDiffChecker(wordStorager(i)(1)) = True Then			'全て同じの時
-							'END: 上の場合の文字ピッチを計算
+																						'END: 挿入文字のフォントサイズを確認する（異なったサイズ無いか？）
+						If PointDiffChecker(wordStorager(i)(1)) = True Then				'全て同じの時
+																						'END: 上の場合の文字ピッチを計算
 							Dim properPit As Single = PitchCal(CSng(defSetAr(3)), _
 															CSng(defSetAr(4)), _
 															wordStorager(i), _
@@ -233,7 +233,7 @@ Public Partial Class PrintReport
 															CInt(defSetAr(1)), _
 															0 _
 															)
-'コメントアウト/移動 No. 0		'TODO: イレギュラーサイズ時の描画方法を考える
+							'コメントアウト/移動 No. 0		
 							Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
 						
 							yPitch = CSng(defSetAr(3))									'yピッチ初期化
@@ -242,14 +242,23 @@ Public Partial Class PrintReport
 							
 							If newXPos <> 0 Then
 								xPitch = newXPos										'イレギュラー改行
-							Else														'TODO: 文字サイズ＋ピッチへ
-								xPitch = xPitch - CSng(defSetAr(5))						'通常改行（左へ）
+							Else														'END: 文字サイズ＋ピッチへ 2013/7/2
+								'xPitch = xPitch - CSng(defSetAr(5))					'通常改行（左へ）
+								Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", defSetAr(1))
+								xPitch = xPitch - CSng(defsetAr(5))	- tempFontSize(1) 
 							End If
-						Else
-							
-							'TODO: フォントサイズが違う時の文字位置と、改列ピッチを求める
-							
-							
+						Else															'END: フォントサイズが違う時の文字位置と、
+																						'改列ピッチを求める 2013/7/2
+																						'TODO: イレギュラーサイズ時の描画方法を考える
+							Dim maxWidth As Single
+							Call SetIrregXYPos(wordStorager(i), _
+												"ＭＳ Ｐ明朝", _
+												defSetAr(3), _
+												defSetAr(4), _
+												4, _
+												xPitch, _
+												maxWidth _
+												)
 						End If
 						
 					Case 1	'下
@@ -317,8 +326,10 @@ Public Partial Class PrintReport
 							If newXPos <> 0 Then 
 								xPitch = newXPos									'イレギュラー改行
 							Else
-								xPitch = xPitch - CSng(defSetAr(5))					'通常改行（左へ）
-							End If 
+								'xPitch = xPitch - CSng(defSetAr(5))					'通常改行（左へ）
+								Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", defSetAr(1))
+								xPitch = xPitch - CSng(defsetAr(5)) - tempFontSize(1)
+							End If
 					End Select
 					
 			Next i
@@ -440,7 +451,7 @@ Public Partial Class PrintReport
 ''' <param name="properPit">文字ピッチ</param>
 ''' <param name="g">グラフィックオブジェクト</param>  <- 廃止
 ''' <returns>Void</returns>
-	Public Sub  CreateWord(word As Array, font As String, point As Integer, xPos As Single, yPos As Single, properPit As Single)', g() As System.Drawing.Graphics)
+	Public Sub  CreateWord(word As Array, font As String, point As Integer, xPos As Single, yPos As Single, properPit As Single)
 		For i As Integer = 0 To CInt(word.Length - 1) Step 1
 			If i = 0 Or i = 1Then						'★END No i = 0
 				Continue For
@@ -530,8 +541,8 @@ Public Function SetIrregXYPos(word As Array, font As String, _
 		Dim onePitch As Single = 0
 		
 		Dim j As Integer = 0
-		For i As Integer = 2 To CInt(word(0)) - 1 Step 1							'それぞれの文字サイズを獲得する
-			eachXYSize(j) = FontSizeCal(word(i), font, CInt(splitPoint(i)))
+		For i As Integer = 2 To CInt(word(0)) + 1 Step 1							'それぞれの文字サイズを獲得する
+			eachXYSize(j) = FontSizeCal(word(i), font, CInt(splitPoint(j)))
 			If j = 0 Then
 				tempMaxWidth = eachXYSize(j)(1)
 			End If
@@ -541,10 +552,12 @@ Public Function SetIrregXYPos(word As Array, font As String, _
 				End If
 			End If
 			
-			maxWidth = tempMaxWidth													'★END: 文字幅の最大値を渡す
 			freeSpace = freeSpace - Csng(eachXYSize(j)(0))							'ピッチに取れるスペースを獲得する
 			j = j + 1
 		Next i
+
+		maxWidth = tempMaxWidth														'★END: 文字幅の最大値を渡す
+		
 		If freeSpace > 0  Then
 			onePitch = freeSpace / CSng(CInt(word(0) - 1))							'y軸の文字ピッチに使えるスペース END: マイナス時の計算
 		Else

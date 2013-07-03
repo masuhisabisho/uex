@@ -235,7 +235,7 @@ Public Partial Class PrintReport
 															)
 							'コメントアウト/移動 No. 0		
 							Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
-						
+'						
 							yPitch = CSng(defSetAr(3))									'yピッチ初期化
 																						'TODO: y軸位置の変更を組み込む
 							Dim newXPos As Single = CheckNewXPos(CSng(mainTxt(i + 1)("tbl_txt_newxpos")))
@@ -248,17 +248,22 @@ Public Partial Class PrintReport
 								xPitch = xPitch - CSng(defsetAr(5))	- tempFontSize(1) 
 							End If
 						Else															'END: フォントサイズが違う時の文字位置と、
-																						'改列ピッチを求める 2013/7/2
+																						'	  改列ピッチを求める 2013/7/2
 																						'TODO: イレギュラーサイズ時の描画方法を考える
 							Dim maxWidth As Single
-							Call SetIrregXYPos(wordStorager(i), _
-												"ＭＳ Ｐ明朝", _
-												defSetAr(3), _
-												defSetAr(4), _
-												4, _
-												xPitch, _
-												maxWidth _
-												)
+							Dim irrXYPos As Array
+							irrXYPos =  SetIrregXYPos(wordStorager(i), _
+													"ＭＳ Ｐ明朝", _
+													defSetAr(3), _
+													defSetAr(4), _
+													4, _
+													xPitch, _
+													maxWidth _
+													)
+							Call CreateWordDiff(wordStorager(i), "ＭＳ Ｐ明朝", irrXYPos)
+							
+							xPitch = xPitch + maxWidth
+							
 						End If
 						
 					Case 1	'下
@@ -453,7 +458,7 @@ Public Partial Class PrintReport
 ''' <returns>Void</returns>
 	Public Sub  CreateWord(word As Array, font As String, point As Integer, xPos As Single, yPos As Single, properPit As Single)
 		For i As Integer = 0 To CInt(word.Length - 1) Step 1
-			If i = 0 Or i = 1Then						'★END No i = 0
+			If i = 0 Or i = 1 Then						'★END No i = 0
 				Continue For
 			End If
 			Dim fontPx() As Single = FontSizeCal(word(i), font, point)
@@ -478,6 +483,41 @@ Public Partial Class PrintReport
 
 	End Sub
 
+'''■CreateWordDiff
+''' <summary>文字を描画して行く（異なったフォントサイズ）</summary>
+''' <param name="word">文字配列</param>
+''' <param name="font">フォント</param>
+''' <param name="point">フォントサイズ（配列）</param>
+''' <param name="xypos">xy軸位置（配列）</param>
+''' <returns>Void</returns>
+Public Sub  CreateWordDiff(word As Array, font As String, xyPos As Array)
+	Dim fontSize As String = CStr(word(1))
+	Dim splitPointAr() As String = fontSize.Split(",")
+	Dim j As Integer = 0
+	
+	For i As Integer = 0 To CInt(word.Length - 1) Step 1
+		If i = 0 Or i = 1 Then	
+			Continue For
+		End If
+		
+		Dim g As System.Drawing.Graphics
+		g = System.Drawing.Graphics.FromImage(Pic_Main.Image)
+		g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+		g.DrawString(word(i), _
+			New Font(font, CSng(splitPointAr(j)), FontStyle.Regular), _
+					Brushes.Black, _ 
+					xyPos(1, i), _ 
+					xyPos(0, i), _
+					New StringFormat(StringFormatFlags.DirectionVertical) _
+					)
+			
+		g.Dispose()
+		g = Nothing
+		j = j + 1
+
+	Next i
+
+	End Sub
 ''''■FontSizeCal
 ''' <summary>文字の縦横高さを測る</summary>
 ''' <param name="word">計測したい文字</param>
@@ -509,10 +549,10 @@ Public Partial Class PrintReport
 #End Region
 
 #Region "Pitch"	
-'TODO: それぞれの文字のフォントサイズを考慮する
-'TODO: フォントサイズの変更に伴いx軸の調整をする
-'TODO: 大きさによってそれぞれの文字のX座標が変わる
-'TODO: ピッチがビチビチの時も考慮
+'END: それぞれの文字のフォントサイズを考慮する
+'END: フォントサイズの変更に伴いx軸の調整をする
+'END: 大きさによってそれぞれの文字のX座標が変わる
+'END: ピッチがビチビチの時も考慮
 '''■SetIrregXYPos
 ''' <summary>フォントサイズが違う文字が混じった列の
 ''' 		1) それぞれのyPosを計算する
@@ -525,7 +565,7 @@ Public Partial Class PrintReport
 ''' <param name="curXPitch">x軸の改行ピッチ</param>
 ''' <param name="lastXPos">最後のx軸位置</param>
 ''' <param name="maxWidth">最大のフォント幅（参照）</param>
-''' <returns>適切なyPos = 0, xPos = 1を返す</returns>
+''' <returns>配列にてyPos = 0, xPos = 1を返す</returns>
 Public Function SetIrregXYPos(word As Array, font As String, _
 								topYPos As Single, bottomYPos As Single, _
 								curXPitch As Single, lastXPos As Single, _

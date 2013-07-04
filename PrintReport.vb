@@ -38,7 +38,8 @@ Public Partial Class PrintReport
 		'http://penguinlab.jp/blog/post/117
 #End Region
 
-    Dim optWord As New Hashtable
+	Dim optWord As New Hashtable
+	Const basicPitch As Integer = 3
 
 	Public Sub Print_Load(sender As Object, e As EventArgs)
 '****************************************************************************************************
@@ -223,14 +224,14 @@ Public Partial Class PrintReport
 			For i As Integer = 0  To lineCounter Step 1
 				Select Case CInt(mainTxt(i)("tbl_txt_ystyle"))
 					Case 0	'上
-																						'END: 挿入文字のフォントサイズを確認する（異なったサイズ無いか？）
+																					 'END: 上の場合の文字ピッチを計算
 						If PointDiffChecker(wordStorager(i)(1)) = True Then				'全て同じの時
-																						'END: 上の場合の文字ピッチを計算
+							Dim splitPoint() As String = wordStorager(i)(1).Split(",") 'END: 上の場合の文字ピッチを計算
 							Dim properPit As Single = PitchCal(CSng(defSetAr(3)), _
-															CSng(defSetAr(4)), _
+															  CSng(defSetAr(4)), _
 															wordStorager(i), _
 															"ＭＳ Ｐ明朝", _
-															CInt(defSetAr(1)), _
+															splitPoint, _
 															0 _
 															)
 							'コメントアウト/移動 No. 0		
@@ -252,7 +253,8 @@ Public Partial Class PrintReport
 																						'TODO: イレギュラーサイズ時の描画方法を考える
 							Dim maxWidth As Single
 							Dim irrXYPos As Array
-							irrXYPos =  SetIrregXYPos(wordStorager(i), _
+							irrXYPos =  SetIrregXYPos(CInt(mainTxt(i)("tbl_txt_ystyle")), _
+													wordStorager(i), _
 													"ＭＳ Ｐ明朝", _
 													defSetAr(3), _
 													defSetAr(4), _
@@ -268,8 +270,14 @@ Public Partial Class PrintReport
 						
 					Case 1	'下
 						'CHK: 下の場合の文字ピッチを計算
-						Dim properPit As Single = PitchCal(CSng(defSetAr(3)), CSng(defSetAr(4)), wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), 0) 'TODO: フォント
-						
+						Dim splitPoint() As String = wordStorager(i)(1).Split(",")
+						Dim properPit As Single = PitchCal(CSng(defSetAr(3)), _
+															CSng(defSetAr(4)), _
+															wordStorager(i), _
+															"ＭＳ Ｐ明朝", _
+															splitPoint, _
+															0 _
+															)	'TODO: フォント
 						If properPit = 0 Then										'1) 文字ピッチ用スペースがある時
 							Dim fontPx() As Single = FontSizeCal(wordStorager(i)(1), "ＭＳ Ｐ明朝", defSetAr(1))
 							Dim bottomPos As Single  = CSng(defSetAr(4)) - fontPx(0)'一番したの文字位置を取得
@@ -317,12 +325,14 @@ Public Partial Class PrintReport
 						
 					Case 2	'天地
 						'END: 天地の場合の文字ピッチを計算
-						Dim properPit As Single = PitchCal(CSng(defSetAr(3)), _
-															CSng(defSetAr(4)), _
+							Dim splitPoint() As String = wordStorager(i)(1).Split(",")
+							Dim properPit As Single = PitchCal(CSng(defSetAr(3)), _
+															  CSng(defSetAr(4)), _
 															wordStorager(i), _
 															"ＭＳ Ｐ明朝", _
-															CInt(defSetAr(1)), 2 _
-															) '						'TODO フォント
+															splitPoint, _
+															0 _
+															)'						'TODO フォント
 'コメントアウト/移動 No. 1
 						Call createWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
 						yPitch = CSng(defSetAr(3))									'yピッチ初期化
@@ -490,32 +500,32 @@ Public Partial Class PrintReport
 ''' <param name="point">フォントサイズ（配列）</param>
 ''' <param name="xypos">xy軸位置（配列）</param>
 ''' <returns>Void</returns>
-Public Sub  CreateWordDiff(word As Array, font As String, xyPos As Array)
-	Dim fontSize As String = CStr(word(1))
-	Dim splitPointAr() As String = fontSize.Split(",")
-	Dim j As Integer = 0
+	Public Sub  CreateWordDiff(word As Array, font As String, xyPos As Array)
+		Dim fontSize As String = CStr(word(1))
+		Dim splitPointAr() As String = fontSize.Split(",")
+		Dim j As Integer = 0
 	
-	For i As Integer = 0 To CInt(word.Length - 1) Step 1
-		If i = 0 Or i = 1 Then	
-			Continue For
-		End If
+		For i As Integer = 0 To CInt(word.Length - 1) Step 1
+			If i = 0 Or i = 1 Then	
+				Continue For
+			End If
 		
-		Dim g As System.Drawing.Graphics
-		g = System.Drawing.Graphics.FromImage(Pic_Main.Image)
-		g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-		g.DrawString(word(i), _
-			New Font(font, CSng(splitPointAr(j)), FontStyle.Regular), _
-					Brushes.Black, _ 
-					xyPos(1, i), _ 
-					xyPos(0, i), _
-					New StringFormat(StringFormatFlags.DirectionVertical) _
-					)
+			Dim g As System.Drawing.Graphics
+			g = System.Drawing.Graphics.FromImage(Pic_Main.Image)
+			g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+			g.DrawString(word(i), _
+						New Font(font, CSng(splitPointAr(j)), FontStyle.Regular), _
+						Brushes.Black, _ 
+						xyPos(1, j), _ 
+						xyPos(0, j), _
+						New StringFormat(StringFormatFlags.DirectionVertical) _
+						)
 			
-		g.Dispose()
-		g = Nothing
-		j = j + 1
+			g.Dispose()
+			g = Nothing
+			j = j + 1
 
-	Next i
+		Next i
 
 	End Sub
 ''''■FontSizeCal
@@ -558,6 +568,7 @@ Public Sub  CreateWordDiff(word As Array, font As String, xyPos As Array)
 ''' 		1) それぞれのyPosを計算する
 ''' 		2) xPosを計算する
 ''' </summary>
+''' <param name="startPos">上・下・天地</param>
 ''' <param name="word">文字配列(0 = 文字数, 1 = それぞれのフォントサイズ）</param>
 ''' <param name="font">フォント（フォントサイズ含む）</param>
 ''' <param name="topYPos">y軸最上位置</param>
@@ -566,7 +577,7 @@ Public Sub  CreateWordDiff(word As Array, font As String, xyPos As Array)
 ''' <param name="lastXPos">最後のx軸位置</param>
 ''' <param name="maxWidth">最大のフォント幅（参照）</param>
 ''' <returns>配列にてyPos = 0, xPos = 1を返す</returns>
-Public Function SetIrregXYPos(word As Array, font As String, _
+Public Function SetIrregXYPos(startPos As Integer, word As Array, font As String, _
 								topYPos As Single, bottomYPos As Single, _
 								curXPitch As Single, lastXPos As Single, _
 								ByRef maxWidth As Single _
@@ -578,7 +589,7 @@ Public Function SetIrregXYPos(word As Array, font As String, _
 		
 		Dim splitPoint() As String = word(1).Split(",")
 		Dim freeSpace As Single = bottomYPos - topYPos
-		Dim onePitch As Single = 0
+		'Dim onePitch As Single = 0
 		
 		Dim j As Integer = 0
 		For i As Integer = 2 To CInt(word(0)) + 1 Step 1							'それぞれの文字サイズを獲得する
@@ -596,25 +607,28 @@ Public Function SetIrregXYPos(word As Array, font As String, _
 			j = j + 1
 		Next i
 
-		maxWidth = tempMaxWidth														'★END: 文字幅の最大値を渡す
+		maxWidth = tempMaxWidth														'***END: 文字幅の最大値を渡す
 		
-		If freeSpace > 0  Then
-			onePitch = freeSpace / CSng(CInt(word(0) - 1))							'y軸の文字ピッチに使えるスペース END: マイナス時の計算
-		Else
-			onePitch = (Math.Abs(freeSpace) / CSng(CInt(word(0) - 1))) * -1 
-		End If
+'		If freeSpace > 0  Then
+'			onePitch = freeSpace / CSng(CInt(word(0) - 1))							'y軸の文字ピッチに使えるスペース END: マイナス時の計算
+'		Else
+'			onePitch = (Math.Abs(freeSpace) / CSng(CInt(word(0) - 1))) * -1 
+'		End If
+
+		Dim properPit As Single = PitchCal(topYPos, bottomYPos, word, "ＭＳ Ｐ明朝", splitPoint, 1)
+		
 		Dim k As Integer = 0
-		For i As Integer = 0 To CInt(word(0)) -1 Step 1								'★END: y軸上の文字位置を決めていく
+		For i As Integer = 0 To CInt(word(0)) -1 Step 1								'***END: y軸上の文字位置を決めていく
 			If i = 0  Then
 				eachPos(0, i) = topYPos
 			Else
-				eachPos(0, i) = eachPos(0, i - 1) + eachXYSize(k)(0) + onePitch
+				eachPos(0, i) = eachPos(0, i - 1) + eachXYSize(k)(0) + properPit		'TODO: 上・下・天地のパターンで対応（フリースペースがある時ない時）
 			End If
 		Next i
-																					'★END: 一番大きいフォントの位置よりそれぞれのｘ軸位置を決める
+																					'***END: 一番大きいフォントの位置よりそれぞれのｘ軸位置を決める
 		For i As Integer = 0 To CInt(word(0)) -1 Step 1								'END: x軸は右から左へマイナス
 			If eachXYSize(i)(1) < tempMaxWidth Then
-				eachPos(1, i) = (lastXPos - curXPitch - tempMaxWidth) - ((tempMaxWidth - CSng(eachPos(1, i))) / 2)
+				eachPos(1, i) = (lastXPos - curXPitch - tempMaxWidth) + ((tempMaxWidth - CSng(eachPos(1, i))) / 2)
 			Else
 				eachPos(1, i) = lastXPos - curXPitch - tempMaxWidth
 			End If
@@ -658,21 +672,19 @@ Public Function SetIrregXYPos(word As Array, font As String, _
 ''' <param name="bottomYPos">修了位置</param>
 ''' <param name="wordAr">単語配列</param>
 ''' <param name="font">フォント</param>		<- 追加　2013/06/23
-''' <param name="point">ポイント数</param>
+''' <param name="point">ポイント数</param>	<- Arrayに変更 2013/7/4
 ''' <param name="pattern">上・下・天地揃え</param>
 ''' <returns>ピッチ数を返す（ピッチが取れない時はマイナス）</returns>
-	Public Function PitchCal(topYPos As Single, bottomYPos As Single, wordAr As Array, font as string, point As Integer, pattern As Integer) As Single
+	Public Function PitchCal(topYPos As Single, bottomYPos As Single, wordAr As Array, font as String, point As Array, pattern As Integer) As Single
 		Dim resultPitch As Single = 0
 		Dim arCounter As Single = CSng(wordAr(0))									'文字数を取得
 		Dim firstWord(1) As Single
 		Dim lastWord(1) As Single
-		Const basicPitch As Integer = 3
 	
-		'ポイント　-> ピクセル変換
-		'Dim wordPixSize As Single = CSng(point * (96 / 72)) 						2013/06/23 out mb
 		'文字の長さの取得(最初と最後は決まっている為）
-		Dim wordsLength() As Single = {0, 0}
-		Dim wordsHeight As Single = 0
+		Dim wordLength() As Single = {0, 0}
+		Dim wordHeight As Single = 0
+		Dim j As Integer = 0
 		For i As Integer = 0 To CInt(arCounter) + 1				'★END Nothing
 			Select Case i
 			    Case 0
@@ -680,13 +692,14 @@ Public Function SetIrregXYPos(word As Array, font As String, _
 			    Case 1
 			    	Continue For
 			    Case 2
-			    	firstWord = FontSizeCal(CStr(wordAr(i)), font, point)
+			    	firstWord = FontSizeCal(CStr(wordAr(i)), font, point(j))
 			    Case CInt(arCounter)
-			    	lastWord = FontSizeCal(CStr(wordAr(i)), font, point)
+			    	lastWord = FontSizeCal(CStr(wordAr(i)), font, point(j))
 			    Case Else
-			    	wordsLength = FontSizeCal(CStr(wordAr(i)), font, point)
-					wordsHeight = wordsHeight + wordsLength(0) 
+			    	wordLength = FontSizeCal(CStr(wordAr(i)), font, point(j))
+					wordHeight = wordHeight + wordLength(0) 
 			End Select
+			j = j + 1
 		Next i
 	
 		'最後の文字の位置を決める
@@ -698,8 +711,8 @@ Public Function SetIrregXYPos(word As Array, font As String, _
 		'文字収納範囲
 		Dim wordArea As Single = lastWordPos - firstWord(0)
 		'文字の長さと収納範囲を検証
-		If (wordArea - (wordsHeight)) > 0 Then										'ピッチを取れる余裕がある時
-			resultPitch = (wordArea - wordsHeight) / (arCounter - 1)
+		If (wordArea - (wordHeight)) > 0 Then										'ピッチを取れる余裕がある時
+			resultPitch = (wordArea - wordHeight) / (arCounter - 1)
 			Select Case pattern
 				Case 0
 					Return basicPitch
@@ -709,7 +722,7 @@ Public Function SetIrregXYPos(word As Array, font As String, _
 					Return resultPitch
 			End Select
 		Else																		'余裕がない時（ビチビチの時　マイナスの値でピッチ幅を減らす）
-			resultPitch = (System.Math.Abs(wordArea - wordsHeight) / (arCounter - 1)) * -1
+			resultPitch = (System.Math.Abs(wordArea - wordHeight) / (arCounter - 1)) * -1
 			Return resultPitch
 		End If
 	

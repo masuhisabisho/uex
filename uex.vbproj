@@ -60,6 +60,7 @@
       <DependentUpon>Calender.vb</DependentUpon>
     </Compile>
     <Compile Include="Common\Calender.vb" />
+    <Compile Include="Common\ClearForm.vb" />
     <Compile Include="Common\Common.vb" />
     <Compile Include="Common\SelectSql.vb" />
     <Compile Include="Common\SetCombo.vb" />

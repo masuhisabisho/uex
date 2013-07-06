@@ -1028,50 +1028,50 @@ Partial Class PrintReport
 	Private Lbl_Day As System.Windows.Forms.Label
 	Private Lbl_Month As System.Windows.Forms.Label
 	Private Btn_Dtp As System.Windows.Forms.Button
-	Private Cmb_Year As System.Windows.Forms.ComboBox
-	Private Cmb_Month As System.Windows.Forms.ComboBox
-	Private Cmb_Day As System.Windows.Forms.ComboBox
+	Friend Cmb_Year As System.Windows.Forms.ComboBox
+	Friend Cmb_Month As System.Windows.Forms.ComboBox
+	Friend Cmb_Day As System.Windows.Forms.ComboBox
 	Private Pic_Main As System.Windows.Forms.PictureBox
-	Private Cmb_PointPS1 As System.Windows.Forms.ComboBox
-	Private Cmb_PointHostName4 As System.Windows.Forms.ComboBox
-	Private Cmb_PointHostName3 As System.Windows.Forms.ComboBox
-	Private Cmb_Title As System.Windows.Forms.ComboBox
-	Private Txt_Name As System.Windows.Forms.TextBox
-	Private Cmb_Time1 As System.Windows.Forms.ComboBox
-	Private Cmb_SeasonWord As System.Windows.Forms.ComboBox
-	Private Cmb_Style As System.Windows.Forms.ComboBox
-	Private Cmb_Time2 As System.Windows.Forms.ComboBox
-	Private Txt_DeadName As System.Windows.Forms.TextBox
-	Private Cmb_Donation As System.Windows.Forms.ComboBox
-	Private Cmb_Imibi As System.Windows.Forms.ComboBox
-	Private Cmb_EndWord As System.Windows.Forms.ComboBox
-	Private Txt_Add2 As System.Windows.Forms.TextBox
-	Private Txt_Add1 As System.Windows.Forms.TextBox
-	Private Cmb_HostType As System.Windows.Forms.ComboBox
-	Private Txt_PS1 As System.Windows.Forms.TextBox
-	Private Cmb_PointTitle As System.Windows.Forms.ComboBox
-	Private Txt_HostName4 As System.Windows.Forms.TextBox
-	Private Txt_HostName3 As System.Windows.Forms.TextBox
-	Private Txt_HostName2 As System.Windows.Forms.TextBox
-	Private Txt_PS4 As System.Windows.Forms.TextBox
-	Private Txt_HostName1 As System.Windows.Forms.TextBox
-	Private Txt_PS5 As System.Windows.Forms.TextBox
-	Private Txt_PS2 As System.Windows.Forms.TextBox
-	Private Txt_PS6 As System.Windows.Forms.TextBox
-	Private Txt_PS3 As System.Windows.Forms.TextBox
-	Private Cmb_PointHostName2 As System.Windows.Forms.ComboBox
-	Private Cmb_PointHostName1 As System.Windows.Forms.ComboBox
-	Private Cmb_PointHostType As System.Windows.Forms.ComboBox
-	Private Cmb_PointAdd1 As System.Windows.Forms.ComboBox
-	Private Cmb_PointCeremonyDate As System.Windows.Forms.ComboBox
-	Private Cmb_PointEndWord As System.Windows.Forms.ComboBox
-	Private Cmb_PointImibi As System.Windows.Forms.ComboBox
-	Private Cmb_PointDeadName As System.Windows.Forms.ComboBox
-	Private Cmb_PointName As System.Windows.Forms.ComboBox
+	Friend Cmb_PointPS1 As System.Windows.Forms.ComboBox
+	Friend Cmb_PointHostName4 As System.Windows.Forms.ComboBox
+	Friend Cmb_PointHostName3 As System.Windows.Forms.ComboBox
+	Friend Cmb_Title As System.Windows.Forms.ComboBox
+	Friend Txt_Name As System.Windows.Forms.TextBox
+	Friend Cmb_Time1 As System.Windows.Forms.ComboBox
+	Friend Cmb_SeasonWord As System.Windows.Forms.ComboBox
+	Friend Cmb_Style As System.Windows.Forms.ComboBox
+	Friend Cmb_Time2 As System.Windows.Forms.ComboBox
+	Friend Txt_DeadName As System.Windows.Forms.TextBox
+	Friend Cmb_Donation As System.Windows.Forms.ComboBox
+	Friend Cmb_Imibi As System.Windows.Forms.ComboBox
+	Friend Cmb_EndWord As System.Windows.Forms.ComboBox
+	Friend Txt_Add2 As System.Windows.Forms.TextBox
+	Friend Txt_Add1 As System.Windows.Forms.TextBox
+	Friend Cmb_HostType As System.Windows.Forms.ComboBox
+	Friend Txt_PS1 As System.Windows.Forms.TextBox
+	Friend Cmb_PointTitle As System.Windows.Forms.ComboBox
+	Friend Txt_HostName4 As System.Windows.Forms.TextBox
+	Friend Txt_HostName3 As System.Windows.Forms.TextBox
+	Friend Txt_HostName2 As System.Windows.Forms.TextBox
+	Friend Txt_PS4 As System.Windows.Forms.TextBox
+	Friend Txt_HostName1 As System.Windows.Forms.TextBox
+	Friend Txt_PS5 As System.Windows.Forms.TextBox
+	Friend Txt_PS2 As System.Windows.Forms.TextBox
+	Friend Txt_PS6 As System.Windows.Forms.TextBox
+	Friend Txt_PS3 As System.Windows.Forms.TextBox
+	Friend Cmb_PointHostName2 As System.Windows.Forms.ComboBox
+	Friend Cmb_PointHostName1 As System.Windows.Forms.ComboBox
+	Friend Cmb_PointHostType As System.Windows.Forms.ComboBox
+	Friend Cmb_PointAdd1 As System.Windows.Forms.ComboBox
+	Friend Cmb_PointCeremonyDate As System.Windows.Forms.ComboBox
+	Friend Cmb_PointEndWord As System.Windows.Forms.ComboBox
+	Friend Cmb_PointImibi As System.Windows.Forms.ComboBox
+	Friend Cmb_PointDeadName As System.Windows.Forms.ComboBox
+	Friend Cmb_PointName As System.Windows.Forms.ComboBox
 	Private Lbl_Thick As System.Windows.Forms.Label
 	Private Lbl_Num As System.Windows.Forms.Label
 	Private Lbl_Rate As System.Windows.Forms.Label
-	Private Cmb_DeathWay As System.Windows.Forms.ComboBox
+	Friend Cmb_DeathWay As System.Windows.Forms.ComboBox
 	Private Lbl_Imibi As System.Windows.Forms.Label
 	Private Lbl_Donation As System.Windows.Forms.Label
 	Private Lbl_DeadName As System.Windows.Forms.Label
@@ -1097,8 +1097,8 @@ Partial Class PrintReport
 	Private Lbl_PS3 As System.Windows.Forms.Label
 	Private Lbl_PS2 As System.Windows.Forms.Label
 	Private Lbl_PS1 As System.Windows.Forms.Label
-	Private Cmb_Thickness As System.Windows.Forms.ComboBox
-	Private Txt_Copy As System.Windows.Forms.TextBox
+	Friend Cmb_Thickness As System.Windows.Forms.ComboBox
+	Friend Txt_Copy As System.Windows.Forms.TextBox
 	Private Lbl_Size As System.Windows.Forms.Label
 	Private Lbl_SizeW As System.Windows.Forms.Label
 	Private Lbl_SizeH As System.Windows.Forms.Label
@@ -1109,11 +1109,11 @@ Partial Class PrintReport
 	Private Txt_SizeW As System.Windows.Forms.TextBox
 	Private Txt_PrintDir As System.Windows.Forms.TextBox
 	Private Txt_SizeY As System.Windows.Forms.TextBox
-	Private Cmb_Magnify As System.Windows.Forms.ComboBox
-	Private Cmb_Size As System.Windows.Forms.ComboBox
-	Private Cmb_Font As System.Windows.Forms.ComboBox
-	Private Txt_PosX As System.Windows.Forms.TextBox
-	Private Txt_PosY As System.Windows.Forms.TextBox
+	Friend Cmb_Magnify As System.Windows.Forms.ComboBox
+	Friend Cmb_Size As System.Windows.Forms.ComboBox
+	Friend Cmb_Font As System.Windows.Forms.ComboBox
+	Friend Txt_PosX As System.Windows.Forms.TextBox
+	Friend Txt_PosY As System.Windows.Forms.TextBox
 	Private Grb_Contents As System.Windows.Forms.GroupBox
 	Private Grb_Common As System.Windows.Forms.GroupBox
 	Private panel1 As System.Windows.Forms.Panel

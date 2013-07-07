@@ -7,6 +7,7 @@
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
 Public Class ClearForm
+	'TODO: 全ての用紙を実装する	
 ''''■ClearForm
 ''' <summary>Format form</summary>
 ''' <param name="reportType">Kind of paper sytle</param>
@@ -19,7 +20,6 @@ Public Class ClearForm
         	Case 0      '奉書挨拶状
                 With frm
                     'CHK: 配列に基本設定を入れておく -> それをセレクトで選択して読む
-                    'Common part
                     .Cmb_Size.SelectedValue = 0         'TODO: Indexで統一？
                     .Cmb_Font.SelectedIndex = 70        'CHK: 拡大率の問題
 

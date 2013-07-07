@@ -553,6 +553,8 @@ Partial Class PrintReport
 		Me.Txt_HostName1.Name = "Txt_HostName1"
 		Me.Txt_HostName1.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_HostName1.TabIndex = 76
+		AddHandler Me.Txt_HostName1.TextChanged,  AddressOf Me.TextBoxChange_TextChanged
+		AddHandler Me.Txt_HostName2.TextChanged, AddressOf Me.TextBoxChange_TextChanged
 		'
 		'Txt_PS4
 		'

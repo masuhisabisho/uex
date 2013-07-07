@@ -149,5 +149,56 @@ returnHash = Nothing
 #End If
         
 	End Function
-        
+	
+'''■ GetSentence
+''' <summary>描画用文字データを返す</summary>
+''' <param name="grID">グループID</param>
+''' <returns>ArrayListで描画用文字データを返す</returns>
+
+	Public Function GetSentence(grID As integer) As ArrayList 
+		Dim sqlText as String = ""
+		Dim resultTxt As New ArrayList　'CHK: 開放
+		
+		sqlText &= " SELECT "														'**参考　インチ = 0.0254m
+		sqlText &= "  tbl_txt_txt "													'メインの文章 　
+		sqlText &= " ,tbl_txt_newypos "												'開始位置の変更		ある時 = 値・無い時 = 9999
+		sqlText &= " ,tbl_txt_ystyle "												'列スタイル 			上から並べる = 0・下から並べる  = 1・天地を合わせる = 2
+		sqlText &= " ,tbl_txt_inspos "												'挿入文字の有無		ある時 = 値(コンマで区切る）無い時 9999, 9999, 9999
+		sqlText &= " ,tbl_txt_targetword "											'挿入文字				文字コンボの値を格納したHashTableのキー名
+		sqlText &= " ,tbl_txt_targetpoint "											'挿入文字				フォントサイズの値を格納したHashTableのキー名
+		sqlText &= " ,tbl_txt_newxpos "												'新行ピッチ			ある時 = 値・ない時 = 9999
+		sqlText &= " ,tbl_txt_newpoint "											'新フォントサイズ	
+		sqlText &= "  FROM tbl_txt "
+		sqlText &= "  WHERE "
+		sqlText &= "  tbl_txt_grid = " & grID										'TODO: パラメーターで選択 = Cmbで
+		sqlText &= "  ORDER BY "
+		sqlText &= "  tbl_txt_order "
+	
+		resultTxt = GetSqlArray(sqlText)
+		
+		Return resultTxt
+		
+	End Function
+'''■ GetDefaultVal
+''' <summary>初期設定値を返す</summary>
+''' <param name="defSetID">tbl_defsetのID</param>
+''' <returns>String配列で初期設定値を返す</returns>
+
+	Public Function GetDefaultVal(defsetId As Integer) As String()
+		
+		Dim sqlText As String= ""
+		Dim defset As String = ""
+		Dim resultDefset() As String 
+		
+		sqlText =  " SELECT "														'初期設定
+		sqlText &= " tbl_defset"													'(0) 縦 = 0・横 = 1, (1) ポイント (2) x座標（幅), 
+		sqlText &= " FROM tbl_defset"												'(3) y座標上,　(4) y座標下, (5) 基本の改行ピッチ
+		sqlText &= " WHERE tbl_defset_id = 0"										'TODO: tbl_defset_idは上と連動させる
+		
+		defset = GetOneSql(sqlText)
+		resultDefset = defSet.Split(",")
+		
+		Return resultDefset
+		
+	End Function
 End Class

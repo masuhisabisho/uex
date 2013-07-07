@@ -7,7 +7,7 @@
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
 Public Class Common
-	Const basicPitch As Single = -3
+	Const basicPitch As Single = 1
 
 ''''■GetWareki
 ''' <summary>Get wareki in Kanji</summary>

@@ -13,7 +13,7 @@ Public Partial Class PrintReport
 		
 		'
 		' TODO : Add constructor code after InitializeComponents
-		'
+		'TODO: 列ピッチをフォントサイズを考慮して設定する
 	End Sub
 #Region "文字描画仕様"
 		'文字描画仕様
@@ -42,7 +42,7 @@ Public Partial Class PrintReport
 	Dim cmn As New Common
 
 	Public Sub Print_Load(sender As Object, e As EventArgs)
-
+Console.WriteLine("a")
 		'フォントの設定を行う
 		'TODO: 必要な分だけにする（英語不要）
 		Dim installedFont As New System.Drawing.Text.InstalledFontCollection		
@@ -101,11 +101,12 @@ Public Partial Class PrintReport
 			optWord("Txt_HostName1")= .Txt_HostName1.Text
 
 			'Font Size（HashTableに格納）
-			optWord("Common_Point") = defSetAr(5)									'共通フォントサイズ
+			optWord("Common_Point") = defSetAr(1)									'共通フォントサイズ
 			optWord("Cmb_PointTitle") = .Cmb_PointTitle.SelectedItem
 			optWord("Cmb_PointName") = .Cmb_PointName.SelectedValue
 			optWord("Cmb_PointDeadName") = .Cmb_PointDeadName.SelectedValue
-			optWord("Cmb_PointImibi") = .Cmb_PointImibi.SelectedValue
+			optWord("Cmb_PointImibi") = .Cmb_PointImibi.SelectedIndex
+			Dim str As String = optWord("Cmb_PointImibi")
 			optWord("Cmb_PointEndWord") = .Cmb_PointEndWord.SelectedValue
 			optWord("Cmb_PointDeremonyDate") = .Cmb_PointCeremonyDate.SelectedIndex
 			optWord("Cmb_PointAdd1") = .Cmb_PointAdd1
@@ -152,8 +153,8 @@ Public Partial Class PrintReport
 		Dim lineCounter As Integer = mainTxt.Count - 1
 		
 		If defSetAr(0) = "0" Then
-			Dim xPitch As Single = CSng(defSetAr(2))	
-			Dim yPitch As Single = CSng(defSetAr(3))
+			Dim startXpos As Single = CSng(defSetAr(2))	
+			Dim startYpos As Single = CSng(defSetAr(3))
 			Dim newYPitch As Single = 0
 			Dim insColCnt As Integer = 0
 			
@@ -161,33 +162,29 @@ Public Partial Class PrintReport
 				Select Case CInt(mainTxt(i)("tbl_txt_ystyle"))
 					Case 0	'上															'END: 上の場合の文字ピッチを計算
 						If Cmn.PointDiffChecker(wordStorager(i)(1)) = True Then			'全て同じフォントサイズの時
-							If i = 0 Then
-								Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", CInt((defSetAr(1))))
-								xPitch = tempFontSize(1)
+							Dim newXpitch As Single = Cmn.CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
+							If newXpitch <> 0 Then
+								startXpos = startXpos - newXpitch						'x軸イレギュラースタート
 							Else
-								Dim newXPos As Single = Cmn.CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
-								If newXPos <> 0 Then
-									xPitch = xPitch - newXPos							'イレギュラー改行
-								Else													'END: 文字サイズ＋ピッチへ 2013/7/2
-									If Cint(wordStorager(i)(0)) <> 0 Then				'END: この辺に文字無しの時のエスケープを考える（改行だけする）
-										Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
-										xPitch = xPitch - CSng(defsetAr(5))	- tempFontSize(1)
-									Else	
-										Dim tempFontSize() As Single = FontSizeCal("あ", "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
-										xPitch = xPitch - CSng(defsetAr(5))	- tempFontSize(1)
-										Continue For
-									End If
+								If CInt(wordStorager(i)(0)) <> 0 Then
+									Dim pickFontSize As Integer = Cmn.OnePointPicker(wordStorager(i)(1), 0)
+									Dim FontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", pickFontSize) '★
+									startXpos = startXpos - CSng(defsetAr(5)) - FontSize(1)	'END: 文字サイズ＋ピッチへ 2013/7/2
+								Else													'END: 文字無しの時のエスケープ（改行だけする）
+									Dim FontSize() As Single = FontSizeCal("口", "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
+									startXpos = startXpos - CSng(defsetAr(5)) - FontSize(1)
+									Continue For
 								End If
 							End If
-							
-							newYPitch = Cmn.CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
+								
+							newYPitch = Cmn.CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos"))) 
 							If newYPitch <> 0 Then
-								yPitch = newYPitch
+								startYpos = newYPitch									'y軸イレギュラースタート
 							End If
 							
 							Dim splitPoint() As String = wordStorager(i)(1).Split(",")
 							
-							Dim properPit As Single = Cmn.PitchCal(yPitch, _
+							Dim properPit As Single = Cmn.PitchCal(startYpos, _
 																CSng(defSetAr(4)), _
 																wordStorager(i), _
 																"ＭＳ Ｐ明朝", _
@@ -195,7 +192,7 @@ Public Partial Class PrintReport
 																0, _
 																Me _
 																)
-							Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
+							Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", startXpos, startYpos, properPit)
 																						'END: y軸位置の変更を組み込む
 						Else															'END: フォントサイズが違う時の文字位置と改列ピッチを求める 2013/7/2
 							Dim maxWidth As Single										'END: イレギュラーサイズ時の描画方法を考える
@@ -203,54 +200,54 @@ Public Partial Class PrintReport
 							
 							newYPitch = Cmn.CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
 							If newYPitch <> 0 Then
-								yPitch = newYPitch
+								startYpos = newYPitch
 							End If
 							
 							irrXYPos =  Cmn.SetIrregXYPos(CInt(mainTxt(i)("tbl_txt_ystyle")), _
 													wordStorager(i), _
 													"ＭＳ Ｐ明朝", _
-													yPitch, _
+													startYpos, _
 													CSng(defSetAr(4)), _
 													CSng(defSetAr(5)), _
-													xPitch, _
+													startXpos, _
 													maxWidth, _
 													Me
 													)
 							Call CreateWordDiff(wordStorager(i), "ＭＳ Ｐ明朝", irrXYPos)
-							xPitch = xPitch - maxWidth
+							startXpos = startXpos - maxWidth
 							
 						End If
 					Case 1	'下
 						If Cmn.PointDiffChecker(wordStorager(i)(1)) = True Then
-							If i = 0 Then
-								Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", defSetAr(1))
-								xPitch = tempFontSize(1)
-							Else
+'							If i = 0 Then
+'								Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", defSetAr(1))
+'								startXpos = tempFontSize(1)
+'							Else     		コメントアウト 2013/7/7
 								Dim newXPos As Single = Cmn.CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
 								If newXPos <> 0 Then
-									xPitch = xPitch - newXPos
+									startXpos = startXpos - newXPos
 								Else
-'	（仮）							If Cint(wordStorager(i)(0)) <> 0 Then				'END: この辺に文字無しの時のエスケープを考える
-'										Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
-'										xPitch = xPitch - CSng(defsetAr(5))	- tempFontSize(1)
-'									Else	
-'										Dim tempFontSize() As Single = FontSizeCal("あ", "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
-'										xPitch = xPitch - CSng(defsetAr(5))	- tempFontSize(1)
-'										Continue For
-'									End If
-									Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", defSetAr(1))
-									xPitch = xPitch - CSng(defsetAr(5))	- tempFontSize(1) 
+									If Cint(wordStorager(i)(0)) <> 0 Then				'END: この辺に文字無しの時のエスケープを考える
+										Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
+										startXpos = startXpos - CSng(defsetAr(5))	- tempFontSize(1)
+									Else	
+										Dim tempFontSize() As Single = FontSizeCal("あ", "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
+										startXpos = startXpos - CSng(defsetAr(5))	- tempFontSize(1)
+										Continue For
+									End If 'TODO: バグあり
+'									Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", defSetAr(1))
+'									startXpos = startXpos - CSng(defsetAr(5))	- tempFontSize(1) コメントアウト 2013/7/7
 								End If
-							End If
+'							End If     		コメントアウト 2013/7/7
 							
 							newYPitch = Cmn.CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
 							If newYPitch <> 0 Then
-								yPitch = newYPitch
+								startYpos = newYPitch
 							End If
 
 							Dim splitPoint() As String = wordStorager(i)(1).Split(",")
 						
-							Dim properPit As Single = Cmn.PitchCal(yPitch, _
+							Dim properPit As Single = Cmn.PitchCal(startYpos, _
 																  CSng(defSetAr(4)), _
 																wordStorager(i), _
 																"ＭＳ Ｐ明朝", _
@@ -264,10 +261,10 @@ Public Partial Class PrintReport
 									Dim tempHeight() As Single = FontSizeCal(wordStorager(i)(j), "ＭＳ Ｐ明朝", CInt(splitPoint(j - 2)))
 									totalHeight = totalHeight + properPit + tempHeight(0)	
 								Next j
-								totalHeight = Csng(defSetAr(4)) - (yPitch + totalHeight)
-								Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, totalHeight, properPit)
+								totalHeight = Csng(defSetAr(4)) - (startYpos + totalHeight)
+								Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", startXpos, totalHeight, properPit)
 							Else
-								Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
+								Call CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", startXpos, startYpos, properPit)
 							End If
 						Else
 							Dim maxWidth As Single	
@@ -276,43 +273,42 @@ Public Partial Class PrintReport
 							irrXYPos =  Cmn.SetIrregXYPos(CInt(mainTxt(i)("tbl_txt_ystyle")), _
 													wordStorager(i), _
 													"ＭＳ Ｐ明朝", _
-													yPitch, _
+													startYpos, _
 													CSng(defSetAr(4)), _
 													CSng(defSetAr(5)), _
-													xPitch, _
+													startXpos, _
 													maxWidth, _
 													Me
 													)
 							Call CreateWordDiff(wordStorager(i), "ＭＳ Ｐ明朝", irrXYPos)
 							
-							xPitch = xPitch - maxWidth
+							startXpos = startXpos - maxWidth
 						End If	
 					Case 2	'天地
 						'END: 天地の場合の文字ピッチを計算
 						Dim newXPos As Single = Cmn.CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
-
 						If newXPos <> 0 Then
-							xPitch = xPitch - newXPos									'イレギュラー改行
+							startXpos = startXpos - newXPos									'イレギュラー改行
 						else
-							Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", defSetAr(1))
-							xPitch = xPitch - CSng(defsetAr(5)) - tempFontSize(1)
-'	（仮）							If Cint(wordStorager(i)(0)) <> 0 Then				'END: この辺に文字無しの時のエスケープを考える
-'										Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
-'										xPitch = xPitch - CSng(defsetAr(5))	- tempFontSize(1)
-'									Else	
-'										Dim tempFontSize() As Single = FontSizeCal("あ", "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
-'										xPitch = xPitch - CSng(defsetAr(5))	- tempFontSize(1)
-'										Continue For
-'									End If
+'							Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", defSetAr(1))
+'							startXpos = startXpos - CSng(defsetAr(5)) - tempFontSize(1) コメントアウト 2013/7/7
+									If Cint(wordStorager(i)(0)) <> 0 Then				'END: この辺に文字無しの時のエスケープを考える
+										Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
+										startXpos = startXpos - CSng(defsetAr(5))	- tempFontSize(1)
+									Else	
+										Dim tempFontSize() As Single = FontSizeCal("あ", "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
+										startXpos = startXpos - CSng(defsetAr(5))	- tempFontSize(1)
+										Continue For
+									End If
 						End If
 						
 						newYPitch = Cmn.CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
 						If newYPitch <> 0 Then
-							yPitch = newYPitch
+							startYpos = newYPitch
 						End If
 							
 						Dim splitPoint() As String = wordStorager(i)(1).Split(",")
-						Dim properPit As Single = Cmn.PitchCal(yPitch, _
+						Dim properPit As Single = Cmn.PitchCal(startYpos, _
 															CSng(defSetAr(4)), _
 															wordStorager(i), _
 															"ＭＳ Ｐ明朝", _
@@ -320,7 +316,7 @@ Public Partial Class PrintReport
 															2, _
 															Me _
 															)'						'TODO フォント
-						Call createWord(wordStorager(i), "ＭＳ Ｐ明朝", CInt(defSetAr(1)), xPitch, yPitch, properPit)
+						Call createWord(wordStorager(i), "ＭＳ Ｐ明朝", startXpos, startYpos, properPit)
 					End Select
 			Next i
 			
@@ -339,6 +335,7 @@ Public Partial Class PrintReport
 		Dim lineCounter As Integer = mainTxt.Count - 1								'メインセンテンスの行数
 		Dim wordStorager(lineCounter) As Array
 		Dim insWord As Array
+		Dim basicPoint As String = defSetAr(1)
 		
 		For i As Integer = 0 To lineCounter Step 1
 			
@@ -397,12 +394,23 @@ Public Partial Class PrintReport
 						Continue For
 					Else
 						subStorager(j) = wordInLine.Substring(m, 1)
-						Call Cmn.PointCollector(defSetAr(1), pointStrager)
+						
+						Dim tempBasipoint As String = cmn.BasicPointChanger(mainTxt(i))
+						If  tempBasipoint <> "0" Then
+							basicPoint = tempBasipoint
+						End If
+						Call Cmn.PointCollector(basicPoint, pointStrager)
+						
 						m = m + 1
 					End If
 				Else
 					subStorager(j) = wordInLine.Substring(j-2, 1)	'★ -1
-					Call Cmn.PointCollector(defSetAr(1), pointStrager)
+					
+					Dim tempBasipoint As String = cmn.BasicPointChanger(mainTxt(i))
+					If  tempBasipoint <> "0" Then
+						basicPoint = tempBasipoint
+					End If
+					Call Cmn.PointCollector(basicPoint, pointStrager)
 				End If
 			Next j
 			subStorager(1) = pointStrager											'フォントサイズを格納（コンマ文字列）
@@ -445,25 +453,30 @@ Public Partial Class PrintReport
 ''' <summary>文字を描画して行く</summary>
 ''' <param name="word">文字配列</param>
 ''' <param name="font">フォント</param>
-''' <param name="point">フォントサイズ</param>
+''' <param name="point">String フォントサイズ</param>  <- word内に格納されているフォントサイズを利用するため廃止		point As Integer, 
 ''' <param name="xpos">x軸初期値</param>
 ''' <param name="ypos">y軸初期値</param>
 ''' <param name="properPit">文字ピッチ</param>
 ''' <param name="g">グラフィックオブジェクト</param>  <- 廃止
 ''' <returns>Void</returns>
-	Public Sub  CreateWord(word As Array, font As String, point As Integer, xPos As Single, yPos As Single, properPit As Single)
-		Dim c1 As New Common
+	Public Sub  CreateWord(word As Array, font As String, xPos As Single, yPos As Single, properPit As Single)
 		For i As Integer = 0 To CInt(word.Length - 1) Step 1
-			If i = 0 Or i = 1 Then						'★END No i = 0
+			If i = 0 Then						'★END No i = 0
 				Continue For
 			End If
-			Dim fontPx() As Single = FontSizeCal(word(i), font, point)
-			'Dim g(CInt(word.Length - 1)) As System.Drawing.Graphics
+			
+			Dim splitPoint() As String
+			If i = 1 Then								'フォントサイズの取り出し
+				splitPoint = CStr(word(i)).Split(",")
+				Continue For
+			End If
+			
+			Dim fontSize() As Single = FontSizeCal(word(i), font, CInt(splitPoint(i - 2)))
 			Dim g As System.Drawing.Graphics
 			g = System.Drawing.Graphics.FromImage(Pic_Main.Image)
 			g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 			g.DrawString(word(i), _
-						New Font(font, point, GraphicsUnit.Pixel), _ 
+						New Font(font, CInt(splitPoint(i - 2)), GraphicsUnit.Pixel), _ 
 						Brushes.Black, _ 
 						xPos, _ 
 						yPos, _
@@ -473,11 +486,10 @@ Public Partial Class PrintReport
 			g.Dispose()
 			g = Nothing
 			
-			yPos = yPos + (fontPx(0) + properPit)		'yピッチ増加
+			yPos = yPos + (fontSize(0) + properPit)		'yピッチ増加
 
 		Next i
 
-		c1 = Nothing
 	End Sub
 
 '''■CreateWordDiff

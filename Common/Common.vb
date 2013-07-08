@@ -33,7 +33,7 @@ Public Class Common
 		
 	End Function	
 	
-	''''■Magnify
+''''■Magnify
 ''' <summary>画像を拡大・縮小する。</summary>
 ''' <param name="Source">対象の画像</param>
 ''' <param name="Rate">拡大率。以下の値を指定した場合は縮小される。</param>
@@ -68,40 +68,6 @@ Public Class Common
 
 	End Function
 #Region "Word"
-
-'''■PointDiffChecker
-''' <summary>コンマ区切りフォントサイズをバラして異なったフォントサイズがあるか確かめる</summary>
-''' <param name="pointStrager">コンマ区切りフォントサイズ文字列</param>
-''' <returns>True = 全て同じ False = 異なるものあり</returns>
-	Public Function PointDiffChecker(pointStrager As String) As Boolean
-		Dim splitPoint() As String = pointStrager.Split(",")
-		Dim tempSplitPoint As String = splitPoint(0)
-	
-		For i As Integer = 0 To splitPoint.Length - 1 Step 1
-			If tempSplitPoint <> splitPoint(i) Then
-				Return False
-			Else
-				tempSplitPoint = splitPoint(i)
-			End If
-		Next i
-	
-		Return True
-	
-	End Function
-
-'''■PointCollector
-''' <summary>フォントを変数にコンマ区切りでまとめる</summary>
-''' <param name="point">格納したいフォントサイズ</param>
-''' <param name="storager">フォントを格納する変数</param>
-''' <returns>Void</returns>
-	Public Sub PointCollector(ByVal point As String, ByRef storager As String)
-		If storager = "" Then 
-			storager = point
-		Else
-			storager &= ","  & point
-		End If
-
-	End Sub
 
 '''■CheckInsWord
 ''' <summary>挿入文字を取り出し</summary>
@@ -383,4 +349,71 @@ Public Function PitchCal(topYPos As Single, bottomYPos As Single, wordAr As Arra
 	
 	End Function
 #End Region
+
+#Region "FontSize"
+'''■BasicPointChanger
+''' <summary>列単位のフォントサイズの変更を確認</summary>
+''' <param name="mainTxt">ArrayList DB内の登録データ</param>
+''' <returns>変更が無い時は0を返す、ある時は登録されたフォントサイズを返す</returns>
+	Public Function BasicPointChanger(mainTxt As Hashtable) As Integer
+		Dim resultInt As Integer
+		If mainTxt("tbl_txt_newpoint") <> "9999" Then
+			resultInt = mainTxt("tbl_txt_newpoint")
+			Return resultInt
+		End If
+		
+		Return 0
+		
+	End Function
+
+'''■PointDiffChecker
+''' <summary>コンマ区切りフォントサイズをバラして異なったフォントサイズがあるか確かめる</summary>
+''' <param name="pointStrager">コンマ区切りフォントサイズ文字列</param>
+''' <returns>True = 全て同じ False = 異なるものあり</returns>
+	Public Function PointDiffChecker(pointStrager As String) As Boolean
+		Dim splitPoint() As String = pointStrager.Split(",")
+		Dim tempSplitPoint As String = splitPoint(0)
+	
+		For i As Integer = 0 To splitPoint.Length - 1 Step 1
+			If tempSplitPoint <> splitPoint(i) Then
+				Return False
+			Else
+				tempSplitPoint = splitPoint(i)
+			End If
+		Next i
+	
+		Return True
+	
+	End Function
+
+'''■PointCollector
+''' <summary>フォントサイズを変数にコンマ区切りでまとめる</summary>
+''' <param name="point">String 格納したいフォントサイズ</param>
+''' <param name="storager">String ByRef フォントを格納する変数</param>
+''' <returns>Void</returns>
+	Public Sub PointCollector(ByVal point As String, ByRef storager As String)
+		If storager = "" Then 
+			storager = point
+		Else
+			storager &= ","  & point
+		End If
+
+	End Sub
+	
+'''■OnePointPicker
+''' <summary>フォントサイズをコンマ区切り文字列から１つ取り出す</summary>
+''' <param name="pointStrager">String コンマ区切りフォントサイズ</param>
+''' <param name="pickUpNo">Integer 取り出したいフォントサイズの位置</param>
+''' <returns>フォントサイズ</returns>
+	Public Function OnePointPicker(pointStrager As String, pickUpNo As Integer) As Integer
+		Dim resultPoint As Integer
+		Dim pointStr() As String = pointStrager.Split(",")
+		
+		resultPoint = pointStr(pickUpNo)
+		Return resultPoint
+		
+	End Function
+	
+#End Region
+
 End Class

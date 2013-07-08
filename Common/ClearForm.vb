@@ -59,7 +59,7 @@ Public Class ClearForm
                     .Cmb_PointName.SelectedIndex = 34
                     .Cmb_PointDeadName.SelectedIndex = 0
                     .Cmb_PointDeadName.Enabled = False
-                    .Cmb_PointImibi.SelectedIndex = 34
+                    .Cmb_PointImibi.SelectedIndex = 35
                     .Cmb_PointEndWord.SelectedIndex = 34
                     .Cmb_PointCeremonyDate.SelectedIndex = 22
                     .Cmb_PointAdd1.SelectedIndex = 19

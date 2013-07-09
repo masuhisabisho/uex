@@ -7,9 +7,8 @@
 ' 
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
-
-
 Public Class SelectSql
+#Region "SQL本体"	
 ''''■GetSqlArray
 ''' <summary>Get data from multiple lines</summary>
 ''' <param name="sqlText">Sql command</param>
@@ -51,13 +50,52 @@ Public Class SelectSql
 
 		listAl = Nothing
 
-#If Not Debug Then
-Try			
-Catch ex As Exception
-MessageBox.Show (ex.Message)	
-End Try
-#End If 
-				
+	End Function
+	
+''' ■GetOneLineSql
+''' <summary> DBから値を取得します(1行のみ)</summary>
+''' <param name="sqlText">SQL文</param>
+''' <returns>取得した値のハッシュテーブル</returns>
+''' <remarks></remarks>
+	Public Function GetOneLineSql(ByVal sqlText As String) As Hashtable
+
+        Dim returnHash As New Hashtable
+
+        If sqlText <> "" Then
+
+            Dim sqlCon As New OleDbConnection
+            Dim sqlCommand As New OleDbCommand
+            Dim sqlReader As OleDbDataReader
+
+            sqlCon.ConnectionString = MainForm.dbSource
+            sqlCommand.Connection = sqlCon
+            sqlCommand.CommandText = sqlText
+
+            sqlCon.Open()
+            sqlReader = sqlCommand.ExecuteReader()
+
+            If sqlReader.HasRows = True Then
+                While sqlReader.Read()
+                    For i = 0 To sqlReader.FieldCount - 1
+                        returnHash(sqlReader.GetName(i)) = "" & sqlReader(i).ToString
+                    Next
+                End While
+            End If
+
+            sqlCommand.Dispose()
+            sqlReader.Close()
+            sqlCon.Close()
+
+            sqlCommand = Nothing
+            sqlReader = Nothing
+            sqlCon = Nothing
+
+        End If
+
+        Return returnHash
+
+        returnHash = Nothing
+
 	End Function
 	
 ''''■GetOneSql
@@ -108,10 +146,8 @@ End Try
 ''' <returns>取得した値のHashtable</returns>
 ''' <remarks></remarks>
     Public Function GetSqlHashRow(ByVal sqlText As String, ByVal keyColumn As String, ByVal valueColumn As String) As Hashtable
-#If Not Debug Then
-        Try
-#End If
-        Dim returnHash As New Hashtable
+    	
+    	Dim returnHash As New Hashtable
 
         Dim sqlCon As New OleDbConnection
         Dim sqlCommand As New OleDbCommand
@@ -140,22 +176,19 @@ End Try
 
         Return returnHash
 
-returnHash = Nothing
+		returnHash = Nothing
 
-#If Not Debug Then
-        Catch ex As Exception
-            Return Nothing
-        End Try
-#End If
-        
 	End Function
+#End Region
 	
+#Region "SQLを使用したFunction"
 '''■ GetSentence
 ''' <summary>描画用文字データを返す</summary>
-''' <param name="grID">グループID</param>
+''' <param name="sizeID">用紙サイズID</param>
+''' <param name="sytleID">文例ID</param>
 ''' <returns>ArrayListで描画用文字データを返す</returns>
 
-	Public Function GetSentence(grID As integer) As ArrayList 
+	Public Function GetSentence(sizeID As Integer, styleID As integer) As ArrayList 
 		Dim sqlText as String = ""
 		Dim resultTxt As New ArrayList　'CHK: 開放
 		
@@ -170,7 +203,8 @@ returnHash = Nothing
 		sqlText &= " ,tbl_txt_newpoint "											'新フォントサイズ	
 		sqlText &= "  FROM tbl_txt "
 		sqlText &= "  WHERE "
-		sqlText &= "  tbl_txt_grid = " & grID										'TODO: パラメーターで選択 = Cmbで
+		sqlText &= "  tbl_txt_sizeid = " & sizeID 
+		sqlText &= "  AND tbl_txt_styleid = " & styleID										'TODO: パラメーターで選択 = Cmbで
 		sqlText &= "  ORDER BY "
 		sqlText &= "  tbl_txt_order "
 	
@@ -181,10 +215,9 @@ returnHash = Nothing
 	End Function
 '''■ GetDefaultVal
 ''' <summary>初期設定値を返す</summary>
-''' <param name="defSetID">tbl_defsetのID</param>
+''' <param name="sizeID">tbl_defsetのID</param>
 ''' <returns>String配列で初期設定値を返す</returns>
-
-	Public Function GetDefaultVal(defsetId As Integer) As String()
+	Public Function GetDefaultVal(sizeID As Integer) As String()
 		
 		Dim sqlText As String= ""
 		Dim defset As String = ""
@@ -193,7 +226,7 @@ returnHash = Nothing
 		sqlText =  " SELECT "														'初期設定
 		sqlText &= " tbl_defset"													'(0) 縦 = 0・横 = 1, (1) ポイント (2) x座標（幅), 
 		sqlText &= " FROM tbl_defset"												'(3) y座標上,　(4) y座標下, (5) 基本の改行ピッチ
-		sqlText &= " WHERE tbl_defset_id = 0"										'TODO: tbl_defset_idは上と連動させる
+		sqlText &= " WHERE tbl_defset_id = " & sizeID								'MEMO: tbl_defset_idは上と連動させる
 		
 		defset = GetOneSql(sqlText)
 		resultDefset = defSet.Split(",")
@@ -201,4 +234,25 @@ returnHash = Nothing
 		Return resultDefset
 		
 	End Function
+	
+'''■ GetOneRow
+''' <summary>tbl_txtの任意の1行の全ての値を返す</summary>
+''' <param name="sizeID">Integer 用紙サイズID</param>
+''' <param name="sytleID">Integer 文例ID</param>
+''' <param name="orderNo">Integer 行番号</param>
+''' <returns>Tbl_txtの任意の1行の全ての値をHashtableで返す</returns>
+	Public Function GetTbl_TxtRow(sizeID As Integer, styleID As integer, orderNo As Integer) As Hashtable
+		Dim sqlText as String = ""
+		Dim resultTxt As New Hashtable
+		
+		sqlText &= " SELECT * FROM tbl_txt "
+		sqlText &= " WHERE tbl_txt_sizeid = " & sizeID
+		sqlText &= " AND tbl_txt_styleid = " & styleID
+		sqlText &= " AND tbl_txt_order = " & orderNo
+		
+		resultTxt = GetOneLineSql(sqlText)
+		
+		Return resultTxt
+	End Function
+#End Region	
 End Class

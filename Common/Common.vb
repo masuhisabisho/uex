@@ -7,8 +7,15 @@
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
 Public Class Common
-	Const basicPitch As Single = 1
-
+	
+	Dim  basicPitch As single = 0
+	
+	Public Sub New(newPitch)
+		'END: コンストラクタ。ここにbasicPitchの定数を入れる basicXPitch basicYPitch DBより
+		basicPitch = newPitch
+	End Sub
+	
+#Region "汎用関数"
 ''''■GetWareki
 ''' <summary>Get wareki in Kanji</summary>
 ''' <param name="requestDt">Date</param>
@@ -67,7 +74,322 @@ Public Class Common
     	Return DestImage
 
 	End Function
+	
+#End Region
+	
 #Region "Word"
+''''■WordPreparer
+''' <summary>DB内のセンテンスを獲得し、単語に分割、フォントサイズと一緒に格納</summary>
+''' <param name="defSetAr">String() 初期設定値</param>
+''' <param name="mainText">ArrayList メインテキスト</param>
+''' <param name="optWord">Hashtable コンボの値</param>
+''' <returns>単語・フォントサイズを格納した配列を返す</returns>	
+	Public Function WordPreparer (defSetAr As String(), mainTxt As ArrayList, optWord As Hashtable) As Array
+		Dim lineCounter As Integer = mainTxt.Count - 1								'メインセンテンスの行数
+		Dim wordStorager(lineCounter) As Array
+		Dim insWord As Array
+		Dim basicPoint As String = defSetAr(1)
+		
+		For i As Integer = 0 To lineCounter Step 1
+			
+			Dim insPos() As String = {"", "", ""}									'挿入文字位置パラメータを格納する配列 
+			Dim insFlg As Boolean = False											'挿入文字フラグ
+			
+			Dim str As String = mainTxt(i)("tbl_txt_inspos")
+			Dim str1 As String = mainTxt(i)("tbl_txt_txt")
+			
+			If mainTxt(i)("tbl_txt_inspos") IsNot "" Then							'END: 挿入文字があるか確認する	
+				insPos = CStr(mainTxt(i)("tbl_txt_inspos")).Split(","c)				'文字数 = 0、フォントサイズ = 1, 挿入行番号 = 2, 挿入位置 = 3 文字（任意の数）= 4～ を獲得する
+				insWord = CheckInsWord(mainTxt(i)("tbl_txt_inspos"), _
+										mainTxt(i)("tbl_txt_targetword"), _
+										mainTxt(i)("tbl_txt_targetpoint"), _
+										i, _
+										optWord _
+										)
+				insFlg = True
+			End If
+			
+			Dim loopCounter As Integer = CInt(CStr(mainTxt(i)("tbl_txt_txt")).Length)
+
+			If insFlg = True Then													'挿入フラグが立っている時、挿入文字分をループカウンターに加算
+				For j As Integer = 0 To 2 Step 1
+					If Val(insPos(j)) <> CDbl(9999) Then
+						loopCounter = loopCounter + CInt(insWord(j)(0))
+					End If
+				Next j
+			End If
+			Dim subStorager(loopCounter + 1) As String								'分割した単語（行単位）を一時保存する配列
+			Dim wordInLine As String = CStr(mainTxt(i)("tbl_txt_txt")) 				'メインセンテンス
+			Dim k As Integer = 0													'挿入文字用カウンター（挿入がある時）
+			Dim m As Integer = 0													'通常文字用カウンター（挿入がある時）
+			Dim pointStorager As String = ""
+			
+			For j As Integer = 0 To loopCounter + 1 Step 1
+				If j = 0 Then
+					subStorager(0) = loopCounter.ToString()							'列の文字数（配列数）= 0 を格納
+					Continue For
+				End If
+				
+				If j = 1 Then
+					Continue For 													'フォントサイズを格納の為
+				End If
+				
+				If insFlg = True  Then												'挿入がある時は挿入文字を差し込んでいく
+					If Val(insWord(k)(3)) + 2 =  j Then								'絶対位置を確認
+						For l As Integer = 4 To Val(insWord(k)(0)) + 3
+							subStorager(j) = insWord(k)(l)
+							Call PointCollector(insWord(k)(1), pointStorager)
+							j = j + 1
+						Next l
+						j = j -1 													'カウンターを１つ戻す（Nextで一つ増える為）
+						k = k + 1
+						Continue For
+					Else
+						subStorager(j) = wordInLine.Substring(m, 1)
+						
+						Dim tempBasipoint As String = BasicPointChanger(mainTxt(i))
+						If  tempBasipoint <> "0" Then
+							basicPoint = tempBasipoint
+						End If
+						Call PointCollector(basicPoint, pointStorager)
+						
+						m = m + 1
+					End If
+				Else
+					subStorager(j) = wordInLine.Substring(j-2, 1)	'★ -1
+					
+					Dim tempBasipoint As String = BasicPointChanger(mainTxt(i))
+					If  tempBasipoint <> "0" Then
+						basicPoint = tempBasipoint
+					End If
+					Call PointCollector(basicPoint, pointStorager)
+				End If
+			Next j
+			
+			If pointStorager = "" Then												'初期値に何も無い時はポイントをDB上にあてがっておく
+				pointStorager = BasicPointChanger(mainTxt(i))
+			End If
+			
+			subStorager(1) = pointStorager											'フォントサイズを格納（コンマ文字列）
+
+			wordStorager(i) = subStorager											'文字１つ１つを配列に格納
+			insFlg = False
+		Next i
+		
+		Return wordStorager
+		
+	End Function
+	
+''''■WordArranger
+''' <summary>単語とフォントサイズの配列を適切に描画できるよう
+''' 		設定を行って描画する
+''' </summary>
+''' <param name="defSetAr">String() 初期設定値</param>
+''' <param name="mainText">ArrayList メインテキスト</param>
+''' <param name="wordStrager">Array 単語とそれぞれのフォントサイズ</param>
+''' <param name="optWord">Hashtable コンボの値</param>
+''' <param name="font">フォント</param>
+''' <param name="Frm">PrintReport.vb</param>
+''' <param name="wc">WordContainer.vb</param>
+''' <returns>単語・フォントサイズを格納した配列を返す</returns>
+''' 'TODO: 文字が無い時改行だけするようにする
+Public Sub WordArranger(defSetAr As String(), mainTxt As ArrayList, _
+						wordStorager As Array, optWord As Hashtable, 
+						font As String, Frm As PrintReport, _
+						wc As WordContainer)
+	
+		Dim lineCounter As Integer = mainTxt.Count - 1
+		
+		If defSetAr(0) = "0" Then
+			Dim startXPos As Single = CSng(defSetAr(2))	
+			Dim startYPos As Single = CSng(defSetAr(3))
+			Dim newStartYPos As Single = 0
+			Dim insColCnt As Integer = 0
+			
+			For i As Integer = 0  To lineCounter Step 1
+				Dim selector As Integer = CInt(mainTxt(i)("tbl_txt_ystyle"))
+				Select Case selector
+					Case 0	'上															'END: 上の場合の文字ピッチを計算
+						If PointDiffChecker(wordStorager(i)(1)) = True Then			'全て同じフォントサイズの時
+							Dim newXpitch As Single = CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
+							If newXpitch <> 0 Then
+								startXPos = startXPos - newXpitch						'x軸イレギュラースタート
+							Else
+								If CInt(wordStorager(i)(0)) <> 0 Then
+									Dim pickPoint As Integer = OnePointPicker(wordStorager(i)(1), 0)
+									Dim fontSize() As Single = Frm.FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", pickPoint) '★
+									startXPos = startXPos - CSng(defsetAr(5)) - fontSize(1)	'END: 文字サイズ＋ピッチへ 2013/7/2
+								Else														'END: 文字無しの時のエスケープ（改行だけする）
+									Dim FontSize() As Single = Frm.FontSizeCal("口", "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
+									startXPos = startXPos - CSng(defsetAr(5)) - FontSize(1)
+									
+										Dim wordDetail() As String = {"", CStr(wordStorager(i)(1)), startYPos.ToString(), startXPos.ToString()}
+										Dim wordInLine As New ArrayList 
+										wordInLine.Add(wordDetail)
+										wc.CurrentWord(wordInLine)								'描画文字データを格納（他はCreateWordで格納される）
+										wordDetail = {"", "", "", ""}
+										Continue For
+								End If
+							End If
+								
+							newStartYPos = CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos"))) 
+							If newStartYPos <> 0 Then
+								startYPos = newStartYPos									'y軸イレギュラースタート
+							End If
+							
+							Dim splitPoint() As String = wordStorager(i)(1).Split(","c)
+							
+							Dim properPit As Single = PitchCal(startYPos, _
+																CSng(defSetAr(4)), _
+																wordStorager(i), _
+																"ＭＳ Ｐ明朝", _
+																splitPoint, _
+																0, _
+																Frm _
+																)
+							Call Frm.CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", startXPos, startYPos, properPit)
+						Else															'END: フォントサイズが違う時の文字位置と改列ピッチを求める 2013/7/2
+							Dim maxWidth As Single										'END: イレギュラーサイズ時の描画方法を考える
+							Dim irrXYPos As Array										'END: y軸位置の変更を組み込む
+							
+							newStartYPos = CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
+							If newStartYPos <> 0 Then
+								startYPos = newStartYPos
+							End If
+							
+							irrXYPos =  SetIrregXYPos(CInt(mainTxt(i)("tbl_txt_ystyle")), _
+													wordStorager(i), _
+													"ＭＳ Ｐ明朝", _
+													startYPos, _
+													CSng(defSetAr(4)), _
+													CSng(defSetAr(5)), _
+													startXPos, _
+													maxWidth, _
+													Frm
+													)
+							Call Frm.CreateWordDiff(wordStorager(i), "ＭＳ Ｐ明朝", irrXYPos)
+							startXPos = startXPos - maxWidth
+							
+						End If
+					Case 1, 3	'下
+						If PointDiffChecker(wordStorager(i)(1)) = True Then
+								Dim newXPos As Single = CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
+								If newXPos <> 0 Then
+									startXPos = startXPos - newXPos
+								Else
+									If CInt(wordStorager(i)(0)) <> 0 Then
+										Dim pickPoint As Integer = OnePointPicker(wordStorager(i)(1), 0)
+										Dim fontSize() As Single = Frm.FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", pickPoint)
+										startXPos = startXPos - CSng(defsetAr(5)) - fontSize(1)
+									Else	
+										Dim fontSize() As Single = Frm.FontSizeCal("口", "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
+										startXPos = startXPos - CSng(defsetAr(5)) - fontSize(1)
+										
+										Dim wordDetail() As String = {"", CStr(wordStorager(i)(1)), startYPos.ToString(), startXPos.ToString()}
+										Dim wordInLine As New ArrayList 
+										wordInLine.Add(wordDetail)
+										wc.CurrentWord(wordInLine)								'描画文字データを格納（他はCreateWordで格納される）
+										wordDetail = {"", "", "", ""}
+										Continue For
+									End If 'END: 2013/7/9　下配置修正
+								End If
+							newStartYPos = CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
+							If newStartYPos <> 0 Then
+								startYPos = newStartYPos
+							End If
+
+							Dim splitPoint() As String = wordStorager(i)(1).Split(","c)
+						
+							Dim properPit As Single = PitchCal(startYPos, _
+																  CSng(defSetAr(4)), _
+																wordStorager(i), _
+																"ＭＳ Ｐ明朝", _
+																splitPoint, _
+																1, _
+																Frm _
+																)
+							'END: ピッチがマイナスでも強制的に下からスタートさせる(ピッチを小さくしたい時) -> OrElseを追加 2013/7/13 mb
+							If properPit > 0 OrElse selector = 3
+								Dim addHeight As Single = 0
+								Dim totalHeight As single = 0
+								For j As Integer = 2 To CInt(wordStorager(i)(0)) + 1 Step 1
+									Dim tempHeight() As Single = Frm.FontSizeCal(wordStorager(i)(j), "ＭＳ Ｐ明朝", CInt(splitPoint(j - 2)))
+									addHeight = addHeight + tempHeight(0)	
+								Next j
+								totalHeight = Csng(defSetAr(4)) - ( addHeight + (properPit * (CSng(wordStorager(i)(0)) - 1)))
+								Call Frm.CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", startXPos, totalHeight, properPit)
+							Else
+								Call Frm.CreateWord(wordStorager(i), "ＭＳ Ｐ明朝", startXPos, startYPos, properPit)　'CHK★一時的に変更
+							End If
+						Else															'フォントサイズが異なる
+							Dim maxWidth As Single	
+							Dim irrXYPos As Array
+							
+							newStartYPos = CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
+							If newStartYPos <> 0 Then
+								startYPos = newStartYPos
+							End If
+							
+							irrXYPos =  SetIrregXYPos(CInt(mainTxt(i)("tbl_txt_ystyle")), _
+													wordStorager(i), _
+													"ＭＳ Ｐ明朝", _
+													startYPos, _
+													CSng(defSetAr(4)), _
+													CSng(defSetAr(5)), _
+													startXPos, _
+													maxWidth, _
+													Frm
+													)
+							Call Frm.CreateWordDiff(wordStorager(i), "ＭＳ Ｐ明朝", irrXYPos)
+							
+							startXPos = startXPos - maxWidth
+						End If	
+					Case 2	'天地
+						'END: 天地の場合の文字ピッチを計算
+						Dim newXPos As Single = CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
+						If newXPos <> 0 Then
+							startXPos = startXPos - newXPos									'イレギュラー改行
+						else
+'							Dim tempFontSize() As Single = FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", defSetAr(1))
+'							startXPos = startXPos - CSng(defsetAr(5)) - tempFontSize(1) コメントアウト 2013/7/7
+									If Cint(wordStorager(i)(0)) <> 0 Then				'END: この辺に文字無しの時のエスケープを考える
+										Dim tempFontSize() As Single = Frm.FontSizeCal(wordStorager(i)(2), "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
+										startXPos = startXPos - CSng(defsetAr(5))	- tempFontSize(1)
+									Else	
+										Dim tempFontSize() As Single = Frm.FontSizeCal("口", "ＭＳ Ｐ明朝", CInt(defSetAr(1)))
+										startXPos = startXPos - CSng(defsetAr(5))	- tempFontSize(1)
+										
+										Dim wordDetail() As String = {"", CStr(wordStorager(i)(1)), startYPos.ToString(), startXPos.ToString()}
+										Dim wordInLine As New ArrayList 
+										wordInLine.Add(wordDetail)
+										wc.CurrentWord(wordInLine)								'描画文字データを格納（他はCreateWordで格納される）
+										wordDetail = {"", "", "", ""}
+										Continue For
+									End If
+						End If
+						
+						newStartYPos = CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
+						If newStartYPos <> 0 Then
+							startYPos = newStartYPos
+						End If
+							
+						Dim splitPoint() As String = wordStorager(i)(1).Split(","c)
+						Dim properPit As Single = PitchCal(startYPos, _
+															CSng(defSetAr(4)), _
+															wordStorager(i), _
+															"ＭＳ Ｐ明朝", _
+															splitPoint, _
+															2, _
+															Frm _
+															)'						'TODO フォント
+						Call Frm.createWord(wordStorager(i), "ＭＳ Ｐ明朝", startXPos, startYPos, properPit)
+					End Select
+			Next i
+			
+		Else
+		'TODO: 横書きの時
+		End If
+	End Sub
 
 '''■CheckInsWord
 ''' <summary>挿入文字を取り出し</summary>
@@ -139,7 +461,7 @@ Public Class Common
 '''■SetIrregXYPos
 ''' <summary>フォントサイズが違う文字が混じった列の
 ''' 		1) それぞれのyPosを計算する
-''' 		2) xPosを計算する
+''' 		2) それぞれのxPosを計算する
 ''' </summary>
 ''' <param name="yStyle">上・下・天地</param>
 ''' <param name="wordStrager">文字配列(0 = 文字数, 1 = それぞれのフォントサイズ）</param>
@@ -231,10 +553,17 @@ Public Function SetIrregXYPos(yStyle As Integer, wordStrager As Array, font As S
 				End if
 			End If
 		Next i
+		
+		Dim lastWordPoint As Single = splitPoint(0)
 																							'***END: 一番大きいフォントの位置よりそれぞれのｘ軸位置を決める
 		For i As Integer = 0 To CInt(wordStrager(0)) -1 Step 1								'END: x軸は右から左へマイナス
-			If eachXYSize(i)(1) < tempMaxWidth Then
-				eachPos(1, i) = (lastXPos - curXPitch - tempMaxWidth) + ((tempMaxWidth - CSng(eachXYSize(i)(1))) / 2) 'TODO: 位置微調整が必要
+			If eachXYSize(i)(1) < tempMaxWidth Then											'END: 位置微調整が必要　-> 連続して同じサイズの時は同じx位置に 2013/7/13
+				If lastWordPoint = splitPoint(i) And i <> 0 Then							'     ひらがなが微妙
+					eachPos(1, i) = eachPos(1, i -1)
+				Else
+					eachPos(1, i) = (lastXPos - curXPitch - tempMaxWidth) + ((tempMaxWidth - CSng(eachXYSize(i)(1))) / 2)
+					lastWordPoint = splitPoint(i)
+				End If
 			Else
 				eachPos(1, i) = lastXPos - curXPitch - tempMaxWidth
 			End If
@@ -296,7 +625,11 @@ Public Function SetIrregXYPos(yStyle As Integer, wordStrager As Array, font As S
 ''' <param name="point">ポイント数</param>	<- Arrayに変更 2013/7/4
 ''' <param name="pattern">上・下・天地揃え</param>
 ''' <returns>ピッチ数を返す（ピッチが取れない時はマイナス）</returns>
-Public Function PitchCal(topYPos As Single, bottomYPos As Single, wordAr As Array, font As String, point As Array, pattern As Integer, pr As PrintReport) As Single
+	Public Function PitchCal(topYPos As Single, bottomYPos As Single, _
+							wordAr As Array, font As String, point As Array, _
+							pattern As Integer, pr As PrintReport) _
+							As Single
+	
 		Dim resultPitch As Single = 0
 		Dim arCounter As Single = CSng(wordAr(0))									'文字数を取得
 		Dim firstWord(1) As Single
@@ -348,6 +681,30 @@ Public Function PitchCal(topYPos As Single, bottomYPos As Single, wordAr As Arra
 		End If
 	
 	End Function
+
+''' ■YPosCal
+''' <summary>y軸方向の文字ピッチを再設定する（フォントサイズが全て同じ時）</summary>
+''' <param name="word">ByRef Array 文字配列（文字、フォントサイズ、文字の高さ、文字の幅）</param>
+''' <param name="topYPos">Single y軸の開始位置</param>
+''' <param name="pr">Form PrintReport</param>
+''' <returns>Void, wordを参照する</returns>
+	Public Sub YPosCal(ByRef word As ArrayList, font As String, topYPos As Single, pr As PrintReport)  'basicPitch
+		
+		Dim loopCounter As Integer = CInt(word.Count)
+	
+		For i As Integer = 1 To loopCounter -1 Step 1
+				Dim fontSize() As Single = pr.FontSizeCal(word(i)(0), font, CInt(word(i)(1)))
+				If i = 1 Then
+					word(i)(2) = fontSize(0) + basicPitch
+				Else
+					word(i)(2) = word(i - 1)(2) + fontSize(0) + basicPitch
+				End If
+				
+				System.Diagnostics.Debug.WriteLine(word(i)(2))
+		Next i
+
+	End Sub
+	
 #End Region
 
 #Region "FontSize"

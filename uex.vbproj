@@ -62,9 +62,11 @@
     <Compile Include="Common\Calender.vb" />
     <Compile Include="Common\ClearForm.vb" />
     <Compile Include="Common\Common.vb" />
+    <Compile Include="Common\ControlHandler.vb" />
     <Compile Include="Common\SelectSql.vb" />
     <Compile Include="Common\SetCombo.vb" />
     <Compile Include="Common\SetEnvList.vb" />
+    <Compile Include="Common\WordContainer.vb" />
     <Compile Include="HostList.Designer.vb">
       <DependentUpon>HostList.vb</DependentUpon>
     </Compile>

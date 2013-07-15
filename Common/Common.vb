@@ -10,10 +10,16 @@ Public Class Common
 	
 	Dim  basicPitch As single = 0
 	
-	Public Sub New(newPitch)
+	Public Sub New(newPitch As Single)
 		'END: コンストラクタ。ここにbasicPitchの定数を入れる basicXPitch basicYPitch DBより
 		basicPitch = newPitch
 	End Sub
+	
+	Public Readonly Property SetBasicPitch() As Single
+		Get
+			Return basicPitch
+		End Get
+	End Property
 	
 #Region "汎用関数"
 ''''■GetWareki
@@ -48,7 +54,7 @@ Public Class Common
 ''' <returns>処理後の画像</returns>
 ''' 'http://homepage1.nifty.com/rucio/main/dotnet/Samples/Sample141ImageMagnify.htm
 ''' 'PictureBox1.Image = Magnify(PictureBox1.Image, 1.2F)
-	Private Function Magnify(ByVal Source As Image, ByVal Rate As Double, _ 
+	Public Function Magnify(ByVal Source As Image, ByVal Rate As Double, _ 
 	Optional ByVal Quality As Drawing2D.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic) As Image
 
     	'▼引数のチェック
@@ -76,7 +82,7 @@ Public Class Common
 	End Function
 	
 #End Region
-	
+
 #Region "Word"
 ''''■WordPreparer
 ''' <summary>DB内のセンテンスを獲得し、単語に分割、フォントサイズと一緒に格納</summary>
@@ -94,9 +100,6 @@ Public Class Common
 			
 			Dim insPos() As String = {"", "", ""}									'挿入文字位置パラメータを格納する配列 
 			Dim insFlg As Boolean = False											'挿入文字フラグ
-			
-			Dim str As String = mainTxt(i)("tbl_txt_inspos")
-			Dim str1 As String = mainTxt(i)("tbl_txt_txt")
 			
 			If mainTxt(i)("tbl_txt_inspos") IsNot "" Then							'END: 挿入文字があるか確認する	
 				insPos = CStr(mainTxt(i)("tbl_txt_inspos")).Split(","c)				'文字数 = 0、フォントサイズ = 1, 挿入行番号 = 2, 挿入位置 = 3 文字（任意の数）= 4～ を獲得する
@@ -118,6 +121,7 @@ Public Class Common
 					End If
 				Next j
 			End If
+			
 			Dim subStorager(loopCounter + 1) As String								'分割した単語（行単位）を一時保存する配列
 			Dim wordInLine As String = CStr(mainTxt(i)("tbl_txt_txt")) 				'メインセンテンス
 			Dim k As Integer = 0													'挿入文字用カウンター（挿入がある時）
@@ -393,13 +397,15 @@ Public Sub WordArranger(defSetAr As String(), mainTxt As ArrayList, _
 
 '''■CheckInsWord
 ''' <summary>挿入文字を取り出し</summary>
-''' <param name="insPos">挿入があるかどうか</param>
-''' <param name="targetWord">挿入文字の値の入ったのHashTableのキー名</param>
-''' <param name="targetPoint">ポイントの値の入ったのHashTableのキー名</param>
-''' <param name="insCol">挿入があった列番号</param>		<- 追加	2013/6/30
-''' <param name="optWord">オプションのセンテンス</param>		<- 追加	2013/7/
-''' <returns>文字数 = 0, フォントサイズ = 1, 挿入列番号 = 2, 挿入位置 = 3 を獲得する, 文字（任意の数）= 3～</returns>
-    Public Function CheckInsWord(insPos As String, targetWord As String, targetPoint As String, insCol As Integer, optWord As Hashtable) As Array
+''' <param name="insPos">String 挿入があるかどうか</param>
+''' <param name="targetWord">String 挿入文字の値の入ったのHashTableのキー名</param>
+''' <param name="targetPoint">String ポイントの値の入ったのHashTableのキー名</param>
+''' <param name="insCol">Integer 挿入があった列番号</param>		<- 追加	2013/6/30
+''' <param name="optWord">Hashtable オプションのセンテンス</param>		<- 追加	2013/7/
+''' <returns>文字数 = 0, フォントサイズ = 1, 挿入列番号 = 2, 挿入位置 = 3 , 文字（任意の数）= 4～</returns>
+	Public Function CheckInsWord(insPos As String, targetWord As String, _
+								targetPoint As String, insCol As Integer, _
+								optWord As Hashtable) As Array
     	'END: 文字数, フォント, フォントサイズを獲得する
     	'END: 挿入位置も格納しておく 2013/6/29
     	'END: 挿入列も格納しておく   2013/6/30
@@ -465,12 +471,13 @@ Public Sub WordArranger(defSetAr As String(), mainTxt As ArrayList, _
 ''' </summary>
 ''' <param name="yStyle">上・下・天地</param>
 ''' <param name="wordStrager">文字配列(0 = 文字数, 1 = それぞれのフォントサイズ）</param>
-''' <param name="font">フォント（フォントサイズ含む）</param>
+''' <param name="font">フォント</param>
 ''' <param name="topYPos">y軸最上位置</param>
 ''' <param name="bottomYPos">y軸最下位置</param>
 ''' <param name="curXPitch">x軸の改列ピッチ</param>
 ''' <param name="lastXPos">最後のx軸位置</param>
 ''' <param name="maxWidth">最大のフォント幅（参照）</param>
+''' <param name="pr">PrintReport.vb</param>
 ''' <returns>配列にてyPos = 0, xPos = 1を返す</returns>
 Public Function SetIrregXYPos(yStyle As Integer, wordStrager As Array, font As String, _
 								topYPos As Single, bottomYPos As Single, _

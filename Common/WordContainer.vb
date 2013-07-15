@@ -10,9 +10,153 @@ Public Class WordContainer
 	
 	Private curSize As Integer
 	Private curStyle As Integer 
-	Public optWord As New Hashtable
-	Public curWord As New ArrayList
 	
+	Public optWord As New Hashtable()
+	Public curWord As New ArrayList()
+	
+	'データを置き換える
+''' ■WordReplacer
+''' <summary>コンボ変更に対して文字挿入、y軸位置、x軸位置を決める</summary>
+''' <param name="lineNo">Integer 行番号</param>
+''' <param name="newTargetCmb">ComboBox 動かされるコンボ</param>
+''' <param name="pr">Frm PrintReport.vb</param>
+''' <param name="Cmn">Frm Common.vb</param>
+''' <param name="yPos">Optional Integer 上、下、天地</param>
+	Sub WordReplacer(lineNo As Integer, newTargetCmb As ComboBox, _
+					pr As PrintReport, Cmn As Common, 
+		Optional yPos As Integer = 0)
+		'コンボの値を置き換え
+		optWord(newTargetCmb.Name) = newTargetCmb.SelectedValue
+		'フォントサイズが全て同じかどうか確認する
+		Dim curFontSize As Integer = CInt(curWord(0)(1))
+		Dim fontSizeDif As Boolean = False
+		For i As Integer = 0 To CInt(curWord.Count) -1 Step 1
+			If curFontSize <> CInt(curWord(i)(1)) Then
+				fontSizeDif = True 
+			End If
+		Next i
+		'ArrayListの値を移しておく
+		Dim tempCurWord As New ArrayList()
+		tempCurWord = curWord(lineNo)		
+		
+		'curWordの任意の行のデータを削除しておく
+		curWord(lineNo).Remove()
+		
+		Dim mainTxt As New Hashtable()
+		Dim SctSql As New SelectSql()
+		
+		mainTxt = SctSql.GetTbl_TxtRow(curSize, curSize, lineNo)
+		
+		Dim insPos() As String
+		insPos = CStr(mainTxt("tbl_txt_inspos")).Split(","c)
+		
+		Dim insWord As array
+		insWord = Cmn.CheckInsWord(mainTxt("tbl_txt_inspos"), _
+                                   mainTxt("tbl_txt_targetword"), _
+                                   mainTxt("tbl_txt_targetpoint"), _
+                                   lineNo, _
+                                   optWord _
+                                   )
+		
+		Dim loopCounter As Integer = CInt(CStr(mainTxt("tbl_txt_txt")).Length)
+		'挿入文字の字数をループカウンターに入れる
+		For i As Integer = 0 To 2 Step 1
+        	If CInt(insPos(i)) <> 9999 Then
+        		loopCounter = loopCounter + CInt(insWord(i)(0))
+        	End If
+        Next i 
+		'不変文字と挿入文字を一つの配列に格納していく
+		Dim wordInLine As New ArrayList()
+		Dim k As Integer = 0
+		If fontSizeDif = False Then												'全て同じの時
+			For i As Integer = 0 To loopCounter - 1 Step 1
+				If CInt(insWord(i)(3)) =  i Then 
+					For j As Integer = 4 To CInt(insWord(i)(0)) + 3 Step 1
+						Dim wordDetail(3) As String
+						wordDetail(0) = insWord(i)(j)
+						wordDetail(1) = tempCurWord(0)(1)
+						worddetail(3) = tempCurWord(0)(3)
+						wordInLine.Add(wordDetail)
+					next j
+				Else
+					Dim wordDetail(3) As String
+					wordDetail(0) = CStr(mainTxt("tbl_txt_txt")).Substring(k, 1)
+					wordDetail(1) = tempCurWord(0)(1)
+					worddetail(3) = tempCurWord(0)(3)
+					wordInLine.add(wordDetail)
+					k = k + 1
+				End If
+			Next i
+		Else																	'フォントサイズが違う時
+			Dim wordStrager(loopCounter + 1) As String
+			wordStrager(0) = loopCounter
+			
+			Dim collectPoint As String
+			
+			For i As Integer = 2 To loopCounter + 1 Step 1
+				If CInt(insWord(i)(3)) =  i Then 
+					For j As Integer = 4 To CInt(insWord(i)(0)) + 3 Step 1
+						'SetIrregXYPos用
+						wordStrager(i) = insWord(i)(j)
+						Cmn.PointCollector(insWord(i)(1), collectPoint) 
+						'描画用XY位置未確定
+						Dim wordDetail(3) As String
+						wordDetail(0) = insWord(i)(j)
+						wordDetail(1) = insWord(0)(1)
+						wordInLine.Add(wordDetail)
+					next j
+				Else
+					'SetIrregXYPos用
+					wordStrager(i) = CStr(mainTxt("tbl_txt_txt")).Substring(k, 1)
+					Cmn.PointCollector(insWord(i)(1), collectPoint)
+					'描画用XY位置未確定
+					Dim wordDetail(3) As String
+					wordDetail(0) = CStr(mainTxt("tbl_txt_txt")).Substring(k, 1)
+					wordDetail(1) = insWord(0)(1)
+					wordInLine.add(wordDetail)
+					k = k + 1
+				End If
+			Next i
+			'イレギュラー配置を計算する
+			wordStrager(1) = collectPoint
+
+			Dim defSetAr() As String = SctSql.GetDefaultVal(curStyle)
+			
+			Dim eachPos(,) As Single
+			Dim maxWidth As Single
+			eachPos = Cmn.SetIrregXYPos(yPos, _
+										wordStrager, _
+										"MS Pゴシック", _
+										tempCurWord(0)(2), _
+										defSetAr(4), _
+										defSetAr(5), _
+										curWord(lineNo - 1)(3), _
+										maxWidth, _
+										pr
+										)
+			For i As Integer = 0 To loopCounter - 1 Step 1
+				wordInLine(i)(2) = eachPos(0, i)
+				wordInLine(i)(3) = eachPos(1, i)
+			Next i
+			
+			curWord(lineNo) = wordInLine
+			'X軸をずらしていく
+			Dim basicPitch As Single = Cmn.SetBasicPitch
+			Dim xPosDiff As Single = CSng(tempCurWord(lineNo)(0)(3)) - CSng(curWord(lineNo - 1)(0)(3)) - basicPitch
+			
+			If xPosDiff <> 0 Then
+				For i As Integer = 0 To curWord.Count -1 Step 1
+					For j As Integer = 0 To curWord(i).Count -1 Step 1
+						curWord(i)(j)(3) = CSng(curWord(i)(j)(3)) + xPosDiff
+					Next j
+				Next i
+				
+			End If
+			
+		End If
+	
+	End Sub
+
 '''■CurSizeStorager
 ''' <summary>現在表示している内容の用紙IDを保存する</summary>
 ''' <returns>用紙ID</returns>

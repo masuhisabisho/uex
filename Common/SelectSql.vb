@@ -235,7 +235,7 @@ Public Class SelectSql
 		
 	End Function
 	
-'''■ GetOneRow
+'''■ GetTbl_TxtRow
 ''' <summary>tbl_txtの任意の1行の全ての値を返す</summary>
 ''' <param name="sizeID">Integer 用紙サイズID</param>
 ''' <param name="sytleID">Integer 文例ID</param>

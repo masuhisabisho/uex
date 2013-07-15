@@ -69,6 +69,10 @@ Public Partial Class PrintReport
 		Call ClrFrm.ClearForm(0, Me)
 		ClrFrm = Nothing
 		
+		'現在の用紙サイズID及び文例IDを保管
+		wc.CurSizeStorager = 0
+		wc.CurStyleStorager = 0
+		
 		'DBより文章データの取り込み
 		Dim SctSql As New SelectSql
 		Dim mainTxt As New ArrayList
@@ -76,10 +80,6 @@ Public Partial Class PrintReport
 	
 		mainTxt = SctSql.GetSentence(0, 0)
 		defSetAr = SctSql.GetDefaultVal(0)
-		
-		'現在の用紙サイズID及び文例IDを保管
-		wc.CurSizeStorager = 0
-		wc.CurStyleStorager = 0
 		
 		SctSql = Nothing
 
@@ -164,6 +164,9 @@ Public Partial Class PrintReport
 				'END: 文字の長さが先と後で不一致の時どうするか
 				'TODO: Function化する
 				'パターン１ = 文字数, 縦配置が変わるのみ
+				'間に入る時はどうするのか？
+				'現状のデータを保存、不変文字の場所、変化文字の場所を確認、変化部分を削除
+				'場所を覚えておく
 
 
 				'選択された文字に置き換え

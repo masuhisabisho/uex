@@ -7,6 +7,7 @@
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
 Public Class ClearForm
+	Private defaultFontIndex As Integer = 18	
 	'TODO: 全ての用紙を実装する	
 ''''■ClearForm
 ''' <summary>Format form</summary>
@@ -21,8 +22,10 @@ Public Class ClearForm
                 With frm
                     'CHK: 配列に基本設定を入れておく -> それをセレクトで選択して読む
                     .Cmb_Size.SelectedValue = 0         'TODO: Indexで統一？
-                    .Cmb_Font.SelectedIndex = 70        'CHK: 拡大率の問題
-
+                    .Cmb_Font.SelectedIndex	= defaultFontIndex       'CHK: 拡大率の問題
+                    
+                    Dim str As String = .Cmb_Font.Text
+                    
                     '下記３つ現画面で廃止予定
                     .Cmb_Magnify.SelectedValue = 100
                     .Cmb_Thickness.SelectedValue = 40
@@ -30,8 +33,7 @@ Public Class ClearForm
                     
                     '初期設定の値は下の通り
                     'Specific part
-                    .Cmb_Style.SelectedValue = 0                            'TODO: basicSetから読む
-                    '.Cmb_SeasonWord.SelectedValue = "厳寒の候"             	'TODO: 月によって読む値を考える
+                    .Cmb_Style.SelectedValue = 0                            'TODO: 引数から読む
                     .Cmb_SeasonWord.SelectedIndex = 1
                     .Cmb_Time1.SelectedValue = "先般"
                     .Cmb_Title.SelectedIndex = 1
@@ -55,8 +57,8 @@ Public Class ClearForm
                     .Txt_PS4.Text = "御受納下さいます様お願い申し上げます"      'TODO: From SQL
 
                     'Font Size
-                    .Cmb_PointTitle.SelectedIndex = 12						'★
-                    .Cmb_PointName.SelectedIndex = 34
+                    .Cmb_PointTitle.SelectedIndex = 35						'★
+                    .Cmb_PointName.SelectedIndex = 35
                     .Cmb_PointDeadName.SelectedIndex = 0
                     .Cmb_PointDeadName.Enabled = False
                     .Cmb_PointImibi.SelectedIndex = 35

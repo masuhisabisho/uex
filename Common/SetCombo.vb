@@ -9,10 +9,10 @@
 Public Class SetCombo
 ''''■SetCombo
 ''' <summary>Set combo values</summary>
-''' <param name="targetCmb">One you want to set</param>
-''' <param name="3nvListHt">Datasource</param>
-''' <param name="defaultStr">Default value of combo lable</param>
-''' <param name="defaultVal">Default value of combo value</param>
+''' <param name="targetCmb">ComboBox One you want to set</param>
+''' <param name="3nvListHt">ArrayList Datasource</param>
+''' <param name="defaultStr">String Default value of combo lable</param>
+''' <param name="defaultVal">String Default value of combo value</param>
 ''' <param name="isVisibleNull">Set nothing on combo as the first value</param>
 ''' <returns>Void</returns>
 	Public Sub SetCombo(targetCmb As ComboBox, envListHt As ArrayList, defaultStr As String, defaultVal As String, isVisibleNull As Boolean)
@@ -69,20 +69,19 @@ Public Class SetCombo
 	Public Sub SetComboContent(Frm As PrintReport)
 		With Frm
 			SetCombo(.Cmb_Size, SetEnvList.envList("002"), "奉書挨拶状", "0", False)
-			'SetCombo(.Cmb_Font, SetEnvList.envList(""), "", "", True)		'Pending "FONT"
 			SetCombo(.Cmb_Magnify, SetEnvList.envList("400"), "100", "100", False)
 			SetCombo(.Cmb_Thickness, SetEnvList.envList("401"), "40", "40", False)
-			SetCombo(.Cmb_Style, SetEnvList.envList("001"), "", "", True)
-			SetCombo(.Cmb_SeasonWord, SetEnvList.envList("100"), "", "", True)
-			SetCombo(.Cmb_Time1, SetEnvList.envList("101"), "", "", True)
-			SetCombo(.Cmb_Title, SetEnvList.envList("200"), "", "", True)
-			SetCombo(.Cmb_DeathWay, SetEnvList.envList("201"), "", "", True)
-			SetCombo(.Cmb_Time2, SetEnvList.envList("106"), "", "", True)
-			SetCombo(.Cmb_Donation, SetEnvList.envList("300"), "", "", True)
-			SetCombo(.Cmb_Imibi, SetEnvList.envList("102"), "", "", True)
-			SetCombo(.Cmb_EndWord, SetEnvList.envList("202"), "", "", True)
-			SetCombo(.Cmb_Year, SetEnvList.envList("105"), "", "", True)
-			SetCombo(.Cmb_Month, SetEnvList.envList("103"), "", "", True)
+			SetCombo(.Cmb_Style, SetEnvList.envList("001"), "", "", False)
+			SetCombo(.Cmb_SeasonWord, SetEnvList.envList("100"), "", "", False)
+			SetCombo(.Cmb_Time1, SetEnvList.envList("101"), "", "", False)
+			SetCombo(.Cmb_Title, SetEnvList.envList("200"), "", "", False)
+			SetCombo(.Cmb_DeathWay, SetEnvList.envList("201"), "", "", False)
+			SetCombo(.Cmb_Time2, SetEnvList.envList("106"), "", "", False)
+			SetCombo(.Cmb_Donation, SetEnvList.envList("300"), "", "", False)
+			SetCombo(.Cmb_Imibi, SetEnvList.envList("102"), "", "", False)
+			SetCombo(.Cmb_EndWord, SetEnvList.envList("202"), "", "", False)
+			SetCombo(.Cmb_Year, SetEnvList.envList("105"), "", "", False)
+			SetCombo(.Cmb_Month, SetEnvList.envList("103"), "", "", False)
 			SetCombo(.Cmb_Day, SetEnvList.envList("104"), "", "", True)
 			SetCombo(.Cmb_HostType, SetEnvList.envList("301"), "", "", True)
 		End With

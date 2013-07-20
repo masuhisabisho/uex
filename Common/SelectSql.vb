@@ -8,7 +8,49 @@
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
 Public Class SelectSql
-#Region "SQL本体"	
+	#Region "SQL本体"
+	
+''''■GetSqlList
+''' <summary>ArrayListで1フィールド、多数の値を取得</summary>
+''' <param name="sqlText">String Sql command</param>
+''' <param name="keyColumn">String 取得したい値のフィールド名</param>
+''' <returns>ArrayListを返す</returns>
+	Public Function GetSqlList (sqltext As String, keyColumn As String) As ArrayList
+		Dim listAl As New ArrayList
+		
+		Dim sqlCon As New OleDbConnection
+		Dim sqlCommand As New OleDbCommand
+		Dim sqlReader As OleDbDataReader
+
+		sqlCon.ConnectionString = MainForm.dbSource
+		sqlCommand.Connection = sqlCon
+		sqlCommand.CommandText = sqltext
+		
+		sqlCon.Open()
+		sqlReader = sqlCommand.ExecuteReader()
+		
+		If sqlReader.HasRows = True Then
+			While sqlReader.Read()
+				Dim getResult = "" & sqlReader(keyColumn).ToString()
+				listAl.Add(getResult)
+				getResult = Nothing
+			End While
+			
+			sqlCommand.Dispose()
+			sqlReader.Close()
+			sqlcon.close()
+		
+			sqlCommand = Nothing
+			sqlReader = Nothing
+			sqlCon = Nothing
+		End If
+		
+		Return listAl
+
+		listAl = Nothing
+
+	End Function
+	
 ''''■GetSqlArray
 ''' <summary>Get data from multiple lines</summary>
 ''' <param name="sqlText">Sql command</param>

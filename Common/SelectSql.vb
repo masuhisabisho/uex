@@ -8,7 +8,8 @@
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
 Public Class SelectSql
-	#Region "SQL本体"
+	
+#Region "SQL本体"
 	
 ''''■GetSqlList
 ''' <summary>ArrayListで1フィールド、多数の値を取得</summary>
@@ -296,5 +297,6 @@ Public Class SelectSql
 		
 		Return resultTxt
 	End Function
-#End Region	
+	#End Region	
+	
 End Class

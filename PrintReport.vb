@@ -157,8 +157,8 @@ Public Partial Class PrintReport
 			Case sender Is	Txt_Add1
 
 			Case sender Is	Me.Txt_Add2
-				Cmn.WordReplacerTxt(17, CType(sender, TextBox), me, wc, 1)
-'				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				Cmn.WordReplacer(17, me, wc, 1,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_HostName1
 				Wc.optWord("Txt_PS1") = Me.Txt_PS1.Text
 			Case sender Is	Me.Txt_HostName2
@@ -212,34 +212,38 @@ Public Partial Class PrintReport
 				Wc.optWord("Common_Font") = Me.Cmb_Font.Text				'END: フォントサイズ 2013/7/21 mb 
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_SeasonWord								'END: 季語 2013/7/20 mb
-				Cmn.WordReplacer(0, CType(sender, ComboBox),  me, wc, 0)
+				Cmn.WordReplacer(0, me, wc, 0, CType(sender, ComboBox),)
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Time1									'END: 時期1 2013/7/20 mb
-				Cmn.WordReplacer(3, CType(sender, ComboBox), Me, Wc, 0)	
+				Cmn.WordReplacer(3, Me, Wc, 0, CType(sender, ComboBox),)	
 				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Title									'END: 続柄　2013/7/20 mb
-				Cmn.WordReplacer(3, CType(sender, ComboBox), Me, Wc, 0)
+				Cmn.WordReplacer(3, Me, Wc, 0, CType(sender, ComboBox))
 				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_DeathWay									'END: 死亡告知 2013/7/20 mb
-				Cmn.WordReplacer(4, CType(sender, ComboBox), Me, Wc, 2)
+				Cmn.WordReplacer(4, Me, Wc, 2, CType(sender, ComboBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				
+				
 '			Case sender Is	Me.Cmb_Time2
 '				Wc.optWord("Cmb_Time2") = Me.Cmb_Time2.SelectedValue
 '			Case sender Is	Me.Cmb_Donation
 '				Wc.optWord("Cmb_Donation") = Me.Cmb_Donation.SelectedValue
+
+
 			Case sender Is	Me.Cmb_Imibi
-				Cmn.WordReplacer(8, CType(sender, ComboBox), me, wc, 2)
+				Cmn.WordReplacer(8, me, wc, 2, CType(sender, ComboBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))	'END: 忌日 2013/7/21 mb
 			Case sender Is	Me.Cmb_EndWord
-				Cmn.WordReplacer(14, CType(sender, ComboBox), me, wc, 1) 	'END: 結語 2013/7/21 mb
+				Cmn.WordReplacer(14, me, wc, 1, CType(sender, ComboBox)) 	'END: 結語 2013/7/21 mb
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Year
 				Wc.optWord("Cmb_Year") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = " & Cmb_Year.SelectedValue)
-				Cmn.WordReplacer(15, CType(sender, ComboBox), Me, Wc, 0)	'END: 日付関連 2013/7/21 mb
+				Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))	'END: 日付関連 2013/7/21 mb
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Month
 				Wc.optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = " & Cmb_Month.SelectedValue)
-				Cmn.WordReplacer(15, CType(sender, ComboBox), Me, Wc, 0)
+				Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Day
 				If Cmb_Day.SelectedValue = "" Then							'文字が無い時のSQLエラー回避
@@ -247,8 +251,10 @@ Public Partial Class PrintReport
 				Else
 					Wc.optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = " & Cmb_Day.SelectedValue)
 				End If
-				Cmn.WordReplacer(15, CType(sender, ComboBox), Me, Wc, 0)
+				Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				
+				
 				
 '			Case sender Is	Me.Cmb_HostType
 '				Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue

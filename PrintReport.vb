@@ -51,6 +51,7 @@ Public Partial Class PrintReport
 		Dim defSetAr() As String
 		defSetAr = SctSql.GetDefaultVal(0)
 		
+		'フォント設定
 		Dim fontList As New ArrayList
 		Dim installedFont As New System.Drawing.Text.InstalledFontCollection
 		Dim fontFamilies As FontFamily() = installedFont.Families
@@ -67,7 +68,7 @@ Public Partial Class PrintReport
 		Next item
 		
 		installedFont.Dispose()
-		installedFont = Nothing		
+		installedFont = Nothing
 		
 		'コンボの値を設定
 		'TODO: それぞれの用紙に対するコンボの設定をどうするか？
@@ -128,6 +129,7 @@ Public Partial Class PrintReport
 	Public Sub TextBoxChange_TextChanged(sender As Object, e As EventArgs)
 		'END: Implement Txt_HostName1_TextChanged
 		'END: 最初の描画データを取り込み -> WordContainer.vb内に取り込み
+		'END: 保存してある文字データを変更して再度描画
 		'TODO: 画像サイズの可変設定
 		'TODO: 用紙サイズ・文例の変更
 		'END: 取り込みデータを元に変更画像を作成
@@ -148,13 +150,15 @@ Public Partial Class PrintReport
 
 		Select Case True
 			Case sender Is	Me.Txt_Name
-				Wc.optWord("Txt_Name") = Me.Txt_Name.Text
+'				Cmn.WordReplacer(0, me, wc, 0, ,CType(sender, TextBox))
+'				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_DeadName
-				Wc.optWord("Txt_DeadName") = Me.Txt_DeadName.Text 
+
 			Case sender Is	Txt_Add1
-				Wc.optWord("Txt_Add1") = Me.Txt_Add1.Text 
+
 			Case sender Is	Me.Txt_Add2
-				Wc.optWord("Txt_Add2") = Me.Txt_Add2.Text 
+				Cmn.WordReplacerTxt(17, CType(sender, TextBox), me, wc, 1)
+'				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_HostName1
 				Wc.optWord("Txt_PS1") = Me.Txt_PS1.Text
 			Case sender Is	Me.Txt_HostName2
@@ -175,40 +179,7 @@ Public Partial Class PrintReport
 				Wc.optWord("Txt_PS5") = Me.Txt_PS5.Text
 			Case sender Is	Me.Txt_PS6
 				Wc.optWord("Txt_PS6") = Me.Txt_PS6.Text 
-	End Select	
-	'TODO: 保存してある文字データを変更して再度描画
-	
-'		Dim SctSql As New SelectSql
-'		Dim mainTxt As New ArrayList
-'		Dim defSetAr() As String
-'		'ピクチャーの破棄・再設定
-'		With Pic_Main
-'			If Not (.Image Is Nothing) Then
-'				.Image.Dispose()
-'				.Image = Nothing
-'
-'				.Size = New Size(1800, 668)
-' 				.image = New Bitmap(1800,668)
-'			End If
-'		End With
-'		Select Case True
-'			Case sender Is Txt_HostName1
-'
-'
-'    			'変更データ格納
-'    			Wc.optWord("Txt_HostName1") = Me.Txt_HostName1.Text
-'				'DBより文章データの取り込み
-'				mainTxt = SctSql.GetSentence(Me.Cmb_Size.SelectedValue)
-'				defSetAr = SctSql.GetDefaultVal(Me.Cmb_Style.SelectedValue)
-'				
-'				Dim wordStorager As Array
-'				wordStorager = WordArranger(defSetAr, mainTxt, Wc.optWord)
-'				Call WordPreparer(defSetAr, mainTxt, wordStorager, Wc.optWord)
-'				
-'			Case sender Is Txt_HostName2
-'				'MessageBox.Show("ok2")
-'		End Select
-		
+		End Select	
 	End Sub
 	
 	Public Sub Cmb_SelectedIndexChanged(sender As Object, e As EventArgs)
@@ -220,9 +191,10 @@ Public Partial Class PrintReport
 		'END: Function化する
 		'END: 間に入る時はどうするのか？ -> 下の通り（書き換え、部分差し替えをしない）
 		'END: 現状のデータを保存、不変文字の場所、変化文字の場所を確認、変化部分を削除 -> 1行全て削除、書き換え
-		'TODO: 変更後の列ピッチがおかしい（おおきい）
+		'END: 変更後の列ピッチがおかしい（おおきい）
 		Dim SctSql As New SelectSql()
-		Dim defSetAr() As String = SctSql.GetDefaultVal(0)
+		Dim currentSize As Integer = Wc.CurSizeStorager
+		Dim defSetAr() As String = SctSql.GetDefaultVal(currentSize)
 		Dim Cmn As New Common(CSng(defSetAr(6)))
 		With Pic_Main
 			If Not (.Image Is Nothing) Then
@@ -234,40 +206,56 @@ Public Partial Class PrintReport
 			End If
 		End With
 		
-		Dim lineNo As Integer = 0
-		
 		Select Case True
+			'文字列
+			Case sender Is Me.Cmb_Font
+				Wc.optWord("Common_Font") = Me.Cmb_Font.Text				'END: フォントサイズ 2013/7/21 mb 
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_SeasonWord								'END: 季語 2013/7/20 mb
-				Wc.WordReplacer(0, CType(sender, ComboBox), me, Cmn, 0)
+				Cmn.WordReplacer(0, CType(sender, ComboBox),  me, wc, 0)
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Time1									'END: 時期1 2013/7/20 mb
-				Wc.WordReplacer(3, CType(sender, ComboBox), Me, Cmn, 0)	
+				Cmn.WordReplacer(3, CType(sender, ComboBox), Me, Wc, 0)	
 				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Title									'END: 続柄　2013/7/20 mb
-				Wc.WordReplacer(3, CType(sender, ComboBox), Me, Cmn, 0)
+				Cmn.WordReplacer(3, CType(sender, ComboBox), Me, Wc, 0)
 				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font"))
-			Case sender Is	Me.Cmb_DeathWay									'TODO: 死亡告知
-				Wc.WordReplacer(4, CType(sender, ComboBox), Me, Cmn, 2)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_DeathWay"))
-			Case sender Is	Me.Cmb_Time2
-				Wc.optWord("Cmb_Time2") = Me.Cmb_Time2.SelectedValue
-			Case sender Is	Me.Cmb_Donation
-				Wc.optWord("Cmb_Donation") = Me.Cmb_Donation.SelectedValue
+			Case sender Is	Me.Cmb_DeathWay									'END: 死亡告知 2013/7/20 mb
+				Cmn.WordReplacer(4, CType(sender, ComboBox), Me, Wc, 2)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+'			Case sender Is	Me.Cmb_Time2
+'				Wc.optWord("Cmb_Time2") = Me.Cmb_Time2.SelectedValue
+'			Case sender Is	Me.Cmb_Donation
+'				Wc.optWord("Cmb_Donation") = Me.Cmb_Donation.SelectedValue
 			Case sender Is	Me.Cmb_Imibi
-				Wc.optWord("Cmb_Imibi") = Me.Cmb_Imibi.SelectedValue
+				Cmn.WordReplacer(8, CType(sender, ComboBox), me, wc, 2)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))	'END: 忌日 2013/7/21 mb
 			Case sender Is	Me.Cmb_EndWord
-				Wc.optWord("Cmb_EndWord") = Me.Cmb_EndWord.SelectedValue
+				Cmn.WordReplacer(14, CType(sender, ComboBox), me, wc, 1) 	'END: 結語 2013/7/21 mb
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Year
-				Wc.optWord("Cmb_Year") = Me.Cmb_Year.SelectedValue
+				Wc.optWord("Cmb_Year") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = " & Cmb_Year.SelectedValue)
+				Cmn.WordReplacer(15, CType(sender, ComboBox), Me, Wc, 0)	'END: 日付関連 2013/7/21 mb
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Month
-				Wc.optWord("Cmb_Month") = Me.Cmb_Month.SelectedValue
+				Wc.optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = " & Cmb_Month.SelectedValue)
+				Cmn.WordReplacer(15, CType(sender, ComboBox), Me, Wc, 0)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Day
-				Wc.optWord("Cmb_Day") = Me.Cmb_Day.SelectedValue
-			Case sender Is	Me.Cmb_HostType
-				Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue
+				If Cmb_Day.SelectedValue = "" Then							'文字が無い時のSQLエラー回避
+					Wc.optWord("Cmb_Day") = ""
+				Else
+					Wc.optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = " & Cmb_Day.SelectedValue)
+				End If
+				Cmn.WordReplacer(15, CType(sender, ComboBox), Me, Wc, 0)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				
+'			Case sender Is	Me.Cmb_HostType
+'				Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue
+				
+			'フォントサイズ
 			Case sender Is Me.Cmb_PointTitle
 				Wc.optWord("Cmb_PointTitle") = Me.Cmb_PointTitle.SelectedItem
-				lineNo = 3
 			Case sender Is Me.Cmb_PointName
 				Wc.optWord("Cmb_PointName") = Me.Cmb_PointName.SelectedValue
 			Case sender Is Me.Cmb_PointDeadName

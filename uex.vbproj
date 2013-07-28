@@ -31,6 +31,8 @@
     <DefineConstants>TRACE=1</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework" />
+    <Reference Include="nunit.framework" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -87,6 +89,10 @@
       <DependentUpon>PrintReport.vb</DependentUpon>
     </Compile>
     <Compile Include="PrintReport.vb" />
+    <Compile Include="PrintSetting.Designer.vb">
+      <DependentUpon>PrintSetting.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PrintSetting.vb" />
     <Compile Include="Program.vb" />
     <Compile Include="Properties\AssemblyInfo.vb" />
   </ItemGroup>
@@ -127,6 +133,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PrintReport.resx">
       <DependentUpon>PrintReport.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PrintSetting.resx">
+      <DependentUpon>PrintSetting.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.Targets" />

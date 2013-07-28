@@ -82,6 +82,11 @@ Public Class ControlHandler
 				AddHandler Frm.Cmb_PointHostName3.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				AddHandler Frm.Cmb_PointHostName4.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				AddHandler Frm.Cmb_PointPS1.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
+				
+				AddHandler Frm.Cmb_Thickness.SelectedIndexChanged, AddressOf Frm.Cmb_Thickness_SelectedIndexChanged
+				
+				AddHandler Frm.Cmb_Magnify.SelectedIndexChanged, AddressOf Frm.Cmb_Magnify_SelectedIndexChanged
+
 			Case False
 				RemoveHandler Frm.Cmb_SeasonWord.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
 				RemoveHandler Frm.Cmb_Time1.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
@@ -108,7 +113,12 @@ Public Class ControlHandler
 				RemoveHandler Frm.Cmb_PointHostName2.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				RemoveHandler Frm.Cmb_PointHostName3.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				RemoveHandler Frm.Cmb_PointHostName4.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointPS1.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
+				RemoveHandler Frm.Cmb_PointPS1.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged
+				
+				RemoveHandler Frm.Cmb_Thickness.SelectedIndexChanged, AddressOf Frm.Cmb_Thickness_SelectedIndexChanged
+				
+				RemoveHandler Frm.Cmb_Magnify.SelectedIndexChanged, AddressOf Frm.Cmb_Magnify_SelectedIndexChanged
+
 		End select
 	End Sub
 	

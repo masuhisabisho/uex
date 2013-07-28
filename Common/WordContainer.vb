@@ -8,8 +8,10 @@
 '
 Public Class WordContainer
 	
-	Private curSize As Integer
-	Private curStyle As Integer 
+	Private curSize As Integer				'現在の用紙ID
+	Private curStyle As Integer				'現在の文例ID
+	Private paperSize As String				'現在の用紙IDに対する用紙サイズ
+	Private paperDirection As String		'現在の用紙IDに対する用紙設定方向
 	
 	Public optWord As New Hashtable()
 	Public curWord As New ArrayList()
@@ -37,7 +39,31 @@ Public Class WordContainer
 			curStyle = val
 		End Set
 	End Property
-
+	
+'''■CurPPSizeStorager
+''' <summary>現在表示している内容の用紙設定名を保存する</summary>
+''' <returns>用紙ID</returns>
+	Public Property CurPPSizeStorager() As String
+		Get
+			Return paperSize
+		End Get
+		Set(ByVal val As String)
+			paperSize = val
+		End Set
+	End Property
+	
+'''■CurPPDirecStorager
+''' <summary>現在表示している内容の印刷方向を保存する</summary>
+''' <returns>用紙ID</returns>
+	Public Property CurPPDirecStorager() As String
+		Get
+			Return paperDirection
+		End Get
+		Set(ByVal val As String)
+			paperDirection = val
+		End Set
+	End Property
+	
 ''''■CurrentWord
 ''' <summary>描画した文字情報を保管しておく
 ''' 1) 行
@@ -106,13 +132,13 @@ Public Class WordContainer
 			optWord("Cmb_PointImibi") = .Cmb_PointImibi.SelectedIndex
 			optWord("Cmb_PointEndWord") = .Cmb_PointEndWord.SelectedIndex
 			optWord("Cmb_PointCeremonyDate") = .Cmb_PointCeremonyDate.SelectedIndex
-			optWord("Cmb_PointAdd1") = .Cmb_PointAdd1
-			optWord("Cmb_PointHostType") = .Cmb_PointHostType
+			optWord("Cmb_PointAdd1") = .Cmb_PointAdd1.SelectedIndex
+			optWord("Cmb_PointHostType") = .Cmb_PointHostType.SelectedValue
 			optWord("Cmb_PointHostName1") = .Cmb_PointHostName1.SelectedValue
 			optWord("Cmb_PointHostName2") = .Cmb_PointHostName2.SelectedValue	
 			optWord("Cmb_PointHostName3") = .Cmb_PointHostName3.SelectedValue
 			optWord("Cmb_PointHostName4") = .Cmb_PointHostName4.SelectedValue
-			optWord("Cmb_PointPS1") = .Cmb_PointPS1.SelectedValue
+			optWord("Cmb_PointPS1") = .Cmb_PointPS1.SelectedIndex
 			End With
 	End Sub
 	

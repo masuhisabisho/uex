@@ -35,21 +35,23 @@ Partial Class PrintReport
 	Private Sub InitializeComponent()
 		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PrintReport))
 		Me.Grb_Common = New System.Windows.Forms.GroupBox()
+		Me.Btn_Print = New System.Windows.Forms.Button()
 		Me.Txt_SizeY = New System.Windows.Forms.TextBox()
+		Me.Cmb_Thickness = New System.Windows.Forms.ComboBox()
 		Me.Txt_PrintDir = New System.Windows.Forms.TextBox()
 		Me.Txt_SizeW = New System.Windows.Forms.TextBox()
-		Me.Lbl_PosY = New System.Windows.Forms.Label()
-		Me.Lbl_PosX = New System.Windows.Forms.Label()
+		Me.Lbl_Thick = New System.Windows.Forms.Label()
+		Me.Cmb_Magnify = New System.Windows.Forms.ComboBox()
 		Me.Lbl_Font = New System.Windows.Forms.Label()
 		Me.Lbl_PrintDir = New System.Windows.Forms.Label()
 		Me.Lbl_SizeH = New System.Windows.Forms.Label()
+		Me.Lbl_Rate = New System.Windows.Forms.Label()
 		Me.Lbl_SizeW = New System.Windows.Forms.Label()
 		Me.Lbl_Size = New System.Windows.Forms.Label()
-		Me.Txt_PosY = New System.Windows.Forms.TextBox()
-		Me.Txt_PosX = New System.Windows.Forms.TextBox()
 		Me.Cmb_Font = New System.Windows.Forms.ComboBox()
 		Me.Cmb_Size = New System.Windows.Forms.ComboBox()
 		Me.Grb_Contents = New System.Windows.Forms.GroupBox()
+		Me.textBox1 = New System.Windows.Forms.TextBox()
 		Me.Btn_Dtp = New System.Windows.Forms.Button()
 		Me.Lbl_Month = New System.Windows.Forms.Label()
 		Me.Lbl_Day = New System.Windows.Forms.Label()
@@ -120,15 +122,8 @@ Partial Class PrintReport
 		Me.Lbl_Donation = New System.Windows.Forms.Label()
 		Me.Lbl_Imibi = New System.Windows.Forms.Label()
 		Me.panel1 = New System.Windows.Forms.Panel()
-		Me.Cmb_Magnify = New System.Windows.Forms.ComboBox()
-		Me.Txt_Copy = New System.Windows.Forms.TextBox()
-		Me.Cmb_Thickness = New System.Windows.Forms.ComboBox()
-		Me.Lbl_Rate = New System.Windows.Forms.Label()
-		Me.Lbl_Num = New System.Windows.Forms.Label()
-		Me.Lbl_Thick = New System.Windows.Forms.Label()
 		Me.Pic_Main = New System.Windows.Forms.PictureBox()
 		Me.Pnl_Main = New System.Windows.Forms.Panel()
-		Me.label1 = New System.Windows.Forms.Label()
 		Me.Grb_Common.SuspendLayout
 		Me.Grb_Contents.SuspendLayout
 		Me.panel1.SuspendLayout
@@ -138,38 +133,57 @@ Partial Class PrintReport
 		'
 		'Grb_Common
 		'
+		Me.Grb_Common.Controls.Add(Me.Btn_Print)
 		Me.Grb_Common.Controls.Add(Me.Txt_SizeY)
+		Me.Grb_Common.Controls.Add(Me.Cmb_Thickness)
 		Me.Grb_Common.Controls.Add(Me.Txt_PrintDir)
 		Me.Grb_Common.Controls.Add(Me.Txt_SizeW)
-		Me.Grb_Common.Controls.Add(Me.Lbl_PosY)
-		Me.Grb_Common.Controls.Add(Me.Lbl_PosX)
+		Me.Grb_Common.Controls.Add(Me.Lbl_Thick)
+		Me.Grb_Common.Controls.Add(Me.Cmb_Magnify)
 		Me.Grb_Common.Controls.Add(Me.Lbl_Font)
 		Me.Grb_Common.Controls.Add(Me.Lbl_PrintDir)
 		Me.Grb_Common.Controls.Add(Me.Lbl_SizeH)
+		Me.Grb_Common.Controls.Add(Me.Lbl_Rate)
 		Me.Grb_Common.Controls.Add(Me.Lbl_SizeW)
 		Me.Grb_Common.Controls.Add(Me.Lbl_Size)
-		Me.Grb_Common.Controls.Add(Me.Txt_PosY)
-		Me.Grb_Common.Controls.Add(Me.Txt_PosX)
 		Me.Grb_Common.Controls.Add(Me.Cmb_Font)
 		Me.Grb_Common.Controls.Add(Me.Cmb_Size)
-		Me.Grb_Common.Location = New System.Drawing.Point(10, 3)
+		Me.Grb_Common.Location = New System.Drawing.Point(10, 1)
 		Me.Grb_Common.Name = "Grb_Common"
-		Me.Grb_Common.Size = New System.Drawing.Size(354, 148)
+		Me.Grb_Common.Size = New System.Drawing.Size(347, 146)
 		Me.Grb_Common.TabIndex = 1
 		Me.Grb_Common.TabStop = false
 		Me.Grb_Common.Text = "共通設定"
 		'
+		'Btn_Print
+		'
+		Me.Btn_Print.Location = New System.Drawing.Point(268, 119)
+		Me.Btn_Print.Name = "Btn_Print"
+		Me.Btn_Print.Size = New System.Drawing.Size(75, 23)
+		Me.Btn_Print.TabIndex = 17
+		Me.Btn_Print.Text = "印刷"
+		Me.Btn_Print.UseVisualStyleBackColor = true
+		AddHandler Me.Btn_Print.Click, AddressOf Me.Btn_Print_Click
+		'
 		'Txt_SizeY
 		'
-		Me.Txt_SizeY.Location = New System.Drawing.Point(99, 55)
+		Me.Txt_SizeY.Location = New System.Drawing.Point(78, 55)
 		Me.Txt_SizeY.Name = "Txt_SizeY"
 		Me.Txt_SizeY.ReadOnly = true
 		Me.Txt_SizeY.Size = New System.Drawing.Size(223, 19)
 		Me.Txt_SizeY.TabIndex = 16
 		'
+		'Cmb_Thickness
+		'
+		Me.Cmb_Thickness.FormattingEnabled = true
+		Me.Cmb_Thickness.Location = New System.Drawing.Point(193, 117)
+		Me.Cmb_Thickness.Name = "Cmb_Thickness"
+		Me.Cmb_Thickness.Size = New System.Drawing.Size(49, 20)
+		Me.Cmb_Thickness.TabIndex = 7
+		'
 		'Txt_PrintDir
 		'
-		Me.Txt_PrintDir.Location = New System.Drawing.Point(99, 75)
+		Me.Txt_PrintDir.Location = New System.Drawing.Point(78, 75)
 		Me.Txt_PrintDir.Name = "Txt_PrintDir"
 		Me.Txt_PrintDir.ReadOnly = true
 		Me.Txt_PrintDir.Size = New System.Drawing.Size(223, 19)
@@ -177,33 +191,33 @@ Partial Class PrintReport
 		'
 		'Txt_SizeW
 		'
-		Me.Txt_SizeW.Location = New System.Drawing.Point(99, 35)
+		Me.Txt_SizeW.Location = New System.Drawing.Point(78, 35)
 		Me.Txt_SizeW.Name = "Txt_SizeW"
 		Me.Txt_SizeW.ReadOnly = true
 		Me.Txt_SizeW.Size = New System.Drawing.Size(223, 19)
 		Me.Txt_SizeW.TabIndex = 14
 		'
-		'Lbl_PosY
+		'Lbl_Thick
 		'
-		Me.Lbl_PosY.Location = New System.Drawing.Point(198, 123)
-		Me.Lbl_PosY.Name = "Lbl_PosY"
-		Me.Lbl_PosY.Size = New System.Drawing.Size(85, 16)
-		Me.Lbl_PosY.TabIndex = 13
-		Me.Lbl_PosY.Text = "印刷位置（Y)："
+		Me.Lbl_Thick.Location = New System.Drawing.Point(134, 121)
+		Me.Lbl_Thick.Name = "Lbl_Thick"
+		Me.Lbl_Thick.Size = New System.Drawing.Size(69, 18)
+		Me.Lbl_Thick.TabIndex = 14
+		Me.Lbl_Thick.Text = "印刷濃度："
 		'
-		'Lbl_PosX
+		'Cmb_Magnify
 		'
-		Me.Lbl_PosX.Location = New System.Drawing.Point(7, 123)
-		Me.Lbl_PosX.Name = "Lbl_PosX"
-		Me.Lbl_PosX.Size = New System.Drawing.Size(81, 18)
-		Me.Lbl_PosX.TabIndex = 12
-		Me.Lbl_PosX.Text = "印刷位置（X)："
+		Me.Cmb_Magnify.FormattingEnabled = true
+		Me.Cmb_Magnify.Location = New System.Drawing.Point(78, 117)
+		Me.Cmb_Magnify.Name = "Cmb_Magnify"
+		Me.Cmb_Magnify.Size = New System.Drawing.Size(49, 20)
+		Me.Cmb_Magnify.TabIndex = 5
 		'
 		'Lbl_Font
 		'
 		Me.Lbl_Font.Location = New System.Drawing.Point(7, 98)
 		Me.Lbl_Font.Name = "Lbl_Font"
-		Me.Lbl_Font.Size = New System.Drawing.Size(69, 23)
+		Me.Lbl_Font.Size = New System.Drawing.Size(69, 17)
 		Me.Lbl_Font.TabIndex = 11
 		Me.Lbl_Font.Text = "フォント："
 		'
@@ -211,7 +225,7 @@ Partial Class PrintReport
 		'
 		Me.Lbl_PrintDir.Location = New System.Drawing.Point(7, 77)
 		Me.Lbl_PrintDir.Name = "Lbl_PrintDir"
-		Me.Lbl_PrintDir.Size = New System.Drawing.Size(69, 23)
+		Me.Lbl_PrintDir.Size = New System.Drawing.Size(69, 17)
 		Me.Lbl_PrintDir.TabIndex = 10
 		Me.Lbl_PrintDir.Text = "印刷方向："
 		'
@@ -219,15 +233,23 @@ Partial Class PrintReport
 		'
 		Me.Lbl_SizeH.Location = New System.Drawing.Point(7, 57)
 		Me.Lbl_SizeH.Name = "Lbl_SizeH"
-		Me.Lbl_SizeH.Size = New System.Drawing.Size(69, 23)
+		Me.Lbl_SizeH.Size = New System.Drawing.Size(69, 17)
 		Me.Lbl_SizeH.TabIndex = 9
 		Me.Lbl_SizeH.Text = "用紙（高さ）："
+		'
+		'Lbl_Rate
+		'
+		Me.Lbl_Rate.Location = New System.Drawing.Point(7, 120)
+		Me.Lbl_Rate.Name = "Lbl_Rate"
+		Me.Lbl_Rate.Size = New System.Drawing.Size(62, 13)
+		Me.Lbl_Rate.TabIndex = 12
+		Me.Lbl_Rate.Text = "表示倍率："
 		'
 		'Lbl_SizeW
 		'
 		Me.Lbl_SizeW.Location = New System.Drawing.Point(7, 37)
 		Me.Lbl_SizeW.Name = "Lbl_SizeW"
-		Me.Lbl_SizeW.Size = New System.Drawing.Size(69, 23)
+		Me.Lbl_SizeW.Size = New System.Drawing.Size(69, 17)
 		Me.Lbl_SizeW.TabIndex = 8
 		Me.Lbl_SizeW.Text = "用紙（幅）："
 		'
@@ -235,29 +257,15 @@ Partial Class PrintReport
 		'
 		Me.Lbl_Size.Location = New System.Drawing.Point(7, 18)
 		Me.Lbl_Size.Name = "Lbl_Size"
-		Me.Lbl_Size.Size = New System.Drawing.Size(69, 23)
+		Me.Lbl_Size.Size = New System.Drawing.Size(69, 17)
 		Me.Lbl_Size.TabIndex = 7
 		Me.Lbl_Size.Text = "用紙："
-		'
-		'Txt_PosY
-		'
-		Me.Txt_PosY.Location = New System.Drawing.Point(282, 121)
-		Me.Txt_PosY.Name = "Txt_PosY"
-		Me.Txt_PosY.Size = New System.Drawing.Size(40, 19)
-		Me.Txt_PosY.TabIndex = 6
-		'
-		'Txt_PosX
-		'
-		Me.Txt_PosX.Location = New System.Drawing.Point(99, 120)
-		Me.Txt_PosX.Name = "Txt_PosX"
-		Me.Txt_PosX.Size = New System.Drawing.Size(40, 19)
-		Me.Txt_PosX.TabIndex = 5
 		'
 		'Cmb_Font
 		'
 		Me.Cmb_Font.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_Font.FormattingEnabled = true
-		Me.Cmb_Font.Location = New System.Drawing.Point(99, 95)
+		Me.Cmb_Font.Location = New System.Drawing.Point(78, 95)
 		Me.Cmb_Font.Name = "Cmb_Font"
 		Me.Cmb_Font.Size = New System.Drawing.Size(223, 20)
 		Me.Cmb_Font.TabIndex = 4
@@ -265,13 +273,14 @@ Partial Class PrintReport
 		'Cmb_Size
 		'
 		Me.Cmb_Size.FormattingEnabled = true
-		Me.Cmb_Size.Location = New System.Drawing.Point(99, 14)
+		Me.Cmb_Size.Location = New System.Drawing.Point(78, 14)
 		Me.Cmb_Size.Name = "Cmb_Size"
 		Me.Cmb_Size.Size = New System.Drawing.Size(223, 20)
 		Me.Cmb_Size.TabIndex = 0
 		'
 		'Grb_Contents
 		'
+		Me.Grb_Contents.Controls.Add(Me.textBox1)
 		Me.Grb_Contents.Controls.Add(Me.Btn_Dtp)
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Month)
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Day)
@@ -347,6 +356,13 @@ Partial Class PrintReport
 		Me.Grb_Contents.TabIndex = 2
 		Me.Grb_Contents.TabStop = false
 		Me.Grb_Contents.Text = "内容設定"
+		'
+		'textBox1
+		'
+		Me.textBox1.Location = New System.Drawing.Point(266, 19)
+		Me.textBox1.Name = "textBox1"
+		Me.textBox1.Size = New System.Drawing.Size(50, 19)
+		Me.textBox1.TabIndex = 102
 		'
 		'Btn_Dtp
 		'
@@ -934,89 +950,33 @@ Partial Class PrintReport
 		'panel1
 		'
 		Me.panel1.Controls.Add(Me.Grb_Contents)
-		Me.panel1.Location = New System.Drawing.Point(10, 181)
+		Me.panel1.Location = New System.Drawing.Point(4, 153)
 		Me.panel1.Name = "panel1"
 		Me.panel1.Size = New System.Drawing.Size(359, 510)
 		Me.panel1.TabIndex = 3
-		'
-		'Cmb_Magnify
-		'
-		Me.Cmb_Magnify.FormattingEnabled = true
-		Me.Cmb_Magnify.Location = New System.Drawing.Point(89, 156)
-		Me.Cmb_Magnify.Name = "Cmb_Magnify"
-		Me.Cmb_Magnify.Size = New System.Drawing.Size(49, 20)
-		Me.Cmb_Magnify.TabIndex = 5
-		'
-		'Txt_Copy
-		'
-		Me.Txt_Copy.Location = New System.Drawing.Point(185, 156)
-		Me.Txt_Copy.Name = "Txt_Copy"
-		Me.Txt_Copy.Size = New System.Drawing.Size(31, 19)
-		Me.Txt_Copy.TabIndex = 6
-		'
-		'Cmb_Thickness
-		'
-		Me.Cmb_Thickness.FormattingEnabled = true
-		Me.Cmb_Thickness.Location = New System.Drawing.Point(282, 156)
-		Me.Cmb_Thickness.Name = "Cmb_Thickness"
-		Me.Cmb_Thickness.Size = New System.Drawing.Size(49, 20)
-		Me.Cmb_Thickness.TabIndex = 7
-		'
-		'Lbl_Rate
-		'
-		Me.Lbl_Rate.Location = New System.Drawing.Point(21, 160)
-		Me.Lbl_Rate.Name = "Lbl_Rate"
-		Me.Lbl_Rate.Size = New System.Drawing.Size(62, 23)
-		Me.Lbl_Rate.TabIndex = 12
-		Me.Lbl_Rate.Text = "表示倍率："
-		'
-		'Lbl_Num
-		'
-		Me.Lbl_Num.Location = New System.Drawing.Point(146, 160)
-		Me.Lbl_Num.Name = "Lbl_Num"
-		Me.Lbl_Num.Size = New System.Drawing.Size(43, 18)
-		Me.Lbl_Num.TabIndex = 13
-		Me.Lbl_Num.Text = "部数："
-		'
-		'Lbl_Thick
-		'
-		Me.Lbl_Thick.Location = New System.Drawing.Point(223, 160)
-		Me.Lbl_Thick.Name = "Lbl_Thick"
-		Me.Lbl_Thick.Size = New System.Drawing.Size(69, 23)
-		Me.Lbl_Thick.TabIndex = 14
-		Me.Lbl_Thick.Text = "印刷濃度："
 		'
 		'Pic_Main
 		'
 		Me.Pic_Main.BackColor = System.Drawing.Color.White
 		Me.Pic_Main.ErrorImage = Nothing
-		Me.Pic_Main.InitialImage = CType(resources.GetObject("Pic_Main.InitialImage"),System.Drawing.Image)
+		Me.Pic_Main.InitialImage = Nothing
 		Me.Pic_Main.Location = New System.Drawing.Point(3, 2)
 		Me.Pic_Main.Name = "Pic_Main"
 		Me.Pic_Main.Size = New System.Drawing.Size(768, 668)
 		Me.Pic_Main.TabIndex = 16
 		Me.Pic_Main.TabStop = false
+		Me.Pic_Main.WaitOnLoad = true
 		'
 		'Pnl_Main
 		'
 		Me.Pnl_Main.AutoScroll = true
 		Me.Pnl_Main.AutoScrollMargin = New System.Drawing.Size(5, 5)
 		Me.Pnl_Main.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-		Me.Pnl_Main.Controls.Add(Me.label1)
 		Me.Pnl_Main.Controls.Add(Me.Pic_Main)
 		Me.Pnl_Main.Location = New System.Drawing.Point(375, 10)
 		Me.Pnl_Main.Name = "Pnl_Main"
 		Me.Pnl_Main.Size = New System.Drawing.Size(790, 687)
 		Me.Pnl_Main.TabIndex = 17
-		'
-		'label1
-		'
-		Me.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-		Me.label1.Location = New System.Drawing.Point(11, 525)
-		Me.label1.Name = "label1"
-		Me.label1.Size = New System.Drawing.Size(752, 4)
-		Me.label1.TabIndex = 17
-		Me.label1.Text = "label1"
 		'
 		'PrintReport
 		'
@@ -1025,13 +985,7 @@ Partial Class PrintReport
 		Me.ClientSize = New System.Drawing.Size(1176, 714)
 		Me.Controls.Add(Me.Pnl_Main)
 		Me.Controls.Add(Me.panel1)
-		Me.Controls.Add(Me.Cmb_Thickness)
-		Me.Controls.Add(Me.Txt_Copy)
-		Me.Controls.Add(Me.Cmb_Magnify)
 		Me.Controls.Add(Me.Grb_Common)
-		Me.Controls.Add(Me.Lbl_Thick)
-		Me.Controls.Add(Me.Lbl_Num)
-		Me.Controls.Add(Me.Lbl_Rate)
 		Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
 		Me.Name = "PrintReport"
 		Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
@@ -1046,9 +1000,9 @@ Partial Class PrintReport
 		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).EndInit
 		Me.Pnl_Main.ResumeLayout(false)
 		Me.ResumeLayout(false)
-		Me.PerformLayout
 	End Sub
-	Private label1 As System.Windows.Forms.Label
+	Private Btn_Print As System.Windows.Forms.Button
+	Private textBox1 As System.Windows.Forms.TextBox
 	Private Pnl_Main As System.Windows.Forms.Panel
 	Private Lbl_year As System.Windows.Forms.Label
 	Private Lbl_Day As System.Windows.Forms.Label
@@ -1095,7 +1049,6 @@ Partial Class PrintReport
 	Friend Cmb_PointDeadName As System.Windows.Forms.ComboBox
 	Friend Cmb_PointName As System.Windows.Forms.ComboBox
 	Private Lbl_Thick As System.Windows.Forms.Label
-	Private Lbl_Num As System.Windows.Forms.Label
 	Private Lbl_Rate As System.Windows.Forms.Label
 	Friend Cmb_DeathWay As System.Windows.Forms.ComboBox
 	Private Lbl_Imibi As System.Windows.Forms.Label
@@ -1124,22 +1077,17 @@ Partial Class PrintReport
 	Private Lbl_PS2 As System.Windows.Forms.Label
 	Private Lbl_PS1 As System.Windows.Forms.Label
 	Friend Cmb_Thickness As System.Windows.Forms.ComboBox
-	Friend Txt_Copy As System.Windows.Forms.TextBox
 	Private Lbl_Size As System.Windows.Forms.Label
 	Private Lbl_SizeW As System.Windows.Forms.Label
 	Private Lbl_SizeH As System.Windows.Forms.Label
 	Private Lbl_PrintDir As System.Windows.Forms.Label
 	Private Lbl_Font As System.Windows.Forms.Label
-	Private Lbl_PosX As System.Windows.Forms.Label
-	Private Lbl_PosY As System.Windows.Forms.Label
 	Private Txt_SizeW As System.Windows.Forms.TextBox
 	Private Txt_PrintDir As System.Windows.Forms.TextBox
 	Private Txt_SizeY As System.Windows.Forms.TextBox
 	Friend Cmb_Magnify As System.Windows.Forms.ComboBox
 	Friend Cmb_Size As System.Windows.Forms.ComboBox
 	Friend Cmb_Font As System.Windows.Forms.ComboBox
-	Friend Txt_PosX As System.Windows.Forms.TextBox
-	Friend Txt_PosY As System.Windows.Forms.TextBox
 	Private Grb_Contents As System.Windows.Forms.GroupBox
 	Private Grb_Common As System.Windows.Forms.GroupBox
 	Private panel1 As System.Windows.Forms.Panel

@@ -70,7 +70,7 @@ Public Class SetCombo
 		With Frm
 			SetCombo(.Cmb_Size, SetEnvList.envList("002"), "奉書挨拶状", "0", False)
 			SetCombo(.Cmb_Magnify, SetEnvList.envList("400"), "100", "100", False)
-			SetCombo(.Cmb_Thickness, SetEnvList.envList("401"), "40", "40", False)
+			SetCombo(.Cmb_Thickness, SetEnvList.envList("401"), "100", "0", False)
 			SetCombo(.Cmb_Style, SetEnvList.envList("001"), "", "", False)
 			SetCombo(.Cmb_SeasonWord, SetEnvList.envList("100"), "", "", False)
 			SetCombo(.Cmb_Time1, SetEnvList.envList("101"), "", "", False)

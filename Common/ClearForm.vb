@@ -27,9 +27,8 @@ Public Class ClearForm
                     Dim str As String = .Cmb_Font.Text
                     
                     '下記３つ現画面で廃止予定
-                    .Cmb_Magnify.SelectedValue = 100
-                    .Cmb_Thickness.SelectedValue = 40
-                    .Txt_Copy.Text = "1"
+                    .Cmb_Magnify.SelectedValue = 1
+                    .Cmb_Thickness.SelectedValue = 0
                     
                     '初期設定の値は下の通り
                     'Specific part
@@ -51,13 +50,13 @@ Public Class ClearForm
                     .Cmb_Day.SelectedValue = currentDt(2)
                     .Cmb_HostType.SelectedValue = "施主"
                     .Cmb_HostType.Enabled = False
-                    .Txt_PS1.Text = "追伸"                                      'TODO: From SQL
-                    .Txt_PS2.Text = "ｘｘｘｘｘｘｘｘｘｘｘのお印までに粗品を"  'TODO: From SQL
-                    .Txt_PS3.Text = "お届けさせて頂きました"                    'TODO: From SQL
-                    .Txt_PS4.Text = "御受納下さいます様お願い申し上げます"      'TODO: From SQL
+                    .Txt_PS1.Text = "追伸" 
+                    .Txt_PS2.Text = "ｘｘｘｘｘｘｘｘｘｘｘのお印までに粗品を"
+                    .Txt_PS3.Text = "お届けさせて頂きました"
+                    .Txt_PS4.Text = "御受納下さいます様お願い申し上げます"
 
                     'Font Size
-                    .Cmb_PointTitle.SelectedIndex = 35						'★
+                    .Cmb_PointTitle.SelectedIndex = 35
                     .Cmb_PointName.SelectedIndex = 35
                     .Cmb_PointDeadName.SelectedIndex = 0
                     .Cmb_PointDeadName.Enabled = False
@@ -65,7 +64,7 @@ Public Class ClearForm
                     .Cmb_PointEndWord.SelectedIndex = 35
                     .Cmb_PointCeremonyDate.SelectedIndex = 22
                     .Cmb_PointAdd1.SelectedIndex = 19
-                    .Cmb_PointHostType.SelectedValue = 0
+                    .Cmb_PointHostType.SelectedValue = 1
                     .Cmb_PointHostType.Enabled = False
                     .Cmb_PointHostName1.SelectedIndex = 34
                     .Cmb_PointHostName2.SelectedIndex = 34

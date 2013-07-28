@@ -20,45 +20,6 @@ Public Class Common
 			Return basicPitch
 		End Get
 	End Property
-	
-#Region "汎用関数"
-
-''''■Magnify
-''' <summary>画像を拡大・縮小する。</summary>
-''' <param name="Source">対象の画像</param>
-''' <param name="Rate">拡大率。以下の値を指定した場合は縮小される。</param>
-''' <param name="Quality">画質。省略時は最高画質。</param>
-''' <returns>処理後の画像</returns>
-''' 'http://homepage1.nifty.com/rucio/main/dotnet/Samples/Sample141ImageMagnify.htm
-''' 'PictureBox1.Image = Magnify(PictureBox1.Image, 1.2F)
-	Public Function Magnify(ByVal Source As Image, ByVal Rate As Double, _ 
-	Optional ByVal Quality As Drawing2D.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic) As Image
-
-    	'▼引数のチェック
-    	If IsNothing(Source) Then
-        	Throw New NullReferenceException("Sourceに値が設定されていません。")
-    	End If
-    	If CInt(Source.Size.Width * Rate) <= 0 OrElse CInt(Source.Size.Height * Rate) <= 0 Then
-        	Throw New ArgumentException("処理後の画像のサイズが0以下になります。Rateには十分大きな値を指定してください。")
-    	End If
-
-    	'▼処理後の大きさの空の画像を作成
-    	Dim NewRect As Rectangle
-
-    	NewRect.Width = CInt(Source.Size.Width * Rate)
-    	NewRect.Height = CInt(Source.Size.Height * Rate)
-    	Dim DestImage As New Bitmap(NewRect.Width, NewRect.Height)
-
-    	'▼拡大・縮小実行
-    	Dim g As Graphics = Graphics.FromImage(DestImage)
-    	g.InterpolationMode = Quality
-    	g.DrawImage(Source, NewRect)
-
-    	Return DestImage
-
-	End Function
-	
-#End Region
 
 #Region "Word"
 ''''■WordPreparer
@@ -198,7 +159,8 @@ Public Sub WordArranger(defSetAr As String(), mainTxt As ArrayList, _
 							Else
 								If CInt(wordStorager(i)(0)) <> 0 Then
 									Dim pickPoint As Integer = OnePointPicker(wordStorager(i)(1), 0)
-									Dim fontSize() As Single = Frm.FontSizeCal(wordStorager(i)(2), Wc.optWord("Common_Font"), pickPoint) '★
+									'Dim fontSize() As Single = Frm.FontSizeCal(wordStorager(i)(2), Wc.optWord("Common_Font"), pickPoint)
+									Dim fontSize() As Single = GetMaxWord(font, wordStorager(i),,,2)	'同一行内の最大幅に変更 2013/7/27 mb
 									startXPos = startXPos - CSng(defsetAr(5)) - fontSize(1)	'END: 文字サイズ＋ピッチへ 2013/7/2
 								Else														'END: 文字無しの時のエスケープ（改行だけする）
 									Dim FontSize() As Single = Frm.FontSizeCal("口", Wc.optWord("Common_Font"), CInt(defSetAr(1)))
@@ -249,10 +211,9 @@ Public Sub WordArranger(defSetAr As String(), mainTxt As ArrayList, _
 													Frm
 													)
 							Call Frm.CreateWordDiff(wordStorager(i), Wc.optWord("Common_Font"), irrXYPos)
-							startXPos = startXPos - maxWidth
-							
+							startXPos = startXPos - maxWidth	
 						End If
-					Case 1, 3	'下
+					Case 1	'下
 						If PointDiffChecker(wordStorager(i)(1)) = True Then
 								Dim newXPos As Single = CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
 								If newXPos <> 0 Then
@@ -260,7 +221,8 @@ Public Sub WordArranger(defSetAr As String(), mainTxt As ArrayList, _
 								Else
 									If CInt(wordStorager(i)(0)) <> 0 Then
 										Dim pickPoint As Integer = OnePointPicker(wordStorager(i)(1), 0)
-										Dim fontSize() As Single = Frm.FontSizeCal(wordStorager(i)(2), Wc.optWord("Common_Font"), pickPoint)
+										'Dim fontSize() As Single = Frm.FontSizeCal(wordStorager(i)(2), Wc.optWord("Common_Font"), pickPoint)
+										Dim fontSize() As Single = GetMaxWord(font, wordStorager(i),,,2)	'同一行内の最大幅に変更 2013/7/27 mb
 										startXPos = startXPos - CSng(defsetAr(5)) - fontSize(1)
 									Else	
 										Dim fontSize() As Single = Frm.FontSizeCal("口", Wc.optWord("Common_Font"), CInt(defSetAr(1)))
@@ -334,11 +296,12 @@ Public Sub WordArranger(defSetAr As String(), mainTxt As ArrayList, _
 							startXPos = startXPos - newXPos									'イレギュラー改行
 						Else
 							If Cint(wordStorager(i)(0)) <> 0 Then				'END: この辺に文字無しの時のエスケープを考える
-								Dim tempFontSize() As Single = Frm.FontSizeCal(wordStorager(i)(2), Wc.optWord("Common_Font"), CInt(defSetAr(1)))
-								startXPos = startXPos - CSng(defsetAr(5))	- tempFontSize(1)
+								'Dim fontSize() As Single = Frm.FontSizeCal(wordStorager(i)(2), Wc.optWord("Common_Font"), CInt(defSetAr(1)))
+								Dim fontSize() As Single = GetMaxWord(font, wordStorager(i),,,2)	'同一行内の最大幅に変更 2013/7/27 mb
+								startXPos = startXPos - CSng(defsetAr(5)) - fontSize(1)
 							Else	
-								Dim tempFontSize() As Single = Frm.FontSizeCal("口", Wc.optWord("Common_Font"), CInt(defSetAr(1)))
-								startXPos = startXPos - CSng(defsetAr(5))	- tempFontSize(1)
+								Dim fontSize() As Single = Frm.FontSizeCal("口", Wc.optWord("Common_Font"), CInt(defSetAr(1)))
+								startXPos = startXPos - CSng(defsetAr(5)) - fontSize(1)
 
 								Dim wordDetail() As String = {"", CStr(wordStorager(i)(1)), startYPos.ToString(), startXPos.ToString()}
 								Dim wordInLine As New ArrayList 
@@ -387,13 +350,13 @@ Public Sub WordArranger(defSetAr As String(), mainTxt As ArrayList, _
 					Optional newTargetTxt As TextBox = Nothing)
 		'コンボの値を置き換え
 		If newTargetCmb IsNot Nothing Then
-		If newTargetCmb IsNot Pr.Cmb_Year And newTargetCmb IsNot Pr.Cmb_Month And newTargetCmb IsNot Pr.Cmb_day Then
-			Wc.optWord(newTargetCmb.Name) = newTargetCmb.SelectedValue
-		End If
+			If newTargetCmb IsNot Pr.Cmb_Year And newTargetCmb IsNot Pr.Cmb_Month And newTargetCmb IsNot Pr.Cmb_day Then
+				Wc.optWord(newTargetCmb.Name) = newTargetCmb.SelectedValue
+			End If
 		End If
 		
 		If newTargetTxt IsNot Nothing Then
-		Wc.optWord(newTargetTxt.Name) = newTargetTxt.Text
+			Wc.optWord(newTargetTxt.Name) = newTargetTxt.Text
 		End if
 		
 		'フォントサイズが全て同じかどうか確認する
@@ -446,6 +409,7 @@ Public Sub WordArranger(defSetAr As String(), mainTxt As ArrayList, _
 		Dim wordDetail(3) As String
 		Dim k As Integer = 0
 		Dim l As Integer = 0
+		
 		If fontSizeDif = False Then												'全て同じの時
 			For i As Integer = 0 To loopCounter - 1 Step 1
 				If  IsArray(insWord(k)) = True AndAlso CInt(insWord(k)(3)) =  i Then	'END エラーをかわす（insWordに配列が1つしかなく文の先頭にある時など）WordPreparerも
@@ -499,9 +463,13 @@ Public Sub WordArranger(defSetAr As String(), mainTxt As ArrayList, _
 			'END: 上・下・天地
 			Dim newYPos As Single = 0
 			Select Case yStyle
-			    Case 0, 2
+				Case 0, 2
+					Dim irrNewYPos As Single = CSng(mainTxt("tbl_txt_newypos"))
 					newYPos = tempCurWord("topYpos")
-			    Case 1
+					If irrNewYPos <> 9999 Then		'END: y軸位置が変わる -> 確認する
+						newYPos = irrNewYPos
+					End If
+				Case 1
 					Dim addHeight As Single = 0
 					Dim totalHeight As single = 0
 					For i As Integer = 2 To tempWordAr.Length - 1 Step 1
@@ -686,9 +654,46 @@ Public Sub WordArranger(defSetAr As String(), mainTxt As ArrayList, _
 
     End Function
 
-#End Region
+#End Region 
 
-#Region "Pitch"	
+#Region "Pitch"
+'END: 文字と文字サイズがばらばらの時を考える（入れ物）
+''' ■GetMaxWord
+''' 1行内にある文字の最大幅を返す
+''' </summary>
+''' <param name="font">String フォント</param>
+''' <param name="wordStrager">Optional String() 文字とサイズが一つの配列に入っている時に使用</param>
+''' <param name="word">Optional String() 文字配列</param>
+''' <param name="fontSize">Optional String() フォントサイズ配列</param>
+''' <param name="startCnt">Optional Integer ループ開始位置</param>
+''' <returns></returns>
+Public Function GetMaxWord(font As String, Optional wordStrager() As String = Nothing, _
+							Optional word() As String = Nothing, _
+							Optional fontSize() As String = Nothing , _
+							Optional startCnt As Integer = 0 _
+							) As Single()
+	
+	'y軸の最大値は今のところ必要ないので未実装 2013/7/27 mb
+	Dim Pr As New PrintReport()
+	Dim wordSize(1) As Single
+	If wordStrager IsNot Nothing Then
+		Dim splitPoint() As String = wordStrager(1).Split(","c)
+		Dim j As Integer = 0
+		For i As Integer = startCnt To wordStrager.Length - 1 Step 1
+			Dim tempWordSize() As Single = Pr.FontSizeCal(wordStrager(i), font, splitPoint(j))
+			If wordSize(1) < tempWordSize(1) Then
+				wordSize(1) = tempWordSize(1)
+			End If
+			j = j + 1
+		Next i
+	ElseIf word IsNot Nothing And fontSize IsNot Nothing then
+		
+	End if
+		
+	Return wordSize
+	
+End Function
+
 'END: それぞれの文字のフォントサイズを考慮する
 'END: フォントサイズの変更に伴いx軸の調整をする
 'END: 大きさによってそれぞれの文字のX座標が変わる

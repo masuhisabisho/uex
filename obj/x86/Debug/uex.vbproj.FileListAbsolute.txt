@@ -11,3 +11,4 @@ C:\Users\madman190382\Documents\SharpDevelop Projects\uex\obj\x86\Debug\Generate
 C:\Users\madman190382\Documents\SharpDevelop Projects\uex\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\madman190382\Documents\SharpDevelop Projects\uex\obj\x86\Debug\uex.exe
 C:\Users\madman190382\Documents\SharpDevelop Projects\uex\obj\x86\Debug\uex.pdb
+C:\Users\madman190382\Documents\SharpDevelop Projects\uex\obj\x86\Debug\uex.PrintSetting.resources

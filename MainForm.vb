@@ -31,10 +31,10 @@ Public Partial Class MainForm
 	End Sub
 	
 	Public Sub Btn_Print_Click(sender As Object, e As EventArgs)
-		Dim f As New PrintReport
-		f.Showdialog()
-		f.Dispose()
-		f = Nothing
+		Dim Pr As New PrintReport
+		Pr.Showdialog()
+		Pr.Dispose()
+		Pr = Nothing
 	End Sub
 	
 End Class

@@ -6,14 +6,16 @@
 ' 
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
+
 Public Partial Class PrintReport
 	
 	Dim Wc As New WordContainer()
+	Private const zero As Integer = 0
 	
 	Public Sub New()
 		' The Me.InitializeComponent call is required for Windows Forms designer support.
 		Me.InitializeComponent()
-		'TODO : Add constructor code after InitializeComponents
+		
 	End Sub
 
 #Region "文字描画仕様"
@@ -40,8 +42,14 @@ Public Partial Class PrintReport
 #End Region
 
 #Region "Form load"
+
 	Private Sub Print_Load(sender As Object, e As EventArgs)
-		'ハンドラーをキャンセルしておく
+	
+	    Me.SetStyle(ControlStyles.DoubleBuffer, True)
+        Me.SetStyle(ControlStyles.UserPaint, True)
+        Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
+        
+        'ハンドラーをキャンセルしておく
 		Dim Ch As New ControlHandler()
 		Ch.AllTCHandleShifter(False, Me)
 		Ch.AllSICHandleShifter(False, Me)
@@ -84,9 +92,11 @@ Public Partial Class PrintReport
 		'コンボの値を保存
 		Wc.OptionalWord(defSetAr, Me)
 		
-		'現在の用紙サイズID及び文例IDを保管
+		'現在の用紙サイズID・文例ID・印刷用情報を保管
 		Wc.CurSizeStorager = 0
 		Wc.CurStyleStorager = 0
+		Wc.CurPPSizeStorager = "奉書挨拶状"
+		Wc.CurPPDirecStorager = "横"
 		
 		'DBより文章データの取り込み
 		Dim mainTxt As New ArrayList
@@ -107,81 +117,19 @@ Public Partial Class PrintReport
 
 		'文字を描画していく
 		Call Cmn.WordArranger(defSetAr, mainTxt, wordStorager, Wc.optWord, Wc.optWord("Common_Font"),Me, Wc)
-
+		
 		'ハンドラーを付与する
 		Ch.AllTCHandleShifter(True, Me)
 		Ch.AllSICHandleShifter(True, Me)
 		
 		Ch = Nothing
 	End Sub
+
 #End Region
-	
+
 #Region "イベント"
-	
-	Private Sub Btn_Dtp_Click(sender As Object, e As EventArgs)
-		'END: Show Calender for easy entry
-		Dim Cal As New Calender(Me, Wc)
-		Cal.ShowDialog()
-		Cal.Dispose()
-		Cal = Nothing
-	End Sub	
-	
-	Public Sub TextBoxChange_TextChanged(sender As Object, e As EventArgs)
-		'END: Implement Txt_HostName1_TextChanged
-		'END: 最初の描画データを取り込み -> WordContainer.vb内に取り込み
-		'END: 保存してある文字データを変更して再度描画
-		'TODO: 画像サイズの可変設定
-		'TODO: 用紙サイズ・文例の変更
-		'END: 取り込みデータを元に変更画像を作成
-'		'END: ピクチャーの破棄・再設定
-		With Pic_Main
-			If Not (.Image Is Nothing) Then
-				.Image.Dispose()
-				.Image = Nothing
-				
-				.Size = New Size(1800, 668)
- 				.image = New Bitmap(1800,668)
-			End If
-		End With
-		
-		Dim SctSql As New SelectSql()
-		Dim defSetAr() As String = SctSql.GetDefaultVal(0)
-		Dim Cmn As New Common(CSng(defSetAr(6)))
 
-		Select Case True
-			Case sender Is	Me.Txt_Name
-'				Cmn.WordReplacer(0, me, wc, 0, ,CType(sender, TextBox))
-'				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
-			Case sender Is	Me.Txt_DeadName
-
-			Case sender Is	Txt_Add1
-
-			Case sender Is	Me.Txt_Add2
-				Cmn.WordReplacer(17, me, wc, 1,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
-			Case sender Is	Me.Txt_HostName1
-				Wc.optWord("Txt_PS1") = Me.Txt_PS1.Text
-			Case sender Is	Me.Txt_HostName2
-				Wc.optWord("Txt_PS1") = Me.Txt_PS2.Text
-			Case sender Is	Me.Txt_HostName3
-				Wc.optWord("Txt_PS1") = Me.Txt_PS3.Text
-			Case sender Is	Me.Txt_HostName4
-				Wc.optWord("Txt_PS1") = Me.Txt_PS4.Text
-			Case sender Is	Me.Txt_PS1
-				Wc.optWord("Txt_PS1") = Me.Txt_PS1.Text
-			Case sender Is	Txt_PS2
-				Wc.optWord("Txt_PS2") = Me.Txt_PS2.Text
-			Case sender Is	Me.Txt_PS3
-				Wc.optWord("Txt_PS3") = Me.Txt_PS3.Text
-			Case sender Is	Me.Txt_PS4
-				Wc.optWord("Txt_PS4") = Me.Txt_PS4.Text
-			Case sender Is	Me.Txt_PS5
-				Wc.optWord("Txt_PS5") = Me.Txt_PS5.Text
-			Case sender Is	Me.Txt_PS6
-				Wc.optWord("Txt_PS6") = Me.Txt_PS6.Text 
-		End Select	
-	End Sub
-	
+	'コンボ変更
 	Public Sub Cmb_SelectedIndexChanged(sender As Object, e As EventArgs)
 		'TODO: 画像サイズの可変設定
 		'END: 文字情報新しく置き換える
@@ -197,7 +145,7 @@ Public Partial Class PrintReport
 		Dim defSetAr() As String = SctSql.GetDefaultVal(currentSize)
 		Dim Cmn As New Common(CSng(defSetAr(6)))
 		With Pic_Main
-			If Not (.Image Is Nothing) Then
+			If Not (.Image Is Nothing) Then						'TODO: 関数に置き換え
 				.Image.Dispose()
 				.Image = Nothing
 
@@ -223,14 +171,10 @@ Public Partial Class PrintReport
 			Case sender Is	Me.Cmb_DeathWay									'END: 死亡告知 2013/7/20 mb
 				Cmn.WordReplacer(4, Me, Wc, 2, CType(sender, ComboBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
-				
-				
-'			Case sender Is	Me.Cmb_Time2
+'			Case sender Is	Me.Cmb_Time2									'TODO
 '				Wc.optWord("Cmb_Time2") = Me.Cmb_Time2.SelectedValue
 '			Case sender Is	Me.Cmb_Donation
 '				Wc.optWord("Cmb_Donation") = Me.Cmb_Donation.SelectedValue
-
-
 			Case sender Is	Me.Cmb_Imibi
 				Cmn.WordReplacer(8, me, wc, 2, CType(sender, ComboBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))	'END: 忌日 2013/7/21 mb
@@ -254,12 +198,10 @@ Public Partial Class PrintReport
 				Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 				
-				
-				
+
 '			Case sender Is	Me.Cmb_HostType
-'				Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue
-				
-			'フォントサイズ
+'				Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue		'TODO: フォントサイズの変更
+			'フォントサイズ（数字）
 			Case sender Is Me.Cmb_PointTitle
 				Wc.optWord("Cmb_PointTitle") = Me.Cmb_PointTitle.SelectedItem
 			Case sender Is Me.Cmb_PointName
@@ -286,14 +228,203 @@ Public Partial Class PrintReport
 	 			Wc.optWord("Cmb_PointHostName4") = Me.Cmb_PointHostName4.SelectedValue
 			Case sender Is Me.Cmb_PointPS1
 	 			Wc.optWord("Cmb_PointPS1") = Me.Cmb_PointPS1.SelectedValue 
-	End Select
+		End Select
+		'TODO: ControlThickness()を入れる
+	End Sub
+	
+	'文字変更
+	Public Sub TextBoxChange_TextChanged(sender As Object, e As EventArgs)
+		'END: Implement Txt_HostName1_TextChanged
+		'END: 最初の描画データを取り込み -> WordContainer.vb内に取り込み
+		'END: 保存してある文字データを変更して再度描画
+		'TODO: 画像サイズの可変設定
+		'TODO: 用紙サイズ・文例の変更
+		'END: 取り込みデータを元に変更画像を作成
+'		'END: ピクチャーの破棄・再設定
+		With Pic_Main								'TODO: 関数に置き換え
+			If Not (.Image Is Nothing) Then
+				.Image.Dispose()
+				.Image = Nothing
+				
+				.Size = New Size(1800, 668)
+ 				.image = New Bitmap(1800,668)
+			End If
+		End With
+		
+		Dim SctSql As New SelectSql()
+		Dim defSetAr() As String = SctSql.GetDefaultVal(0)
+		Dim Cmn As New Common(CSng(defSetAr(6)))
 
+		Select Case True
+			Case sender Is	Me.Txt_Name
+'				Cmn.WordReplacer(0, me, wc, 0, ,CType(sender, TextBox))
+'				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_DeadName
+				'TODO: 設定する
+			Case sender Is	Txt_Add1					'END: ｄｂにフォントサイズ無いとエラーに
+				Cmn.WordReplacer(16, me, wc, 1,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_Add2
+				Cmn.WordReplacer(17, me, wc, 1,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_HostName1
+				Cmn.WordReplacer(18, me, wc, 1,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_HostName2
+				Cmn.WordReplacer(19, me, wc, 1,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_HostName3
+				Cmn.WordReplacer(20, me, wc, 1,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_HostName4
+				Cmn.WordReplacer(21, me, wc, 1,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_PS1
+				Cmn.WordReplacer(22, me, wc, 0,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_PS2
+				Cmn.WordReplacer(23, me, wc, 0,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_PS3
+				Cmn.WordReplacer(24, me, wc, 0,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_PS4
+				Cmn.WordReplacer(25, me, wc, 0,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_PS5
+				Cmn.WordReplacer(26, me, wc, 0,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_PS6
+				Cmn.WordReplacer(27, me, wc, 0,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+		End Select	
+		'TODO: ControlThickness()を入れる
+	End Sub
+	
+
+	'印刷フォームを開く
+	Private Sub Btn_Print_Click(sender As Object, e As EventArgs)
+		Dim curPaperSize As String = Wc.CurPPSizeStorager
+		Dim curPaperDirec As String = Wc.CurPPDirecStorager
+		
+		Dim Ps As New PrintSetting(Me.Pic_Main.Image, curPaperSize, curPaperDirec)
+		Ps.ShowDialog()
+		Ps.Dispose()
+		Ps = Nothing
+	End Sub
+	
+	'カレンダーを開く
+	Private Sub Btn_Dtp_Click(sender As Object, e As EventArgs)
+		'END: Show Calender for easy entry
+		Dim Cal As New Calender(Me, Wc)
+		Cal.ShowDialog()
+		Cal.Dispose()
+		Cal = Nothing
+	End Sub	
+
+	'文字の濃淡変更
+	Public Sub Cmb_Thickness_SelectedIndexChanged(sender As Object, e As EventArgs)
+		
+		Call ClearPicture(Me.Pic_Main, 1800, 668)													'TODO: 変数に置き換える
+		Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), 1800, 668)			'TODO: 変数に置き換える
+
+	End Sub
+	
+	'画像拡大
+	Public Sub Cmb_Magnify_SelectedIndexChanged(sender As Object, e As EventArgs)
+		'TODO: PictureBox　と BitMapのサイズを変える、描画位置も考える
+		Call ClearPicture(Me.Pic_Main, 1800, 668)													'TODO: 変数に置き換える
+		Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+		
+		If Me.Cmb_Thickness.SelectedValue <> 0 Then
+			Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), 1800, 668)		'TODO: 変数に置き換える
+		End If
+		
+		Me.Pic_Main.Image = Magnify(Me.Pic_Main.Image, CDbl(Me.Cmb_Magnify.SelectedValue))
+		
 	End Sub
 
 #End Region
 	
 #Region "文字描画"
 
+''''■Magnify
+''' <summary>画像を拡大・縮小する。</summary>
+''' <param name="Source">対象の画像</param>
+''' <param name="Rate">拡大率。以下の値を指定した場合は縮小される。</param>
+''' <param name="Quality">画質。省略時は最高画質。</param>
+''' <returns>処理後の画像</returns>
+''' 'http://homepage1.nifty.com/rucio/main/dotnet/Samples/Sample141ImageMagnify.htm
+''' 'PictureBox1.Image = Magnify(PictureBox1.Image, 1.2F)
+	Public Function Magnify(ByVal Source As Image, ByVal Rate As Double, _ 
+	Optional ByVal Quality As Drawing2D.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic) As Image
+
+    	'▼引数のチェック
+    	If IsNothing(Source) Then
+        	Throw New NullReferenceException("Sourceに値が設定されていません。")
+    	End If
+    	If CInt(Source.Size.Width * Rate) <= 0 OrElse CInt(Source.Size.Height * Rate) <= 0 Then
+        	Throw New ArgumentException("処理後の画像のサイズが0以下になります。Rateには十分大きな値を指定してください。")
+    	End If
+
+    	'▼処理後の大きさの空の画像を作成
+    	Dim NewRect As Rectangle
+
+    	NewRect.Width = CInt(Source.Size.Width * Rate)
+    	NewRect.Height = CInt(Source.Size.Height * Rate)
+    	Dim DestImage As New Bitmap(NewRect.Width, NewRect.Height)
+
+    	'▼拡大・縮小実行
+    	Dim g As Graphics = Graphics.FromImage(DestImage)
+    	g.InterpolationMode = Quality
+    	g.DrawImage(Source, NewRect)
+
+    	Return DestImage
+
+	End Function
+'''■ControlThickness
+''' <summary>文字に濃淡をつける</summary>
+''' <param name="picBox">PictureBox ピクチャーボックス</param>
+''' <param name="whiteRate">Integer 濃淡の割合</param>
+''' <param name="picWidth">Integer BitMapの幅</param>
+''' <param name="picHeight">Integer BitMapの高さ</param>
+	Private Sub ControlThickness(picBox As PictureBox, whiteRate As Integer, _
+		picWidth As Integer, picHeight As Integer)
+		
+		Dim g As System.Drawing.Graphics
+		g = System.Drawing.Graphics.FromImage(picBox.Image)
+
+		Dim Br As New SolidBrush(Color.FromArgb(whiteRate, Color.White)) '0-255の範囲
+		'四角を描画する
+		g.FillRectangle(Br, zero, zero, picWidth, picHeight)
+
+		'Graphicsオブジェクトのリソースを解放する
+		g.Dispose()	
+		g = Nothing
+		Br.Dispose()
+		Br = Nothing
+		
+	End Sub
+
+'''■ClearPicture
+''' <summary>PictureBox内のBitMapをクリアーする</summary>
+''' <param name="picBox">PictureBox ピクチャーボックス</param>
+''' <param name="picWidth">画像の幅</param>
+''' <param name="picHeight">画像の高さ</param>
+	Private Sub ClearPicture(picBox As PictureBox, picWidth As Integer, picHeight As Integer)
+		With picBox
+			If Not (.Image Is Nothing) Then
+				.Image.Dispose()
+				.Image = Nothing
+				
+				.Size = New Size(picWidth, picHeight)
+ 				.image = New Bitmap(picWidth, picHeight)
+			End If
+		End With
+		
+	End Sub
+	
 '''■ReCreateWord
 ''' <summary>文字を再描画していく(フォントサイズ, y軸位置（絶対位置), x軸位置（絶対位置）がある時用）</summary>
 ''' <param name="word">ArrayList 文字情報配列（文字, フォントサイズ, y軸位置, x軸位置）</param>
@@ -305,10 +436,11 @@ Public Partial Class PrintReport
 				If item(i)(0) = "" Then  							'空白行はスキップする
 					Continue For
 				End If
-
+				
 				Dim g As System.Drawing.Graphics
 				g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
 				g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+				
 				g.DrawString(item(i)(0), _
 							New Font(font, item(i)(1), GraphicsUnit.Pixel), _ 
 							Brushes.Black, _ 
@@ -316,12 +448,11 @@ Public Partial Class PrintReport
 							item(i)(2), _
 							New StringFormat(StringFormatFlags.DirectionVertical) _
 							)
-		
 				g.Dispose()
 				g = Nothing
 			Next i
 		Next 
-
+		
 	End Sub
 	
 '''■CreateWord
@@ -461,7 +592,7 @@ Public Partial Class PrintReport
 
 		gr.Dispose()
 		stringFont.Dispose()
-	
+
 		gr = Nothing
 		stringFont = Nothing
 		stringSize = Nothing
@@ -471,5 +602,6 @@ Public Partial Class PrintReport
 	End Function
 	
 #End Region
+
 
 End Class

@@ -8,62 +8,101 @@
 '
 Public Class WordContainer
 	
-	Private curSize As Integer				'現在の用紙ID
-	Private curStyle As Integer				'現在の文例ID
-	Private paperSize As String				'現在の用紙IDに対する用紙サイズ
-	Private paperDirection As String		'現在の用紙IDに対する用紙設定方向
+	Private curSetting As New Hashtable
+	Private defKeyWord As New Hashtable
 	
 	Public optWord As New Hashtable()
 	Public curWord As New ArrayList()
+	
+	'END:　この辺りまとまらないか？
+'''■DefSet (移行テスト中 -> OK 2013/8/3 mb）
+''' <summary>現在表示している内容の初期値を保存・出力する（指定する。１項目のみ）</summary>
+''' <param name="curWriteWay">selector = 0 縦( = 0)・横( = 0)書き</param>
+''' <param name="curFontSize">selector = 1 一般のフォントサイズ</param>
+''' <param name="curTopXPos">selector = 2 最大のx座標</param>
+''' <param name="curTopYPos">selector = 3 天のy座標</param>
+''' <param name="curBotoomYPos">selector = 4 地のy座標</param>
+''' <param name="curBasicPitch">selector = 5 基本の改列ピッチ</param>
+''' <param name="curWordPitch">selector = 6 基本の文字ピッチ</param>
+''' <param name="paperSize">selector = 7 現在の用紙IDに対する用紙サイズ　</param>
+''' <param name="paperDirection">selector = 8 現在の用紙IDに対する用紙設定方向</param>
+	Public Property DefSet (selector As Integer) As String
+		Get
+			Select Case selector
+				Case 0
+					Return defKeyWord("curWriteWay").ToString()
+				Case 1
+					Return defKeyWord("curFontSize").ToString()
+			    Case 2
+			    	Return defKeyWord("curTopXPos").ToString()
+			    Case 3
+			    	Return defKeyWord("curTopYPos").ToString()
+			    Case 4
+			    	Return defKeyWord("curBotoomYPos").ToString()
+			    Case 5
+			    	Return defKeyWord("curBasicPitch").ToString()
+			    Case 6
+			    	Return defKeyWord("curWordPitch").ToString()
+			    Case 7
+			    	Return defKeyWord("paperSize").ToString()
+			    Case 8
+			    	Return defKeyWord("paperDirection").ToString()
+			End Select
+		End Get
+		Set(ByVal val As String)
+			Select Case selector
+				Case 0
+					defKeyWord("curWriteWay") = Val
+				Case 1
+					defKeyWord("curFontSize") = Val	
+			    Case 2
+			    	defKeyWord("curTopXPos") = Val
+			    Case 3
+			    	defKeyWord("curTopYPos") = Val
+			    Case 4
+			    	defKeyWord("curBotoomYPos") = Val
+			    Case 5
+			    	defKeyWord("curBasicPitch") = Val
+			    Case 6
+			    	defKeyWord("curWordPitch") = Val
+			    Case 7
+			    	defKeyWord("paperSize") = Val
+			    Case 8
+			    	defKeyWord("paperDirection") = Val
+			End Select
+		End Set	
+	End Property
+'''■DefSetAll（移行テスト中 -> OK 2013/8/3 mb）
+ ''' <summary>現在表示している内容の初期値を保存・出力する（すべての項目）</summary>
+	Public Readonly Property DefSetAll() As Hashtable
+		Get
+			Return defKeyWord
+		End Get
+	End Property
 
-'''■CurSizeStorager
-''' <summary>現在表示している内容の用紙IDを保存する</summary>
-''' <returns>用紙ID</returns>
-	Public Property CurSizeStorager() As Integer
+'''■CurSizeSet
+''' <summary>現在表示している内容の用紙ID・文例IDを保存出力する</summary>
+''' <param name="curSize">selector = 0 現在の用紙ID</param>
+''' <param name="curStyle">selector = 1 現在の文例ID</param>
+	Public Property CurrentSet(selector As Integer) As Integer
 		Get
-			Return curSize
+			Select Case selector
+			    Case 0
+					Return curSetting("curSize").ToString()
+			    Case 1
+					Return curSetting("curStyle").ToString()
+			End Select
 		End Get
 		Set(ByVal val As Integer)
-			curSize = val
+			Select Case selector
+			    Case 0
+					curSetting("curSize") = Val
+			    Case 1
+					curSetting("curStyle") = Val
+			End Select
 		End Set
 	End Property
-	
-'''■CurStyleStorager
-''' <summary>現在表示している内容の文例IDを保存する</summary>
-''' <returns>用紙ID</returns>
-	Public Property CurStyleStorager() As Integer
-		Get
-			Return curStyle
-		End Get
-		Set(ByVal val As Integer)
-			curStyle = val
-		End Set
-	End Property
-	
-'''■CurPPSizeStorager
-''' <summary>現在表示している内容の用紙設定名を保存する</summary>
-''' <returns>用紙ID</returns>
-	Public Property CurPPSizeStorager() As String
-		Get
-			Return paperSize
-		End Get
-		Set(ByVal val As String)
-			paperSize = val
-		End Set
-	End Property
-	
-'''■CurPPDirecStorager
-''' <summary>現在表示している内容の印刷方向を保存する</summary>
-''' <returns>用紙ID</returns>
-	Public Property CurPPDirecStorager() As String
-		Get
-			Return paperDirection
-		End Get
-		Set(ByVal val As String)
-			paperDirection = val
-		End Set
-	End Property
-	
+
 ''''■CurrentWord
 ''' <summary>描画した文字情報を保管しておく
 ''' 1) 行
@@ -78,9 +117,9 @@ Public Class WordContainer
 	
 ''''■OptionaWord
 ''' <summary>挿入文字を保管しておく</summary>
-''' <param name="defSetAr">String() 文字</param>
+''' <param name="DefKeyWord">Hashtable 文字</param>
 ''' <returns>Void</returns>
-	Public sub OptionalWord(defsetAr As String(), frm As PrintReport)
+	Public sub OptionalWord(DefKeyWord As Hashtable, frm As PrintReport)
 		With frm
 		'挿入等に使う
 		'Specific Part（HashTableに格納）
@@ -123,7 +162,9 @@ Public Class WordContainer
 			optWord("Txt_PS5") = .Txt_PS5.Text
 			optWord("Txt_PS6") = .Txt_PS6.Text
 			'一般
-			optWord("Common_Point") = defSetAr(1)									'共通フォントサイズ
+			'optWord("Common_Style") = defsetAr(0)									'共通Propertyへ　2013/8/3 mb
+			optWord("Common_Point") = DefKeyWord("curFontSize")
+			
 			optWord("Common_Font") = .Cmb_Font.text									'CHK: SelectedValue, SelectedIndex, Textの違い
 			'フォントサイズ
 			optWord("Cmb_PointTitle") = .Cmb_PointTitle.SelectedIndex
@@ -141,5 +182,43 @@ Public Class WordContainer
 			optWord("Cmb_PointPS1") = .Cmb_PointPS1.SelectedIndex
 			End With
 	End Sub
+	
+	
+	'以下3点DefSetに統合・移行・廃止 2013/8/3 mb
+''''■CurStyleStorager
+'''' <summary>現在表示している内容の文例IDを保存する</summary>
+'''' <returns>用紙ID</returns>
+'	Public Property CurStyleStorager() As Integer
+'		Get
+'			Return curStyle
+'		End Get
+'		Set(ByVal val As Integer)
+'			curStyle = val
+'		End Set
+'	End Property
+	
+''''■CurPPSizeStorager
+'''' <summary>現在表示している内容の用紙設定名を保存する</summary>
+'''' <returns>用紙ID</returns>
+'	Public Property CurPPSizeStorager() As String
+'		Get
+'			Return paperSize
+'		End Get
+'		Set(ByVal val As String)
+'			paperSize = val
+'		End Set
+'	End Property
+'	
+''''■CurPPDirecStorager
+'''' <summary>現在表示している内容の印刷方向を保存する</summary>
+'''' <returns>用紙ID</returns>
+'	Public Property CurPPDirecStorager() As String
+'		Get
+'			Return paperDirection
+'		End Get
+'		Set(ByVal val As String)
+'			paperDirection = val
+'		End Set
+'	End Property	
 	
 End Class

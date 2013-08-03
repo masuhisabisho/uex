@@ -54,10 +54,18 @@ Public Partial Class PrintReport
 		Ch.AllTCHandleShifter(False, Me)
 		Ch.AllSICHandleShifter(False, Me)
 
-		'初期設定の読み込み
+		'初期設定の読み込み保存
 		Dim SctSql As New SelectSql
-		Dim defSetAr() As String
-		defSetAr = SctSql.GetDefaultVal(0)
+		Call SctSql.SetDefaultVal(0, Wc)
+		
+'		以下SetDefaultVal内に移行　2013/8/3 mb
+'		Dim defSetAr() As String
+'		defSetAr = SctSql.GetDefaultVal(0)
+'		
+'		'CHK: 全ての初期値を保存に変更
+'		For i As Integer = 0 To defSetAr.Length -1 Step 1
+'			Wc.DefSet(i) = defSetAr(i)
+'		Next i
 		
 		'フォント設定
 		Dim fontList As New ArrayList
@@ -89,14 +97,18 @@ Public Partial Class PrintReport
 		Call ClrFrm.ClearForm(0, Me)
 		ClrFrm = Nothing
 		
-		'コンボの値を保存
-		Wc.OptionalWord(defSetAr, Me)
+		'コンボ内の値を保存
+		Dim DefKeyWord As New Hashtable
+		'DefKeyWord = Wc.DefSetAll					2013/8/3 out 1 line mb
+		Wc.OptionalWord(Wc.DefSetAll, Me)
 		
-		'現在の用紙サイズID・文例ID・印刷用情報を保管
-		Wc.CurSizeStorager = 0
-		Wc.CurStyleStorager = 0
-		Wc.CurPPSizeStorager = "奉書挨拶状"
-		Wc.CurPPDirecStorager = "横"
+		'現在の用紙サイズID
+		Wc.CurrentSet(0) = 0						'初めて開いた時は一番最初の分にする、設定できるようにするか？
+		Wc.currentset(1) = 0
+		
+'		Wc.CurStyleStorager = 0						'END 管理一元化を考える -> 不要になった
+'		Wc.CurPPSizeStorager = "奉書挨拶状" 			2013/8/3 out DefSetに移行
+'		Wc.CurPPDirecStorager = "横"
 		
 		'DBより文章データの取り込み
 		Dim mainTxt As New ArrayList
@@ -106,17 +118,24 @@ Public Partial Class PrintReport
 
 		'描画用Bitmapを準備
 		With Pic_Main
-			.Size = New Size(CInt(defSeTAr(2)), CInt(defSetAr(4)))					'CHK: New sizeはわかった、Bitmapの値はなんなのか？要確認
-			.Image = New Bitmap(1800,668)											'TODO: 可変にする　
+			.Size = New Size(CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))					'CHK: New sizeはわかった、Bitmapの値はなんなのか？要確認
+			.Image = New Bitmap(1800, 668)											'TODO: 可変にする　
 		End With
 		
 		'DB内の文章を単語に分割する
-		Dim Cmn As New Common(defSetAr(6))
+		'Dim Cmn As New Common(defSetAr(6))						2013/8/3 out 1 line mb
+		
+		'Dim basicColPitch As Single = CSng(Wc.DefSet(6))		2013/8/3/ out 2 lines mb
+		'Dim Cmn As New Common (basicColPitch)
+		Dim Cmn As New Common(Wc.DefSetAll)
+		
 		Dim wordStorager As Array
-		wordStorager = Cmn.WordPreparer(defSetAr, mainTxt, Wc.optWord)
+		'Dim basicFontSize As String = Wc.DefSet(1)				2013/8/3 out 1 line mb
+		wordStorager = Cmn.WordPreparer(Wc.DefSet(1), mainTxt, Wc.optWord)
 
 		'文字を描画していく
-		Call Cmn.WordArranger(defSetAr, mainTxt, wordStorager, Wc.optWord, Wc.optWord("Common_Font"),Me, Wc)
+		'CHK: 引数DefSetAllに変更
+		Call Cmn.WordArranger(Wc.DefSetAll, mainTxt, wordStorager, Wc.optWord, Wc.optWord("Common_Font"),Me, Wc)
 		
 		'ハンドラーを付与する
 		Ch.AllTCHandleShifter(True, Me)
@@ -140,10 +159,15 @@ Public Partial Class PrintReport
 		'END: 間に入る時はどうするのか？ -> 下の通り（書き換え、部分差し替えをしない）
 		'END: 現状のデータを保存、不変文字の場所、変化文字の場所を確認、変化部分を削除 -> 1行全て削除、書き換え
 		'END: 変更後の列ピッチがおかしい（おおきい）
+		
+'		Dim currentSize As Integer = Wc.CurSizeStorager				2013/8/3 out  lines mb
+'		Dim defSetAr() As String = SctSql.GetDefaultVal(currentSize)  
+'		Dim Cmn As New Common(CSng(defSetAr(6)))
+
 		Dim SctSql As New SelectSql()
-		Dim currentSize As Integer = Wc.CurSizeStorager
-		Dim defSetAr() As String = SctSql.GetDefaultVal(currentSize)
-		Dim Cmn As New Common(CSng(defSetAr(6)))
+		'Dim Cmn As New Common(CSng(Wc.DefSet(6)))				'2013/8/3 out 1 line mb
+		Dim Cmn As New Common(Wc.DefSetAll)
+		
 		With Pic_Main
 			If Not (.Image Is Nothing) Then						'TODO: 関数に置き換え
 				.Image.Dispose()
@@ -160,34 +184,34 @@ Public Partial Class PrintReport
 				Wc.optWord("Common_Font") = Me.Cmb_Font.Text				'END: フォントサイズ 2013/7/21 mb 
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_SeasonWord								'END: 季語 2013/7/20 mb
-				Cmn.WordReplacer(0, me, wc, 0, CType(sender, ComboBox),)
+				Call Cmn.WordReplacer(0, me, wc, 0, CType(sender, ComboBox),)
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Time1									'END: 時期1 2013/7/20 mb
-				Cmn.WordReplacer(3, Me, Wc, 0, CType(sender, ComboBox),)	
+				Call Cmn.WordReplacer(3, Me, Wc, 0, CType(sender, ComboBox),)	
 				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Title									'END: 続柄　2013/7/20 mb
-				Cmn.WordReplacer(3, Me, Wc, 0, CType(sender, ComboBox))
+				Call Cmn.WordReplacer(3, Me, Wc, 0, CType(sender, ComboBox))
 				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_DeathWay									'END: 死亡告知 2013/7/20 mb
-				Cmn.WordReplacer(4, Me, Wc, 2, CType(sender, ComboBox))
+				Call Cmn.WordReplacer(4, Me, Wc, 2, CType(sender, ComboBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 '			Case sender Is	Me.Cmb_Time2									'TODO
 '				Wc.optWord("Cmb_Time2") = Me.Cmb_Time2.SelectedValue
 '			Case sender Is	Me.Cmb_Donation
 '				Wc.optWord("Cmb_Donation") = Me.Cmb_Donation.SelectedValue
 			Case sender Is	Me.Cmb_Imibi
-				Cmn.WordReplacer(8, me, wc, 2, CType(sender, ComboBox))
+				Call Cmn.WordReplacer(8, me, wc, 2, CType(sender, ComboBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))	'END: 忌日 2013/7/21 mb
 			Case sender Is	Me.Cmb_EndWord
-				Cmn.WordReplacer(14, me, wc, 1, CType(sender, ComboBox)) 	'END: 結語 2013/7/21 mb
+				Call Cmn.WordReplacer(14, me, wc, 1, CType(sender, ComboBox)) 	'END: 結語 2013/7/21 mb
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Year
 				Wc.optWord("Cmb_Year") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = " & Cmb_Year.SelectedValue)
-				Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))	'END: 日付関連 2013/7/21 mb
+				Call Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))	'END: 日付関連 2013/7/21 mb
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Month
 				Wc.optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = " & Cmb_Month.SelectedValue)
-				Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))
+				Call Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Cmb_Day
 				If Cmb_Day.SelectedValue = "" Then							'文字が無い時のSQLエラー回避
@@ -195,7 +219,7 @@ Public Partial Class PrintReport
 				Else
 					Wc.optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = " & Cmb_Day.SelectedValue)
 				End If
-				Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))
+				Call Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 				
 
@@ -251,9 +275,12 @@ Public Partial Class PrintReport
 			End If
 		End With
 		
-		Dim SctSql As New SelectSql()
-		Dim defSetAr() As String = SctSql.GetDefaultVal(0)
-		Dim Cmn As New Common(CSng(defSetAr(6)))
+'		Dim SctSql As New SelectSql()			2013/8/3 out 3 lines mb
+'		Dim defSetAr() As String = SctSql.GetDefaultVal(0)
+'		Dim Cmn As New Common(CSng(defSetAr(6)))
+
+		'Dim Cmn As New Common(CSng(Wc.DefSet(6)))  2013/8/3 out 1 line mb
+		Dim Cmn As New Common (Wc.DefSetAll)
 
 		Select Case True
 			Case sender Is	Me.Txt_Name
@@ -262,40 +289,40 @@ Public Partial Class PrintReport
 			Case sender Is	Me.Txt_DeadName
 				'TODO: 設定する
 			Case sender Is	Txt_Add1					'END: ｄｂにフォントサイズ無いとエラーに
-				Cmn.WordReplacer(16, me, wc, 1,,CType(sender, TextBox))
+				Call Cmn.WordReplacer(16, me, wc, 1,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_Add2
-				Cmn.WordReplacer(17, me, wc, 1,,CType(sender, TextBox))
+				Call Cmn.WordReplacer(17, me, wc, 1,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_HostName1
-				Cmn.WordReplacer(18, me, wc, 1,,CType(sender, TextBox))
+				Call Cmn.WordReplacer(18, me, wc, 1,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_HostName2
-				Cmn.WordReplacer(19, me, wc, 1,,CType(sender, TextBox))
+				Call Cmn.WordReplacer(19, me, wc, 1,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_HostName3
-				Cmn.WordReplacer(20, me, wc, 1,,CType(sender, TextBox))
+				Call Cmn.WordReplacer(20, me, wc, 1,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_HostName4
-				Cmn.WordReplacer(21, me, wc, 1,,CType(sender, TextBox))
+				Call Cmn.WordReplacer(21, me, wc, 1,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_PS1
-				Cmn.WordReplacer(22, me, wc, 0,,CType(sender, TextBox))
+				Call Cmn.WordReplacer(22, me, wc, 0,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_PS2
-				Cmn.WordReplacer(23, me, wc, 0,,CType(sender, TextBox))
+				Call Cmn.WordReplacer(23, me, wc, 0,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_PS3
-				Cmn.WordReplacer(24, me, wc, 0,,CType(sender, TextBox))
+				Call Cmn.WordReplacer(24, me, wc, 0,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_PS4
-				Cmn.WordReplacer(25, me, wc, 0,,CType(sender, TextBox))
+				Call Cmn.WordReplacer(25, me, wc, 0,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_PS5
-				Cmn.WordReplacer(26, me, wc, 0,,CType(sender, TextBox))
+				Call Cmn.WordReplacer(26, me, wc, 0,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_PS6
-				Cmn.WordReplacer(27, me, wc, 0,,CType(sender, TextBox))
+				Call Cmn.WordReplacer(27, me, wc, 0,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 		End Select	
 		'TODO: ControlThickness()を入れる
@@ -304,10 +331,10 @@ Public Partial Class PrintReport
 
 	'印刷フォームを開く
 	Private Sub Btn_Print_Click(sender As Object, e As EventArgs)
-		Dim curPaperSize As String = Wc.CurPPSizeStorager
-		Dim curPaperDirec As String = Wc.CurPPDirecStorager
+'		Dim curPaperSize As String = Wc.DefSet(7)
+'		Dim curPaperDirec As String = Wc.DefSet(8)
 		
-		Dim Ps As New PrintSetting(Me.Pic_Main.Image, curPaperSize, curPaperDirec)
+		Dim Ps As New PrintSetting(Me.Pic_Main.Image, Wc.DefSet(7), Wc.DefSet(8))
 		Ps.ShowDialog()
 		Ps.Dispose()
 		Ps = Nothing
@@ -357,8 +384,10 @@ Public Partial Class PrintReport
 ''' <returns>処理後の画像</returns>
 ''' 'http://homepage1.nifty.com/rucio/main/dotnet/Samples/Sample141ImageMagnify.htm
 ''' 'PictureBox1.Image = Magnify(PictureBox1.Image, 1.2F)
+'	Public Function Magnify(ByVal Source As Image, ByVal Rate As Double, _ 
+'	Optional ByVal Quality As Drawing2D.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic) As Image
 	Public Function Magnify(ByVal Source As Image, ByVal Rate As Double, _ 
-	Optional ByVal Quality As Drawing2D.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic) As Image
+	Optional ByVal Quality As Drawing2D.InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor) As Image
 
     	'▼引数のチェック
     	If IsNothing(Source) Then

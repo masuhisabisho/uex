@@ -256,11 +256,11 @@ Public Class SelectSql
 		Return resultTxt
 		
 	End Function
-'''■ GetDefaultVal
-''' <summary>初期設定値を返す</summary>
+'''■ SetDefaultVal
+''' <summary>初期設定値を設定する</summary>
 ''' <param name="sizeID">tbl_defsetのID</param>
-''' <returns>String配列で初期設定値を返す</returns>
-	Public Function GetDefaultVal(sizeID As Integer) As String()
+''' <returns>WordContainer.vbに値を保存する</returns>	'2013/8/3 Function　-> Subへ全てまとめて処理するように変更 mb
+	Public Sub SetDefaultVal(sizeID As Integer, Wc As WordContainer)
 		
 		Dim sqlText As String= ""
 		Dim defset As String = ""
@@ -272,11 +272,13 @@ Public Class SelectSql
 		sqlText &= " WHERE tbl_defset_id = " & sizeID								'MEMO: tbl_defset_idは上と連動させる
 		
 		defset = GetOneSql(sqlText)
-		resultDefset = defSet.Split(",")
+		resultDefset = defSet.Split(","c)
 		
-		Return resultDefset
+		For i As Integer = 0 To resultDefset.Length -1 Step 1
+			Wc.DefSet(i) = resultDefset(i)
+		Next i
 		
-	End Function
+	End Sub
 	
 '''■ GetTbl_TxtRow
 ''' <summary>tbl_txtの任意の1行の全ての値を返す</summary>

@@ -44,17 +44,16 @@ Public Partial Class PrintReport
 #Region "Form load"
 
 	Private Sub Print_Load(sender As Object, e As EventArgs)
-	
-	    Me.SetStyle(ControlStyles.DoubleBuffer, True)
-        Me.SetStyle(ControlStyles.UserPaint, True)
-        Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
-        
-        'ハンドラーをキャンセルしておく
+		'ダブルバッファを入れる
+		Me.SetStyle(ControlStyles.DoubleBuffer, True)
+		Me.SetStyle(ControlStyles.UserPaint, True)
+		Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
+		'ハンドラーをキャンセルしておく
 		Dim Ch As New ControlHandler()
 		Ch.AllTCHandleShifter(False, Me)
 		Ch.AllSICHandleShifter(False, Me)
 
-		'初期設定の読み込み保存
+'		'初期設定の読み込み保存
 		Dim SctSql As New SelectSql
 		Call SctSql.SetDefaultVal(0, Wc)
 		
@@ -98,7 +97,7 @@ Public Partial Class PrintReport
 		ClrFrm = Nothing
 		
 		'コンボ内の値を保存
-		Dim DefKeyWord As New Hashtable
+		'Dim DefKeyWord As New Hashtable			2013/8/4 out 1 line mb
 		'DefKeyWord = Wc.DefSetAll					2013/8/3 out 1 line mb
 		Wc.OptionalWord(Wc.DefSetAll, Me)
 		
@@ -118,7 +117,7 @@ Public Partial Class PrintReport
 
 		'描画用Bitmapを準備
 		With Pic_Main
-			.Size = New Size(CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))					'CHK: New sizeはわかった、Bitmapの値はなんなのか？要確認
+			.Size = New Size(CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))				'CHK: New sizeはわかった、Bitmapの値はなんなのか？要確認
 			.Image = New Bitmap(1800, 668)											'TODO: 可変にする　
 		End With
 		
@@ -127,15 +126,16 @@ Public Partial Class PrintReport
 		
 		'Dim basicColPitch As Single = CSng(Wc.DefSet(6))		2013/8/3/ out 2 lines mb
 		'Dim Cmn As New Common (basicColPitch)
-		Dim Cmn As New Common(Wc.DefSetAll)
+		'Dim Cmn As New Common(Wc.DefSetAll)
+		Dim Cmn As New Common(Wc)
 		
 		Dim wordStorager As Array
 		'Dim basicFontSize As String = Wc.DefSet(1)				2013/8/3 out 1 line mb
-		wordStorager = Cmn.WordPreparer(Wc.DefSet(1), mainTxt, Wc.optWord)
+		wordStorager = Cmn.WordPreparer(Wc.DefSet(1), mainTxt)
 
 		'文字を描画していく
 		'CHK: 引数DefSetAllに変更
-		Call Cmn.WordArranger(Wc.DefSetAll, mainTxt, wordStorager, Wc.optWord, Wc.optWord("Common_Font"),Me, Wc)
+		Call Cmn.WordArranger(mainTxt, wordStorager, Me)
 		
 		'ハンドラーを付与する
 		Ch.AllTCHandleShifter(True, Me)
@@ -164,9 +164,13 @@ Public Partial Class PrintReport
 '		Dim defSetAr() As String = SctSql.GetDefaultVal(currentSize)  
 '		Dim Cmn As New Common(CSng(defSetAr(6)))
 
-		Dim SctSql As New SelectSql()
 		'Dim Cmn As New Common(CSng(Wc.DefSet(6)))				'2013/8/3 out 1 line mb
-		Dim Cmn As New Common(Wc.DefSetAll)
+		Dim Cmn As New Common(Wc)
+		
+		Dim SctSql As New SelectSql()
+		Dim sqlText As String = " SELECT tbl_txt_ystyle FROM tbl_txt "
+		             sqlText &= " WHERE tbl_txt_sizeid = " & Wc.CurrentSet(0) & " AND tbl_txt_styleid = " & Wc.CurrentSet(1) & " AND tbl_txt_order = "
+		Dim yStyle As Integer
 		
 		With Pic_Main
 			If Not (.Image Is Nothing) Then						'TODO: 関数に置き換え
@@ -181,47 +185,74 @@ Public Partial Class PrintReport
 		Select Case True
 			'文字列
 			Case sender Is Me.Cmb_Font
-				Wc.optWord("Common_Font") = Me.Cmb_Font.Text				'END: フォントサイズ 2013/7/21 mb 
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				Wc.optWord("Common_Font") = Me.Cmb_Font.Text				'END: フォント 2013/7/21 mb 
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
+
 			Case sender Is	Me.Cmb_SeasonWord								'END: 季語 2013/7/20 mb
-				Call Cmn.WordReplacer(0, me, wc, 0, CType(sender, ComboBox),)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "0"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+				
+				Call Cmn.WordReplacer(0, me, yStyle, CType(sender, ComboBox),)			'CHK: 行数を変数にするか？
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Cmb_Time1									'END: 時期1 2013/7/20 mb
-				Call Cmn.WordReplacer(3, Me, Wc, 0, CType(sender, ComboBox),)	
-				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "3"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+				
+				Call Cmn.WordReplacer(3, Me, yStyle, CType(sender, ComboBox),)
+				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Cmb_Title									'END: 続柄　2013/7/20 mb
-				Call Cmn.WordReplacer(3, Me, Wc, 0, CType(sender, ComboBox))
-				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "3"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+				
+				Call Cmn.WordReplacer(3, Me, yStyle, CType(sender, ComboBox),)
+				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Cmb_DeathWay									'END: 死亡告知 2013/7/20 mb
-				Call Cmn.WordReplacer(4, Me, Wc, 2, CType(sender, ComboBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "4"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+				
+				Call Cmn.WordReplacer(4, Me, yStyle, CType(sender, ComboBox),)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 '			Case sender Is	Me.Cmb_Time2									'TODO
 '				Wc.optWord("Cmb_Time2") = Me.Cmb_Time2.SelectedValue
 '			Case sender Is	Me.Cmb_Donation
 '				Wc.optWord("Cmb_Donation") = Me.Cmb_Donation.SelectedValue
 			Case sender Is	Me.Cmb_Imibi
-				Call Cmn.WordReplacer(8, me, wc, 2, CType(sender, ComboBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))	'END: 忌日 2013/7/21 mb
+				sqlText &= "8"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+				
+				Call Cmn.WordReplacer(8, me, yStyle, CType(sender, ComboBox),)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())	'END: 忌日 2013/7/21 mb
 			Case sender Is	Me.Cmb_EndWord
-				Call Cmn.WordReplacer(14, me, wc, 1, CType(sender, ComboBox)) 	'END: 結語 2013/7/21 mb
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "14"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+				
+				Call Cmn.WordReplacer(14, me, yStyle, CType(sender, ComboBox),) 	'END: 結語 2013/7/21 mb
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Cmb_Year
-				Wc.optWord("Cmb_Year") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = " & Cmb_Year.SelectedValue)
-				Call Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))	'END: 日付関連 2013/7/21 mb
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				Wc.optWord("Cmb_Year") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = " & Me.Cmb_Year.SelectedValue.ToString())
+				sqlText &= "15"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+				
+				Call Cmn.WordReplacer(15, Me, yStyle, CType(sender, ComboBox),)	'END: 日付関連 2013/7/21 mb
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Cmb_Month
-				Wc.optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = " & Cmb_Month.SelectedValue)
-				Call Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				Wc.optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = " & Me.Cmb_Month.SelectedValue.ToString())
+				sqlText &= "15"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+				
+				Call Cmn.WordReplacer(15, Me, yStyle, CType(sender, ComboBox),)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Cmb_Day
-				If Cmb_Day.SelectedValue = "" Then							'文字が無い時のSQLエラー回避
+				If Me.Cmb_Day.SelectedValue.ToString() = "" Then							'文字が無い時のSQLエラー回避
 					Wc.optWord("Cmb_Day") = ""
 				Else
-					Wc.optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = " & Cmb_Day.SelectedValue)
+					Wc.optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = " & Cmb_Day.SelectedValue.ToString())
 				End If
-				Call Cmn.WordReplacer(15, Me, Wc, 0, CType(sender, ComboBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "15"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
 				
+				Call Cmn.WordReplacer(15, Me, yStyle, CType(sender, ComboBox),)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 
 '			Case sender Is	Me.Cmb_HostType
 '				Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue		'TODO: フォントサイズの変更
@@ -253,7 +284,7 @@ Public Partial Class PrintReport
 			Case sender Is Me.Cmb_PointPS1
 	 			Wc.optWord("Cmb_PointPS1") = Me.Cmb_PointPS1.SelectedValue 
 		End Select
-		'TODO: ControlThickness()を入れる
+		'TODO: ControlThickness()を入れる(濃淡を維持する為)
 	End Sub
 	
 	'文字変更
@@ -280,50 +311,94 @@ Public Partial Class PrintReport
 '		Dim Cmn As New Common(CSng(defSetAr(6)))
 
 		'Dim Cmn As New Common(CSng(Wc.DefSet(6)))  2013/8/3 out 1 line mb
-		Dim Cmn As New Common (Wc.DefSetAll)
+		Dim Cmn As New Common (Wc)
+		
+		Dim SctSql As New SelectSql
+		Dim sqlText As String = " SELECT tbl_txt_ystyle FROM tbl_txt "
+		             sqlText &= " WHERE tbl_txt_sizeid = " & Wc.CurrentSet(0) & " AND tbl_txt_styleid = " & Wc.CurrentSet(1) & " AND tbl_txt_order = "
+		Dim yStyle As Integer
 
 		Select Case True
-			Case sender Is	Me.Txt_Name
-'				Cmn.WordReplacer(0, me, wc, 0, ,CType(sender, TextBox))
-'				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Me.Txt_Name												'END:俗名 2013/8/4 mb
+				sqlText &= "3"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+
+				Cmn.WordReplacer(3, me, yStyle, ,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
 			Case sender Is	Me.Txt_DeadName
 				'TODO: 設定する
-			Case sender Is	Txt_Add1					'END: ｄｂにフォントサイズ無いとエラーに
-				Call Cmn.WordReplacer(16, me, wc, 1,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+			Case sender Is	Txt_Add1												'END: dbにフォントサイズ無いとエラーに
+				sqlText &= "16"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+				
+				Call Cmn.WordReplacer(16, me, yStyle,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Txt_Add2
-				Call Cmn.WordReplacer(17, me, wc, 1,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "17"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+				
+				Call Cmn.WordReplacer(17, me, yStyle,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Txt_HostName1
-				Call Cmn.WordReplacer(18, me, wc, 1,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "18"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+
+				Call Cmn.WordReplacer(18, me, yStyle,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Txt_HostName2
-				Call Cmn.WordReplacer(19, me, wc, 1,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "19"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+				
+				Call Cmn.WordReplacer(19, me, yStyle,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Txt_HostName3
-				Call Cmn.WordReplacer(20, me, wc, 1,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "20"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+
+				Call Cmn.WordReplacer(20, me, yStyle,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Txt_HostName4
-				Call Cmn.WordReplacer(21, me, wc, 1,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "21"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+				
+				Call Cmn.WordReplacer(21, me, yStyle,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Txt_PS1
-				Call Cmn.WordReplacer(22, me, wc, 0,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "22"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+
+				Call Cmn.WordReplacer(22, me, yStyle,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Txt_PS2
-				Call Cmn.WordReplacer(23, me, wc, 0,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "23"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+
+				Call Cmn.WordReplacer(23, me, yStyle,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Txt_PS3
-				Call Cmn.WordReplacer(24, me, wc, 0,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "24"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+
+				Call Cmn.WordReplacer(24, me, yStyle,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Txt_PS4
-				Call Cmn.WordReplacer(25, me, wc, 0,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "25"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+
+				Call Cmn.WordReplacer(25, me, yStyle,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Txt_PS5
-				Call Cmn.WordReplacer(26, me, wc, 0,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "26"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+
+				Call Cmn.WordReplacer(26, me, yStyle,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Txt_PS6
-				Call Cmn.WordReplacer(27, me, wc, 0,,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+				sqlText &= "27"
+				yStyle = CInt(SctSql.GetOneSql(sqlText))
+
+				Call Cmn.WordReplacer(27, me, yStyle,,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 		End Select	
 		'TODO: ControlThickness()を入れる
 	End Sub
@@ -333,7 +408,7 @@ Public Partial Class PrintReport
 	Private Sub Btn_Print_Click(sender As Object, e As EventArgs)
 '		Dim curPaperSize As String = Wc.DefSet(7)
 '		Dim curPaperDirec As String = Wc.DefSet(8)
-		
+
 		Dim Ps As New PrintSetting(Me.Pic_Main.Image, Wc.DefSet(7), Wc.DefSet(8))
 		Ps.ShowDialog()
 		Ps.Dispose()
@@ -353,7 +428,7 @@ Public Partial Class PrintReport
 	Public Sub Cmb_Thickness_SelectedIndexChanged(sender As Object, e As EventArgs)
 		
 		Call ClearPicture(Me.Pic_Main, 1800, 668)													'TODO: 変数に置き換える
-		Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+		Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), 1800, 668)			'TODO: 変数に置き換える
 
 	End Sub
@@ -362,9 +437,9 @@ Public Partial Class PrintReport
 	Public Sub Cmb_Magnify_SelectedIndexChanged(sender As Object, e As EventArgs)
 		'TODO: PictureBox　と BitMapのサイズを変える、描画位置も考える
 		Call ClearPicture(Me.Pic_Main, 1800, 668)													'TODO: 変数に置き換える
-		Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font"))
+		Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 		
-		If Me.Cmb_Thickness.SelectedValue <> 0 Then
+		If CDbl(Me.Cmb_Thickness.SelectedValue) <> 0 Then
 			Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), 1800, 668)		'TODO: 変数に置き換える
 		End If
 		
@@ -412,6 +487,7 @@ Public Partial Class PrintReport
     	Return DestImage
 
 	End Function
+	
 '''■ControlThickness
 ''' <summary>文字に濃淡をつける</summary>
 ''' <param name="picBox">PictureBox ピクチャーボックス</param>
@@ -543,7 +619,6 @@ Public Partial Class PrintReport
 		Next i
 		Wc.CurrentWord(wordInLine)
 
-			
 	End Sub
 
 '''■CreateWordDiff

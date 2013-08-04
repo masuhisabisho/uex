@@ -10,9 +10,9 @@ Public Class WordContainer
 	
 	Private curSetting As New Hashtable
 	Private defKeyWord As New Hashtable
-	
-	Public optWord As New Hashtable()
 	Public curWord As New ArrayList()
+
+	Public optWord As New Hashtable()
 	
 	'END:　この辺りまとまらないか？
 '''■DefSet (移行テスト中 -> OK 2013/8/3 mb）
@@ -72,15 +72,16 @@ Public Class WordContainer
 			End Select
 		End Set	
 	End Property
+	
 '''■DefSetAll（移行テスト中 -> OK 2013/8/3 mb）
- ''' <summary>現在表示している内容の初期値を保存・出力する（すべての項目）</summary>
+''' <summary>現在表示している内容の初期値を保存・出力する（すべての項目）</summary>
 	Public Readonly Property DefSetAll() As Hashtable
 		Get
 			Return defKeyWord
 		End Get
 	End Property
 
-'''■CurSizeSet
+'''■CurrentSet
 ''' <summary>現在表示している内容の用紙ID・文例IDを保存出力する</summary>
 ''' <param name="curSize">selector = 0 現在の用紙ID</param>
 ''' <param name="curStyle">selector = 1 現在の文例ID</param>
@@ -88,9 +89,9 @@ Public Class WordContainer
 		Get
 			Select Case selector
 			    Case 0
-					Return curSetting("curSize").ToString()
+					Return CInt(curSetting("curSize"))
 			    Case 1
-					Return curSetting("curStyle").ToString()
+					Return CInt(curSetting("curStyle"))
 			End Select
 		End Get
 		Set(ByVal val As Integer)
@@ -164,7 +165,6 @@ Public Class WordContainer
 			'一般
 			'optWord("Common_Style") = defsetAr(0)									'共通Propertyへ　2013/8/3 mb
 			optWord("Common_Point") = DefKeyWord("curFontSize")
-			
 			optWord("Common_Font") = .Cmb_Font.text									'CHK: SelectedValue, SelectedIndex, Textの違い
 			'フォントサイズ
 			optWord("Cmb_PointTitle") = .Cmb_PointTitle.SelectedIndex
@@ -183,7 +183,7 @@ Public Class WordContainer
 			End With
 	End Sub
 	
-	
+#Region "Comment Out"
 	'以下3点DefSetに統合・移行・廃止 2013/8/3 mb
 ''''■CurStyleStorager
 '''' <summary>現在表示している内容の文例IDを保存する</summary>
@@ -220,5 +220,5 @@ Public Class WordContainer
 '			paperDirection = val
 '		End Set
 '	End Property	
-	
+#End Region	
 End Class

@@ -129,13 +129,15 @@ Public Partial Class PrintReport
 		'Dim Cmn As New Common(Wc.DefSetAll)
 		Dim Cmn As New Common(Wc)
 		
-		Dim wordStorager As Array
 		'Dim basicFontSize As String = Wc.DefSet(1)				2013/8/3 out 1 line mb
-		wordStorager = Cmn.WordPreparer(Wc.DefSet(1), mainTxt)
-
+		'Dim wordStorager As Array								2013/8/4 out 2 lines mb
+		'wordStorager = Cmn.WordPreparer(Wc.DefSet(1), mainTxt)
+		Dim storageWord As New ArrayList
+		storageWord = Cmn.WordPreparer(Wc.DefSet(1), mainTxt)
 		'文字を描画していく
 		'CHK: 引数DefSetAllに変更
-		Call Cmn.WordArranger(mainTxt, wordStorager, Me)
+		'Call Cmn.WordArranger(mainTxt, wordStorager, Me)	'2013/8/4 out 1 line mb
+		Call Cmn.WordArranger(mainTxt, storageWord, Me)
 		
 		'ハンドラーを付与する
 		Ch.AllTCHandleShifter(True, Me)
@@ -560,47 +562,49 @@ Public Partial Class PrintReport
 		
 	End Sub
 	
+	'Public Sub CreateWord(word As Array, font As String, xPos As Single, yPos As Single, properPit As Single)			2013/8/5 out following 6 lines mb
+	' <param name="point">String フォントサイズ</param>  <- word内に格納されているフォントサイズを利用するため廃止		point As Integer, 
+	' <param name="g">グラフィックオブジェクト</param>  <- 廃止
+	' <param name="xpos">x軸初期値</param>
+	' <param name="ypos">y軸初期値</param>
+	' <param name="properPit">文字ピッチ</param>
 '''■CreateWord
 ''' <summary>文字を描画して行く（同じフォントサイズ）</summary>
 ''' <param name="word">文字配列</param>
 ''' <param name="font">フォント</param>
-''' <param name="point">String フォントサイズ</param>  <- word内に格納されているフォントサイズを利用するため廃止		point As Integer, 
-''' <param name="xpos">x軸初期値</param>
-''' <param name="ypos">y軸初期値</param>
-''' <param name="properPit">文字ピッチ</param>
-''' <param name="g">グラフィックオブジェクト</param>  <- 廃止
 ''' <returns>Void</returns>
-	Public Sub CreateWord(word As Array, font As String, xPos As Single, yPos As Single, properPit As Single)
+	Public Sub CreateWord(word As ArrayList, font As String)
 		Dim wordDetail(3) As String							'文字詳細情報
 		Dim wordInLine As New ArrayList			'文字詳細情報を配列に格納
 		
-		Dim splitPointAr() As String
-		splitPointAr = CStr(word(1)).Split(","c)
+'		Dim splitPointAr() As String
+'		splitPointAr = CStr(word(1)).Split(","c)
 			
-		For i As Integer = 2 To CInt(word.Length) - 1 Step 1
-			Dim fontSize() As Single = FontSizeCal(word(i), font, CInt(splitPointAr(i - 2)))
+		'For i As Integer = 2 To CInt(word.Length) - 1 Step 1
+		For i As Integer = 0 To word.Count - 1 Step 1
+			'Dim fontSize() As Single = FontSizeCal(word(i), font, CInt(splitPointAr(i - 2)))
 			Dim g As System.Drawing.Graphics
 			
 			g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
 			g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-			g.DrawString(word(i), _
-						New Font(font, CInt(splitPointAr(i - 2)), GraphicsUnit.Pixel), _ 
+			g.DrawString(word(i)(0), _
+						New Font(font, CSng(word(i)(1)), GraphicsUnit.Pixel), _ 
 						Brushes.Black, _ 
-						xPos, _ 
-						yPos, _
+						word(i)(3), _ 
+						word(i)(2), _
 						New StringFormat(StringFormatFlags.DirectionVertical) _
 						)
 			
 			g.Dispose()
 			g = Nothing
 			
-			wordDetail(0) = word(i)							'出力位置を格納（絶対値）
-			wordDetail(1) = splitPointAr(i - 2)
-			wordDetail(2) = yPos
-			wordDetail(3) = xPos
+			wordDetail(0) = word(i)(0)							'出力位置を格納（絶対値）
+			wordDetail(1) = word(i)(1)
+			wordDetail(2) = word(i)(2)
+			wordDetail(3) = word(i)(3)
 			wordInLine.Add(wordDetail)
 			
-			yPos = yPos + (fontSize(0) + properPit)			'yピッチ増加
+'			yPos = yPos + (fontSize(0) + properPit)			'yピッチ増加
 
 '			#If Debug Then
 '				System.Diagnostics.Debug.Write(wordDetail(0))

@@ -133,7 +133,7 @@ Public Partial Class PrintReport
 		'Dim wordStorager As Array								2013/8/4 out 2 lines mb
 		'wordStorager = Cmn.WordPreparer(Wc.DefSet(1), mainTxt)
 		Dim storageWord As New ArrayList
-		storageWord = Cmn.WordPreparer(Wc.DefSet(1), mainTxt)
+		storageWord = Cmn.WordPreparer(mainTxt, Wc.DefSet(1))
 		'文字を描画していく
 		'CHK: 引数DefSetAllに変更
 		'Call Cmn.WordArranger(mainTxt, wordStorager, Me)	'2013/8/4 out 1 line mb
@@ -278,7 +278,7 @@ Public Partial Class PrintReport
 			Case sender Is Me.Cmb_PointHostName1
 				Wc.optWord("Cmb_PointHostName1") = Me.Cmb_PointHostName1.SelectedValue
 			Case sender Is Me.Cmb_PointHostName2
-				Wc.optWord("Cmb_PointHostName2") = Me.Cmb_PointHostName2.SelectedValue    
+				Wc.optWord("Cmb_PointHostName2") = Me.Cmb_PointHostName2.SelectedValue
 			Case sender Is Me.Cmb_PointHostName3
 				Wc.optWord("Cmb_PointHostName3") = Me.Cmb_PointHostName2.SelectedValue
 			Case sender Is Me.Cmb_PointHostName4
@@ -321,6 +321,7 @@ Public Partial Class PrintReport
 		Dim yStyle As Integer
 
 		Select Case True
+			
 			Case sender Is	Me.Txt_Name												'END:俗名 2013/8/4 mb
 				sqlText &= "3"
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
@@ -575,7 +576,7 @@ Public Partial Class PrintReport
 ''' <returns>Void</returns>
 	Public Sub CreateWord(word As ArrayList, font As String)
 		Dim wordDetail(3) As String							'文字詳細情報
-		Dim wordInLine As New ArrayList			'文字詳細情報を配列に格納
+		Dim wordInLine As New ArrayList						'文字詳細情報を配列に格納
 		
 '		Dim splitPointAr() As String
 '		splitPointAr = CStr(word(1)).Split(","c)
@@ -598,7 +599,7 @@ Public Partial Class PrintReport
 			g.Dispose()
 			g = Nothing
 			
-			wordDetail(0) = word(i)(0)							'出力位置を格納（絶対値）
+			wordDetail(0) = word(i)(0)						'出力位置を格納（絶対値）
 			wordDetail(1) = word(i)(1)
 			wordDetail(2) = word(i)(2)
 			wordDetail(3) = word(i)(3)

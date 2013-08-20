@@ -165,21 +165,27 @@ Public Class WordContainer
 			'一般
 			'optWord("Common_Style") = defsetAr(0)									'共通Propertyへ　2013/8/3 mb
 			optWord("Common_Point") = DefKeyWord("curFontSize")
-			optWord("Common_Font") = .Cmb_Font.text									'CHK: SelectedValue, SelectedIndex, Textの違い
+			optWord("Common_Font") = .Cmb_Font.text									'END: SelectedValue, SelectedIndex, Textの違い
 			'フォントサイズ
-			optWord("Cmb_PointTitle") = .Cmb_PointTitle.SelectedIndex
-			optWord("Cmb_PointName") = .Cmb_PointName.SelectedIndex
-			optWord("Cmb_PointDeadName") = .Cmb_PointDeadName.SelectedValue
-			optWord("Cmb_PointImibi") = .Cmb_PointImibi.SelectedIndex
-			optWord("Cmb_PointEndWord") = .Cmb_PointEndWord.SelectedIndex
-			optWord("Cmb_PointCeremonyDate") = .Cmb_PointCeremonyDate.SelectedIndex
-			optWord("Cmb_PointAdd1") = .Cmb_PointAdd1.SelectedIndex
-			optWord("Cmb_PointHostType") = .Cmb_PointHostType.SelectedValue
-			optWord("Cmb_PointHostName1") = .Cmb_PointHostName1.SelectedValue
-			optWord("Cmb_PointHostName2") = .Cmb_PointHostName2.SelectedValue	
-			optWord("Cmb_PointHostName3") = .Cmb_PointHostName3.SelectedValue
-			optWord("Cmb_PointHostName4") = .Cmb_PointHostName4.SelectedValue
-			optWord("Cmb_PointPS1") = .Cmb_PointPS1.SelectedIndex
+			optWord("Cmb_PointTitle") = .Cmb_PointTitle.Text
+			optWord("Cmb_PointName") = .Cmb_PointName.Text
+			optWord("Cmb_PointDeadName") = .Cmb_PointDeadName.Text
+			optWord("Cmb_PointImibi") = .Cmb_PointImibi.Text
+			optWord("Cmb_PointEndWord") = .Cmb_PointEndWord.Text
+			optWord("Cmb_PointCeremonyDate") = .Cmb_PointCeremonyDate.Text
+			optWord("Cmb_PointAdd1") = .Cmb_PointAdd1.Text
+			optWord("Cmb_PointHostType") = .Cmb_PointHostType.Text
+			optWord("Cmb_PointHostName1") = .Cmb_PointHostName1.Text
+			optWord("Cmb_PointHostName2") = .Cmb_PointHostName2.Text	
+			optWord("Cmb_PointHostName3") = .Cmb_PointHostName3.Text
+			optWord("Cmb_PointHostName4") = .Cmb_PointHostName4.Text
+			optWord("Cmb_PointPS1") = .Cmb_PointPS1.Text
+			
+'			2013/8/20 出力内容再度確認
+'			For Each item As DictionaryEntry In optWord
+'				System.Diagnostics.Debug.WriteLine(item.Key & "  = " & item.Value)
+'			Next
+
 			End With
 	End Sub
 	

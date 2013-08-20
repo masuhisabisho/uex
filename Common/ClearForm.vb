@@ -33,16 +33,18 @@ Public Class ClearForm
                     '初期設定の値は下の通り
                     'Specific part
                     .Cmb_Style.SelectedValue = 0                            'TODO: 引数から読む
-                    .Cmb_SeasonWord.SelectedIndex = 1
+                    
+                    .Cmb_SeasonWord.SelectedValue = "厳寒の候"
                     .Cmb_Time1.SelectedValue = "先般"
-                    .Cmb_Title.SelectedIndex = 1
+                    .Cmb_Title.SelectedValue = "亡養父"
                     .Txt_Name.Text = "儀"
                     .Cmb_DeathWay.SelectedValue = "死去"
                     .Cmb_Time2.SelectedValue = "本日"
                     .Cmb_Time2.Enabled = False
                     .Txt_DeadName.Text = ""
                     .Txt_DeadName.Enabled = False
-                    .Cmb_Donation.SelectedValue = 0
+                    .Cmb_Donation.SelectedValue = "御花料"
+                    .Cmb_Donation.Enabled = False
                     .Cmb_Imibi.SelectedValue = "忌明の法要"
                     .Cmb_EndWord.SelectedValue = "敬具"
                     .Cmb_Year.SelectedValue = currentDt(0)
@@ -56,15 +58,15 @@ Public Class ClearForm
                     .Txt_PS4.Text = "御受納下さいます様お願い申し上げます"
 
                     'Font Size
-                    .Cmb_PointTitle.SelectedIndex = 35
-                    .Cmb_PointName.SelectedIndex = 35
+                    .Cmb_PointTitle.SelectedIndex = 34
+                    .Cmb_PointName.SelectedIndex = 34
                     .Cmb_PointDeadName.SelectedIndex = 0
                     .Cmb_PointDeadName.Enabled = False
-                    .Cmb_PointImibi.SelectedIndex = 35
-                    .Cmb_PointEndWord.SelectedIndex = 35
+                    .Cmb_PointImibi.SelectedIndex = 34
+                    .Cmb_PointEndWord.SelectedIndex = 34
                     .Cmb_PointCeremonyDate.SelectedIndex = 22
                     .Cmb_PointAdd1.SelectedIndex = 19
-                    .Cmb_PointHostType.SelectedValue = 1
+                    .Cmb_PointHostType.SelectedIndex = 0
                     .Cmb_PointHostType.Enabled = False
                     .Cmb_PointHostName1.SelectedIndex = 34
                     .Cmb_PointHostName2.SelectedIndex = 34

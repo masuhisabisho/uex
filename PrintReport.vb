@@ -245,22 +245,32 @@ Public Partial Class PrintReport
 				Wc.optWord("Cmb_PointEndWord") = Me.Cmb_PointEndWord.SelectedValue
 			Case sender Is Me.Cmb_PointAdd1
 				Wc.optWord("Cmb_PointAdd1") = Me.Cmb_PointAdd1
-			Case sender Is Me.Cmb_PointHostType
+				Call Cmn.ChangeFontSize(0, Wc.curWord, 16, Cmb_PointAdd1, Me,,)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
+			Case sender Is Me.Cmb_PointHostType				
 				Wc.optWord("Cmb_PointHostType") = Me.Cmb_PointHostType
+				Call Cmn.ChangeFontSize(0, Wc.curWord, 17, Cmb_PointHostType, Me, )
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is Me.Cmb_PointHostName1
 				Wc.optWord("Cmb_PointHostName1") = Me.Cmb_PointHostName1.SelectedValue
-				Dim startNewXpos As Single
-				Call Cmn.ChangeFontSize(0, Wc.curWord, 18, startNewXpos, Cmb_PointHostName1, Me, )
-				Call Cmn.ShiftXPos(18, Wc.curWord, startNewXpos, Me)
+				Call Cmn.ChangeFontSize(0, Wc.curWord, 18, Cmb_PointHostName1, Me,,)
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is Me.Cmb_PointHostName2
 				Wc.optWord("Cmb_PointHostName2") = Me.Cmb_PointHostName2.SelectedValue
+				Call Cmn.ChangeFontSize(0, Wc.curWord, 19, Cmb_PointHostName2, Me,,)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is Me.Cmb_PointHostName3
-				Wc.optWord("Cmb_PointHostName3") = Me.Cmb_PointHostName2.SelectedValue
+				Wc.optWord("Cmb_PointHostName3") = Me.Cmb_PointHostName3.SelectedValue
+				Call Cmn.ChangeFontSize(0, Wc.curWord, 20, Cmb_PointHostName3, Me,,)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is Me.Cmb_PointHostName4
 	 			Wc.optWord("Cmb_PointHostName4") = Me.Cmb_PointHostName4.SelectedValue
-			Case sender Is Me.Cmb_PointPS1
-	 			Wc.optWord("Cmb_PointPS1") = Me.Cmb_PointPS1.SelectedValue 
+				Call Cmn.ChangeFontSize(0, Wc.curWord, 21, Cmb_PointHostName4, Me,,)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
+	 		Case sender Is Me.Cmb_PointPS1
+	 			Wc.optWord("Cmb_PointPS1") = Me.Cmb_PointPS1.SelectedValue
+				Call Cmn.ChangeFontSize(2, Wc.curWord, 22, Cmb_PointPS1, Me,,6)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 		End Select
 		'TODO: ControlThickness()を入れる(濃淡を維持する為)
 	End Sub

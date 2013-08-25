@@ -21,7 +21,7 @@ Public Class WordContainer
 ''' <param name="curFontSize">selector = 1 一般のフォントサイズ</param>
 ''' <param name="curTopXPos">selector = 2 最大のx座標</param>
 ''' <param name="curTopYPos">selector = 3 天のy座標</param>
-''' <param name="curBotoomYPos">selector = 4 地のy座標</param>
+''' <param name="curBottomYPos">selector = 4 地のy座標</param>
 ''' <param name="curBasicPitch">selector = 5 基本の改列ピッチ</param>
 ''' <param name="curWordPitch">selector = 6 基本の文字ピッチ</param>
 ''' <param name="paperSize">selector = 7 現在の用紙IDに対する用紙サイズ　</param>
@@ -38,7 +38,7 @@ Public Class WordContainer
 			    Case 3
 			    	Return defKeyWord("curTopYPos").ToString()
 			    Case 4
-			    	Return defKeyWord("curBotoomYPos").ToString()
+			    	Return defKeyWord("curBottomYPos").ToString()
 			    Case 5
 			    	Return defKeyWord("curBasicPitch").ToString()
 			    Case 6
@@ -60,7 +60,7 @@ Public Class WordContainer
 			    Case 3
 			    	defKeyWord("curTopYPos") = Val
 			    Case 4
-			    	defKeyWord("curBotoomYPos") = Val
+			    	defKeyWord("curBottomYPos") = Val
 			    Case 5
 			    	defKeyWord("curBasicPitch") = Val
 			    Case 6
@@ -136,7 +136,7 @@ Public Class WordContainer
 			optWord("Cmb_EndWord") = .Cmb_EndWord.SelectedValue
 			'日付
 			Dim SctSql As New SelectSql()
-			optWord("Cmb_Year") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = " & frm.Cmb_Year.SelectedValue)
+			optWord("Cmb_Year") = SctSql.GetOneSql("SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = " & frm.Cmb_Year.SelectedValue)
 			optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = " & frm.Cmb_Month.SelectedValue)
 			optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = " & frm.Cmb_Day.SelectedValue)
 			SctSql = Nothing

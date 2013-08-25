@@ -233,7 +233,7 @@ Public Class SelectSql
 
 	Public Function GetSentence(sizeID As Integer, styleID As integer) As ArrayList 
 		Dim sqlText as String = ""
-		Dim resultTxt As New ArrayList　'CHK: 開放
+		Dim resultTxt As New ArrayList
 		
 		sqlText &= " SELECT "														'**参考　インチ = 0.0254m
 		sqlText &= "  tbl_txt_txt "													'メインの文章 　

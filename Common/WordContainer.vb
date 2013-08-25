@@ -134,16 +134,8 @@ Public Class WordContainer
 			optWord("Cmb_Donation") = .Cmb_Donation.SelectedValue
 			optWord("Cmb_Imibi") = .Cmb_Imibi.SelectedValue
 			optWord("Cmb_EndWord") = .Cmb_EndWord.SelectedValue
-'			optWord("Cmb_Year") = .Cmb_Year.SelectedIndex
-'			optWord("Cmb_Month") = .Cmb_Month.SelectedIndex
-'			optWord("Cmb_Day") = .Cmb_Day.SelectedIndex
 			'日付
 			Dim SctSql As New SelectSql()
-'			Dim resultWareki As String = ""
-'			resultWareki &= SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = " & frm.Cmb_Year.SelectedValue)
-'			resultWareki &= SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = " & frm.Cmb_Month.SelectedValue)
-'			resultWareki &= SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = " & frm.Cmb_Day.SelectedValue)
-'			optWord("Txt_CeremonyDate") = resultWareki
 			optWord("Cmb_Year") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = " & frm.Cmb_Year.SelectedValue)
 			optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = " & frm.Cmb_Month.SelectedValue)
 			optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = " & frm.Cmb_Day.SelectedValue)
@@ -163,7 +155,6 @@ Public Class WordContainer
 			optWord("Txt_PS5") = .Txt_PS5.Text
 			optWord("Txt_PS6") = .Txt_PS6.Text
 			'一般
-			'optWord("Common_Style") = defsetAr(0)									'共通Propertyへ　2013/8/3 mb
 			optWord("Common_Point") = DefKeyWord("curFontSize")
 			optWord("Common_Font") = .Cmb_Font.text									'END: SelectedValue, SelectedIndex, Textの違い
 			'フォントサイズ
@@ -189,42 +180,4 @@ Public Class WordContainer
 			End With
 	End Sub
 	
-#Region "Comment Out"
-	'以下3点DefSetに統合・移行・廃止 2013/8/3 mb
-''''■CurStyleStorager
-'''' <summary>現在表示している内容の文例IDを保存する</summary>
-'''' <returns>用紙ID</returns>
-'	Public Property CurStyleStorager() As Integer
-'		Get
-'			Return curStyle
-'		End Get
-'		Set(ByVal val As Integer)
-'			curStyle = val
-'		End Set
-'	End Property
-	
-''''■CurPPSizeStorager
-'''' <summary>現在表示している内容の用紙設定名を保存する</summary>
-'''' <returns>用紙ID</returns>
-'	Public Property CurPPSizeStorager() As String
-'		Get
-'			Return paperSize
-'		End Get
-'		Set(ByVal val As String)
-'			paperSize = val
-'		End Set
-'	End Property
-'	
-''''■CurPPDirecStorager
-'''' <summary>現在表示している内容の印刷方向を保存する</summary>
-'''' <returns>用紙ID</returns>
-'	Public Property CurPPDirecStorager() As String
-'		Get
-'			Return paperDirection
-'		End Get
-'		Set(ByVal val As String)
-'			paperDirection = val
-'		End Set
-'	End Property	
-#End Region	
 End Class

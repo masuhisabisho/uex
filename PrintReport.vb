@@ -57,14 +57,6 @@ Public Partial Class PrintReport
 		Dim SctSql As New SelectSql
 		Call SctSql.SetDefaultVal(0, Wc)
 		
-'		以下SetDefaultVal内に移行　2013/8/3 mb
-'		Dim defSetAr() As String
-'		defSetAr = SctSql.GetDefaultVal(0)
-'		
-'		'CHK: 全ての初期値を保存に変更
-'		For i As Integer = 0 To defSetAr.Length -1 Step 1
-'			Wc.DefSet(i) = defSetAr(i)
-'		Next i
 		
 		'フォント設定
 		Dim fontList As New ArrayList
@@ -97,17 +89,11 @@ Public Partial Class PrintReport
 		ClrFrm = Nothing
 		
 		'コンボ内の値を保存
-		'Dim DefKeyWord As New Hashtable			2013/8/4 out 1 line mb
-		'DefKeyWord = Wc.DefSetAll					2013/8/3 out 1 line mb
 		Wc.OptionalWord(Wc.DefSetAll, Me)
 		
 		'現在の用紙サイズID
-		Wc.CurrentSet(0) = 0						'初めて開いた時は一番最初の分にする、設定できるようにするか？
+		Wc.CurrentSet(0) = 0														'初めて開いた時は一番最初の分にする、設定できるようにするか？
 		Wc.currentset(1) = 0
-		
-'		Wc.CurStyleStorager = 0						'END 管理一元化を考える -> 不要になった
-'		Wc.CurPPSizeStorager = "奉書挨拶状" 			2013/8/3 out DefSetに移行
-'		Wc.CurPPDirecStorager = "横"
 		
 		'DBより文章データの取り込み
 		Dim mainTxt As New ArrayList
@@ -122,21 +108,11 @@ Public Partial Class PrintReport
 		End With
 		
 		'DB内の文章を単語に分割する
-		'Dim Cmn As New Common(defSetAr(6))						2013/8/3 out 1 line mb
-		
-		'Dim basicColPitch As Single = CSng(Wc.DefSet(6))		2013/8/3/ out 2 lines mb
-		'Dim Cmn As New Common (basicColPitch)
-		'Dim Cmn As New Common(Wc.DefSetAll)
 		Dim Cmn As New Common(Wc)
 		
-		'Dim basicFontSize As String = Wc.DefSet(1)				2013/8/3 out 1 line mb
-		'Dim wordStorager As Array								2013/8/4 out 2 lines mb
-		'wordStorager = Cmn.WordPreparer(Wc.DefSet(1), mainTxt)
 		Dim storageWord As New ArrayList
 		storageWord = Cmn.WordPreparer(mainTxt, Wc.DefSet(1))
 		'文字を描画していく
-		'CHK: 引数DefSetAllに変更
-		'Call Cmn.WordArranger(mainTxt, wordStorager, Me)	'2013/8/4 out 1 line mb
 		Call Cmn.WordArranger(mainTxt, storageWord, Me)
 		
 		'ハンドラーを付与する
@@ -162,11 +138,6 @@ Public Partial Class PrintReport
 		'END: 現状のデータを保存、不変文字の場所、変化文字の場所を確認、変化部分を削除 -> 1行全て削除、書き換え
 		'END: 変更後の列ピッチがおかしい（おおきい）
 		
-'		Dim currentSize As Integer = Wc.CurSizeStorager				2013/8/3 out  lines mb
-'		Dim defSetAr() As String = SctSql.GetDefaultVal(currentSize)  
-'		Dim Cmn As New Common(CSng(defSetAr(6)))
-
-		'Dim Cmn As New Common(CSng(Wc.DefSet(6)))				'2013/8/3 out 1 line mb
 		Dim Cmn As New Common(Wc)
 		
 		Dim SctSql As New SelectSql()
@@ -175,7 +146,7 @@ Public Partial Class PrintReport
 		Dim yStyle As Integer
 		
 		With Pic_Main
-			If Not (.Image Is Nothing) Then						'TODO: 関数に置き換え
+			If Not (.Image Is Nothing) Then									'TODO: 関数に置き換え
 				.Image.Dispose()
 				.Image = Nothing
 
@@ -194,7 +165,7 @@ Public Partial Class PrintReport
 				sqlText &= "0"
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
 				
-				Call Cmn.WordReplacer(0, me, yStyle, CType(sender, ComboBox),)			'CHK: 行数を変数にするか？
+				Call Cmn.WordReplacer(0, me, yStyle, CType(sender, ComboBox),)	'CHK: 行数を変数にするか？
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Cmb_Time1									'END: 時期1 2013/7/20 mb
 				sqlText &= "3"
@@ -235,7 +206,7 @@ Public Partial Class PrintReport
 				sqlText &= "15"
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
 				
-				Call Cmn.WordReplacer(15, Me, yStyle, CType(sender, ComboBox),)	'END: 日付関連 2013/7/21 mb
+				Call Cmn.WordReplacer(15, Me, yStyle, CType(sender, ComboBox),)		'END: 日付関連 2013/7/21 mb
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Cmb_Month
 				Wc.optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = " & Me.Cmb_Month.SelectedValue.ToString())
@@ -245,7 +216,7 @@ Public Partial Class PrintReport
 				Call Cmn.WordReplacer(15, Me, yStyle, CType(sender, ComboBox),)
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Cmb_Day
-				If Me.Cmb_Day.SelectedValue.ToString() = "" Then							'文字が無い時のSQLエラー回避
+				If Me.Cmb_Day.SelectedValue.ToString() = "" Then					'文字が無い時のSQLエラー回避
 					Wc.optWord("Cmb_Day") = ""
 				Else
 					Wc.optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = " & Cmb_Day.SelectedValue.ToString())
@@ -257,7 +228,8 @@ Public Partial Class PrintReport
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 
 '			Case sender Is	Me.Cmb_HostType
-'				Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue		'TODO: フォントサイズの変更
+'				Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue			'TODO: フォントサイズの変更
+
 			'フォントサイズ（数字）
 			Case sender Is Me.Cmb_PointTitle
 				Wc.optWord("Cmb_PointTitle") = Me.Cmb_PointTitle.SelectedItem
@@ -277,6 +249,10 @@ Public Partial Class PrintReport
 				Wc.optWord("Cmb_PointHostType") = Me.Cmb_PointHostType
 			Case sender Is Me.Cmb_PointHostName1
 				Wc.optWord("Cmb_PointHostName1") = Me.Cmb_PointHostName1.SelectedValue
+				Dim startNewXpos As Single
+				Call Cmn.ChangeFontSize(0, Wc.curWord, 18, startNewXpos, Cmb_PointHostName1, Me, )
+				Call Cmn.ShiftXPos(18, Wc.curWord, startNewXpos, Me)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is Me.Cmb_PointHostName2
 				Wc.optWord("Cmb_PointHostName2") = Me.Cmb_PointHostName2.SelectedValue
 			Case sender Is Me.Cmb_PointHostName3
@@ -308,11 +284,6 @@ Public Partial Class PrintReport
 			End If
 		End With
 		
-'		Dim SctSql As New SelectSql()			2013/8/3 out 3 lines mb
-'		Dim defSetAr() As String = SctSql.GetDefaultVal(0)
-'		Dim Cmn As New Common(CSng(defSetAr(6)))
-
-		'Dim Cmn As New Common(CSng(Wc.DefSet(6)))  2013/8/3 out 1 line mb
 		Dim Cmn As New Common (Wc)
 		
 		Dim SctSql As New SelectSql
@@ -409,9 +380,6 @@ Public Partial Class PrintReport
 
 	'印刷フォームを開く
 	Private Sub Btn_Print_Click(sender As Object, e As EventArgs)
-'		Dim curPaperSize As String = Wc.DefSet(7)
-'		Dim curPaperDirec As String = Wc.DefSet(8)
-
 		Dim Ps As New PrintSetting(Me.Pic_Main.Image, Wc.DefSet(7), Wc.DefSet(8))
 		Ps.ShowDialog()
 		Ps.Dispose()
@@ -497,6 +465,7 @@ Public Partial Class PrintReport
 ''' <param name="whiteRate">Integer 濃淡の割合</param>
 ''' <param name="picWidth">Integer BitMapの幅</param>
 ''' <param name="picHeight">Integer BitMapの高さ</param>
+''' <returns>Void</returns>
 	Private Sub ControlThickness(picBox As PictureBox, whiteRate As Integer, _
 		picWidth As Integer, picHeight As Integer)
 		
@@ -520,6 +489,7 @@ Public Partial Class PrintReport
 ''' <param name="picBox">PictureBox ピクチャーボックス</param>
 ''' <param name="picWidth">画像の幅</param>
 ''' <param name="picHeight">画像の高さ</param>
+''' <returns>Void</returns>
 	Private Sub ClearPicture(picBox As PictureBox, picWidth As Integer, picHeight As Integer)
 		With picBox
 			If Not (.Image Is Nothing) Then
@@ -563,12 +533,6 @@ Public Partial Class PrintReport
 		
 	End Sub
 	
-	'Public Sub CreateWord(word As Array, font As String, xPos As Single, yPos As Single, properPit As Single)			2013/8/5 out following 6 lines mb
-	' <param name="point">String フォントサイズ</param>  <- word内に格納されているフォントサイズを利用するため廃止		point As Integer, 
-	' <param name="g">グラフィックオブジェクト</param>  <- 廃止
-	' <param name="xpos">x軸初期値</param>
-	' <param name="ypos">y軸初期値</param>
-	' <param name="properPit">文字ピッチ</param>
 '''■CreateWord
 ''' <summary>文字を描画して行く（同じフォントサイズ）</summary>
 ''' <param name="word">文字配列</param>
@@ -578,12 +542,7 @@ Public Partial Class PrintReport
 		Dim wordDetail(3) As String							'文字詳細情報
 		Dim wordInLine As New ArrayList						'文字詳細情報を配列に格納
 		
-'		Dim splitPointAr() As String
-'		splitPointAr = CStr(word(1)).Split(","c)
-			
-		'For i As Integer = 2 To CInt(word.Length) - 1 Step 1
 		For i As Integer = 0 To word.Count - 1 Step 1
-			'Dim fontSize() As Single = FontSizeCal(word(i), font, CInt(splitPointAr(i - 2)))
 			Dim g As System.Drawing.Graphics
 			
 			g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
@@ -605,8 +564,6 @@ Public Partial Class PrintReport
 			wordDetail(3) = word(i)(3)
 			wordInLine.Add(wordDetail)
 			
-'			yPos = yPos + (fontSize(0) + properPit)			'yピッチ増加
-
 '			#If Debug Then
 '				System.Diagnostics.Debug.Write(wordDetail(0))
 '				System.Diagnostics.Debug.Write("<>")

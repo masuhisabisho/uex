@@ -7,7 +7,7 @@
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
 Public Class ClearForm
-	Private defaultFontIndex As Integer = 18	
+	Private Const defaultFontIndex As Integer = 18	
 	'TODO: 全ての用紙を実装する	
 ''''■ClearForm
 ''' <summary>Format form</summary>
@@ -21,8 +21,8 @@ Public Class ClearForm
         	Case 0      '奉書挨拶状
                 With frm
                     'CHK: 配列に基本設定を入れておく -> それをセレクトで選択して読む
-                    .Cmb_Size.SelectedValue = 0         'TODO: Indexで統一？
-                    .Cmb_Font.SelectedIndex	= defaultFontIndex       'CHK: 拡大率の問題
+                    .Cmb_Size.SelectedValue = 0							'END: Indexで統一？ -> コレクションに直接値を入れているところは
+                    .Cmb_Font.SelectedIndex	= defaultFontIndex			'CHK: 拡大率の問題
                     
                     Dim str As String = .Cmb_Font.Text
                     
@@ -36,7 +36,7 @@ Public Class ClearForm
                     
                     .Cmb_SeasonWord.SelectedValue = "厳寒の候"
                     .Cmb_Time1.SelectedValue = "先般"
-                    .Cmb_Title.SelectedValue = "亡養父"
+                    .Cmb_Title.SelectedValue = " 亡父 "
                     .Txt_Name.Text = "儀"
                     .Cmb_DeathWay.SelectedValue = "死去"
                     .Cmb_Time2.SelectedValue = "本日"

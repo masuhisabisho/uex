@@ -6,7 +6,7 @@
 ' 
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
-
+Option Explicit
 Public Partial Class PrintReport
 	
 	Dim Wc As New WordContainer()
@@ -237,12 +237,20 @@ Public Partial Class PrintReport
 				Wc.optWord("Cmb_PointName") = Me.Cmb_PointName.SelectedValue
 			Case sender Is Me.Cmb_PointDeadName
 				Wc.optWord("Cmb_PointDeadName") = Me.Cmb_PointDeadName.SelectedValue
+				
+				
 			Case sender Is Me.Cmb_PointImibi
 				Wc.optWord("Cmb_PointImibi") = Me.Cmb_PointImibi.SelectedIndex
+				Call Cmn.ChangeFontSize(1, Wc.curWord, 8, Cmb_PointImibi, Me, Cmb_Imibi,)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
+				
 			Case sender Is Me.Cmb_PointEndWord
 				Wc.optWord("Cmb_PointEndWord") = Me.Cmb_PointImibi.SelectedIndex
 			Case sender Is Me.Cmb_PointCeremonyDate
 				Wc.optWord("Cmb_PointEndWord") = Me.Cmb_PointEndWord.SelectedValue
+				
+				
+				
 			Case sender Is Me.Cmb_PointAdd1
 				Wc.optWord("Cmb_PointAdd1") = Me.Cmb_PointAdd1
 				Call Cmn.ChangeFontSize(0, Wc.curWord, 16, Cmb_PointAdd1, Me,,)
@@ -592,60 +600,6 @@ Public Partial Class PrintReport
 		Wc.CurrentWord(wordInLine)
 
 	End Sub
-
-'''■CreateWordDiff
-''' <summary>文字を描画して行く（異なったフォントサイズ）</summary>
-''' <param name="word">文字配列,フォントサイズ（配列）</param>
-''' <param name="font">フォント</param>
-''' <param name="xypos">xy軸位置（配列）</param>
-''' <returns>Void</returns>
-	Public Sub  CreateWordDiff(word As Array, font As String, xyPos As Array)
-		
-		Dim wordDetail(3) As String							'文字詳細情報
-		Dim wordInLine As New ArrayList				'行ごとの文字詳細情報を格納
-		
-		Dim fontSize As String = CStr(word(1))
-		Dim splitPointAr() As String = fontSize.Split(","c)
-	
-		For i As Integer = 2 To CInt(word.Length - 1) Step 1
-			Dim g As System.Drawing.Graphics
-			
-			wordDetail(0) = word(i)
-			wordDetail(1) = splitPointAr(i - 2)
-			wordDetail(2) = xyPos(1, i - 2)
-			wordDetail(3) = xyPos(0, i - 2)
-			wordInLine.Add(wordDetail)
-			wordDetail = {"", "", "", ""}
-
-			g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
-			g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-			g.DrawString(word(i), _
-						New Font(font, CSng(splitPointAr(i - 2)), GraphicsUnit.Pixel), _
-						Brushes.Black, _ 
-						xyPos(1, i - 2), _ 
-						xyPos(0, i - 2), _
-						New StringFormat(StringFormatFlags.DirectionVertical) _
-						)
-			g.Dispose()
-			g = Nothing
-		Next i
-		
-'		#If Debug Then
-'			System.Diagnostics.Debug.WriteLine("Irr")
-'			System.Diagnostics.Debug.Write(wordDetail(0))
-'			System.Diagnostics.Debug.Write("<>")
-'			System.Diagnostics.Debug.Write(wordDetail(1))
-'			System.Diagnostics.Debug.Write("<>")
-'			System.Diagnostics.Debug.Write(wordDetail(2))
-'			System.Diagnostics.Debug.Write("<>")
-'			System.Diagnostics.Debug.Write(wordDetail(3))
-'			System.Diagnostics.Debug.Write(",")
-'			System.Diagnostics.Debug.WriteLine(vbCrLf)
-'		#End If
-			
-		Wc.CurrentWord(wordInLine)
-
-	End Sub
 	
 #End Region
 
@@ -679,5 +633,47 @@ Public Partial Class PrintReport
 	
 #End Region
 
+'廃止
+''''■CreateWordDiff
+'''' <summary>文字を描画して行く（異なったフォントサイズ）</summary>
+'''' <param name="word">文字配列,フォントサイズ（配列）</param>
+'''' <param name="font">フォント</param>
+'''' <param name="xypos">xy軸位置（配列）</param>
+'''' <returns>Void</returns>
+'	Public Sub  CreateWordDiff(word As Array, font As String, xyPos As Array)
+'		
+'		Dim wordDetail(3) As String							'文字詳細情報
+'		Dim wordInLine As New ArrayList				'行ごとの文字詳細情報を格納
+'		
+'		Dim fontSize As String = CStr(word(1))
+'		Dim splitPointAr() As String = fontSize.Split(","c)
+'	
+'		For i As Integer = 2 To CInt(word.Length - 1) Step 1
+'			Dim g As System.Drawing.Graphics
+'			
+'			wordDetail(0) = word(i)
+'			wordDetail(1) = splitPointAr(i - 2)
+'			wordDetail(2) = xyPos(1, i - 2)
+'			wordDetail(3) = xyPos(0, i - 2)
+'			wordInLine.Add(wordDetail)
+'			wordDetail = {"", "", "", ""}
+'
+'			g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
+'			g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+'			g.DrawString(word(i), _
+'						New Font(font, CSng(splitPointAr(i - 2)), GraphicsUnit.Pixel), _
+'						Brushes.Black, _ 
+'						xyPos(1, i - 2), _ 
+'						xyPos(0, i - 2), _
+'						New StringFormat(StringFormatFlags.DirectionVertical) _
+'						)
+'			g.Dispose()
+'			g = Nothing
+'		Next i
+'		
+'			
+'		Wc.CurrentWord(wordInLine)
+'
+'	End Sub
 
 End Class

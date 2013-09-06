@@ -239,7 +239,7 @@ Public Partial Class PrintReport
 				Wc.optWord("Cmb_PointDeadName") = Me.Cmb_PointDeadName.SelectedValue
 				
 				
-			Case sender Is Me.Cmb_PointImibi
+			Case sender Is Me.Cmb_PointImibi　　'★★★★
 				Wc.optWord("Cmb_PointImibi") = Me.Cmb_PointImibi.SelectedIndex
 				Call Cmn.ChangeFontSize(1, Wc.curWord, 8, Cmb_PointImibi, Me, Cmb_Imibi,)
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())

@@ -177,7 +177,7 @@ Public Partial Class PrintReport
 				sqlText &= "3"
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
 				
-				Call Cmn.WordReplacer(3, Me, yStyle, CType(sender, ComboBox),)
+				Call Cmn.WordReplacer(3, Me, yStyle, CType(sender, ComboBox), )
 				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 			Case sender Is	Me.Cmb_DeathWay									'END: 死亡告知 2013/7/20 mb
 				sqlText &= "4"
@@ -228,27 +228,38 @@ Public Partial Class PrintReport
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 
 '			Case sender Is	Me.Cmb_HostType
-'				Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue			'TODO: フォントサイズの変更
-
-			'フォントサイズ（数字）
+'				Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue				'TODO: フォントサイズの変更（開発途中で未使用のため）
+								
+			'フォントサイズ（数字）	
 			Case sender Is Me.Cmb_PointTitle
 				Wc.optWord("Cmb_PointTitle") = Me.Cmb_PointTitle.SelectedItem
-			Case sender Is Me.Cmb_PointName
-				Wc.optWord("Cmb_PointName") = Me.Cmb_PointName.SelectedValue
-			Case sender Is Me.Cmb_PointDeadName
-				Wc.optWord("Cmb_PointDeadName") = Me.Cmb_PointDeadName.SelectedValue
+				Call Cmn.ChangeFontSize(1, Wc.curWord, 3, Cmb_PointTitle, Me, Cmb_Title,)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 				
+'			Case sender Is Me.Cmb_PointName
+'				Wc.optWord("Cmb_PointName") = Me.Cmb_PointName.SelectedValue
+'				Call Cmn.ChangeFontSize(1, Wc.curWord,3 , Cmb_PointName, Me, Cmb_Name,)
+'				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 				
-			Case sender Is Me.Cmb_PointImibi　　'★★★★
+'			Case sender Is Me.Cmb_PointDeadName											'TODO: フォントサイズの変更（開発途中で未使用のため）
+'				Wc.optWord("Cmb_PointDeadName") = Me.Cmb_PointDeadName.SelectedValue
+'				Call Cmn.ChangeFontSize(0, Wc.curWord,3 , Cmb_PointName, Me, Cmb_Name,)
+'				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
+				
+			Case sender Is Me.Cmb_PointImibi
 				Wc.optWord("Cmb_PointImibi") = Me.Cmb_PointImibi.SelectedIndex
 				Call Cmn.ChangeFontSize(1, Wc.curWord, 8, Cmb_PointImibi, Me, Cmb_Imibi,)
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 				
 			Case sender Is Me.Cmb_PointEndWord
-				Wc.optWord("Cmb_PointEndWord") = Me.Cmb_PointImibi.SelectedIndex
-			Case sender Is Me.Cmb_PointCeremonyDate
-				Wc.optWord("Cmb_PointEndWord") = Me.Cmb_PointEndWord.SelectedValue
+				Wc.optWord("Cmb_PointEndWord") = Me.Cmb_PointEndWord.SelectedIndex
+				Call Cmn.ChangeFontSize(0, Wc.curWord, 14, Cmb_PointEndWord, Me, Cmb_EndWord,)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 				
+			Case sender Is Me.Cmb_PointCeremonyDate
+				Wc.optWord("Cmb_PointCeremonyDate") = Me.Cmb_PointCeremonyDate.SelectedValue
+				Call Cmn.ChangeFontSize(0, Wc.curWord, 15, Cmb_PointCeremonyDate, Me,)
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 				
 				
 			Case sender Is Me.Cmb_PointAdd1
@@ -280,7 +291,8 @@ Public Partial Class PrintReport
 				Call Cmn.ChangeFontSize(2, Wc.curWord, 22, Cmb_PointPS1, Me,,6)
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 		End Select
-		'TODO: ControlThickness()を入れる(濃淡を維持する為)
+		'END: ControlThickness()を入れる(濃淡を維持する為)
+		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), 1800, 668)
 	End Sub
 	
 	'文字変更
@@ -392,7 +404,8 @@ Public Partial Class PrintReport
 				Call Cmn.WordReplacer(27, me, yStyle,,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 		End Select	
-		'TODO: ControlThickness()を入れる
+		'END: ControlThickness()を入れる
+		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), 1800, 668)
 	End Sub
 	
 
@@ -632,48 +645,5 @@ Public Partial Class PrintReport
 	End Function
 	
 #End Region
-
-'廃止
-''''■CreateWordDiff
-'''' <summary>文字を描画して行く（異なったフォントサイズ）</summary>
-'''' <param name="word">文字配列,フォントサイズ（配列）</param>
-'''' <param name="font">フォント</param>
-'''' <param name="xypos">xy軸位置（配列）</param>
-'''' <returns>Void</returns>
-'	Public Sub  CreateWordDiff(word As Array, font As String, xyPos As Array)
-'		
-'		Dim wordDetail(3) As String							'文字詳細情報
-'		Dim wordInLine As New ArrayList				'行ごとの文字詳細情報を格納
-'		
-'		Dim fontSize As String = CStr(word(1))
-'		Dim splitPointAr() As String = fontSize.Split(","c)
-'	
-'		For i As Integer = 2 To CInt(word.Length - 1) Step 1
-'			Dim g As System.Drawing.Graphics
-'			
-'			wordDetail(0) = word(i)
-'			wordDetail(1) = splitPointAr(i - 2)
-'			wordDetail(2) = xyPos(1, i - 2)
-'			wordDetail(3) = xyPos(0, i - 2)
-'			wordInLine.Add(wordDetail)
-'			wordDetail = {"", "", "", ""}
-'
-'			g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
-'			g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-'			g.DrawString(word(i), _
-'						New Font(font, CSng(splitPointAr(i - 2)), GraphicsUnit.Pixel), _
-'						Brushes.Black, _ 
-'						xyPos(1, i - 2), _ 
-'						xyPos(0, i - 2), _
-'						New StringFormat(StringFormatFlags.DirectionVertical) _
-'						)
-'			g.Dispose()
-'			g = Nothing
-'		Next i
-'		
-'			
-'		Wc.CurrentWord(wordInLine)
-'
-'	End Sub
 
 End Class

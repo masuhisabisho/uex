@@ -51,7 +51,6 @@ Partial Class PrintReport
 		Me.Cmb_Font = New System.Windows.Forms.ComboBox()
 		Me.Cmb_Size = New System.Windows.Forms.ComboBox()
 		Me.Grb_Contents = New System.Windows.Forms.GroupBox()
-		Me.textBox1 = New System.Windows.Forms.TextBox()
 		Me.Btn_Dtp = New System.Windows.Forms.Button()
 		Me.Lbl_Month = New System.Windows.Forms.Label()
 		Me.Lbl_Day = New System.Windows.Forms.Label()
@@ -280,7 +279,6 @@ Partial Class PrintReport
 		'
 		'Grb_Contents
 		'
-		Me.Grb_Contents.Controls.Add(Me.textBox1)
 		Me.Grb_Contents.Controls.Add(Me.Btn_Dtp)
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Month)
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Day)
@@ -356,13 +354,6 @@ Partial Class PrintReport
 		Me.Grb_Contents.TabIndex = 2
 		Me.Grb_Contents.TabStop = false
 		Me.Grb_Contents.Text = "内容設定"
-		'
-		'textBox1
-		'
-		Me.textBox1.Location = New System.Drawing.Point(266, 19)
-		Me.textBox1.Name = "textBox1"
-		Me.textBox1.Size = New System.Drawing.Size(50, 19)
-		Me.textBox1.TabIndex = 102
 		'
 		'Btn_Dtp
 		'
@@ -1002,7 +993,6 @@ Partial Class PrintReport
 		Me.ResumeLayout(false)
 	End Sub
 	Private Btn_Print As System.Windows.Forms.Button
-	Private textBox1 As System.Windows.Forms.TextBox
 	Private Pnl_Main As System.Windows.Forms.Panel
 	Private Lbl_year As System.Windows.Forms.Label
 	Private Lbl_Day As System.Windows.Forms.Label

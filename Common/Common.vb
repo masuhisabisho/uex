@@ -961,10 +961,33 @@ End sub
 ''' <returns>Void wordに計算値を当て込んでいく</returns>
 	Public Sub ShiftXPos(ByVal lineNo As Integer, ByRef word As ArrayList, ByVal startNewXPos As Single, Pr As PrintReport)
 		For i As Integer = lineNo + 1 To word.Count - 1 Step 1
-			Dim MaxWidth() As Single 
-			If word(i)(0)(0) <> "" Then				'空白行の時ダミーデータを差し込む
-				MaxWidth = GetMaxWord(Wc.optWord("Common_Font"), word(i), Pr)
-			Else
+			Dim MaxWidth() As Single
+
+			If word(i)(0)(0) <> "" Then						'END: イレギュラー行に対応する
+				If FontSizeDifChecker(word(i)) = False Then
+					Dim SctSql As New SelectSql
+					Dim txtRow As New Hashtable 
+					txtRow = SctSql.GetTbl_TxtRow(Wc.CurrentSet(0), Wc.CurrentSet(1), lineNo)
+					SctSql = Nothing
+					
+					Dim maxWord As Single = SetIrregXYPos(i, _
+															txtRow("tbl_txt_ystyle"), _
+															word(i), _
+															Wc.optWord("Common_Font"), _ 
+															CheckNewYPos(txtRow("tbl_txt_newypos")), _
+															startNewXPos, _
+															Pr
+														 )
+					startNewXPos = maxWord
+				Else
+					MaxWidth = GetMaxWord(Wc.optWord("Common_Font"), word(i), Pr)
+					startNewXPos = startNewXPos - (MaxWidth(1) + DefSet("curBasicPitch"))
+			
+					For j As Integer = 0 To word(i).Count - 1 Step 1
+						word(i)(j)(3) = startNewXPos
+					Next j
+				End If
+			Else'空白行の時ダミーデータを差し込む
 				Dim tempWordDetail() As String = {"口", word(i)(0)(1), "", ""}
 				Dim tempWordInLine As New ArrayList
 				tempWordInLine.Add(tempWordDetail)
@@ -976,16 +999,53 @@ End sub
 				tempWordDetail = Nothing
 				tempWordInLine = Nothing
 				tempCurWord = Nothing
+				startNewXPos = startNewXPos - (MaxWidth(1) + DefSet("curBasicPitch"))
+				word(i)(0)(3) = startNewXPos
+				
 			End If
-			
-			startNewXPos = startNewXPos - (MaxWidth(1) + DefSet("curBasicPitch"))
-			
-			For j As Integer = 0 To word(i).Count - 1 Step 1
-				word(i)(j)(3) = startNewXPos
-			Next j
 		Next i
 		
 	End Sub
+	
+'					Dim maxWord() As Single = {0s, 0s}
+'					Dim tempMaxWord() As single = Pr.FontSizeCal(word(i)(0)(0), Wc.optWord("Common_Font"), word(i)(0)(1))
+'					Dim eachXYSize() As Single
+'					Dim xySizeList As New ArrayList
+'					Dim lastLpCnt As Integer = 0					
+'					
+'					For j As Integer = 0 To word(i).Count - 1 Step 1
+'						eachXYSize = Pr.FontSizeCal(word(i)(j)(0), Wc.optWord("Common_Font"), word(i)(j)(1))
+'						
+'						If maxWord(1) < eachXYSize(1)  Then
+'							maxWord(1) = eachXYSize(1)
+'						End If
+'			
+'						If j > 0 AndAlso (word(i)(j - 1)(1) = word(i)(j)(1)　And tempMaxWord(1) < eachXYSize(1)) Then
+'							tempMaxWord(1) = eachXYsize(1)
+'						ElseIf j > 0 AndAlso word(i)(j - 1)(1) <> word(i)(j)(1)
+'							For k As Integer = lastLpCnt To i - 1 Step 1
+'								eachXYSize(1) = tempMaxWord(1)
+'								xySizeList.Add(eachXYSize)
+'							Next k
+'							lastLpCnt = j
+'						ElseIf j = word(i).Count - 1 Then
+'							For k As Integer = lastLpCnt To j
+'								eachXYSize(1) = tempMaxWord(1)
+'								xySizeList.Add(eachXYSize)
+'							Next k
+'						End If
+'					Next j
+'					
+'					For j As Integer = 0 To word(i).count -1 Step 1
+'						If xySizeList(j)(1) < maxWord(1) Then
+'							word(i)(j)(3) = (startNewXPos - (CSng(defSet("curBasicPitch")) + maxWord(1))) + ((maxWord(1) - xySizeList(j)(1)) / 2)
+'						Else
+'							word(i)(j)(3) = startNewXPos - (CSng(defSet("curBasicPitch")) + xySizeList(j)(1))
+'						End If
+'					Next j					
+'					'次の処理用のx軸位置（最大値）
+'					startNewXPos = startNewXPos - (maxWord(1) + defSet("curBasicPitch"))
+
 
 'END: y軸の文字ピッチを文字の大小にかかわらず一定化させる
 ''' ■YPosCal
@@ -1029,7 +1089,7 @@ End sub
 ''' <param name="topYPos">y軸最上位置</param>
 ''' <param name="lastXPos">最後のx軸位置</param>
 ''' <param name="pr">PrintReport.vb</param>
-''' <returns>文字幅の最大値を返す（次の行のx軸位置設定のため）</returns>
+''' <returns>次の行のx軸スタート座標</returns>
 	Public Function SetIrregXYPos(lineNo As Integer, yStyle As Integer, _
 							ByRef storageWord As ArrayList, font As String, _
 							topYpos As Single, lastXPos As Single, _

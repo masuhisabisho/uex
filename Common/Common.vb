@@ -9,7 +9,7 @@
 Imports System.Diagnostics.Debug		'開発用
 
 Public Class Common
-	'TODO: また文字無しにした時にエラーが出るのが再発している
+	'END: また文字無しにした時にエラーが出るのが再発している
 	Private defSet As New Hashtable
 	Private Wc As WordContainer
 	
@@ -392,7 +392,13 @@ Public Class Common
 		SctSql = Nothing
 		
 		'フォントサイズが全て同じかどうか確認する
-		Dim fontSizeDif As Boolean = FontSizeDifChecker(Wc.curWord(lineNo))
+		Dim fontSizeDif As Boolean
+		If Wc.curWord(lineNo)(0)(0) <> "" Then
+			fontSizeDif = FontSizeDifChecker(Wc.curWord(lineNo))
+		Else
+			fontSizeDif = True
+		End If
+			
 		If fontSizeDif = True then											'★★全て同じの時★★
 			'コンボの値を置き換え
 			If newTargetCmb IsNot Nothing Then
@@ -539,7 +545,7 @@ Public Class Common
 			
 			'END: 文字数０から文字有りに変化する時を考える(場所をどのように判断するのか？フォントサイズは？)
 			'CheckInsWordで全ての処理が可能でした2013/9/15
-			'TODO: イレギュラーサイズにした時移行の行でイレギュラーがあるとx軸位置がおかしくなる
+			'END: イレギュラーサイズにした時移行の行でイレギュラーがあるとx軸位置がおかしくなる
 			'ArrayListを削除
 			Wc.curWord(lineNo).Clear
 			'挿入位置を取得
@@ -685,12 +691,11 @@ End sub
 ''' <param name="lineNo">Integer 変更する行番号</param>
 ''' <param name="targetPointCmb">Combo 変更するフォントサイズコンボ</param>
 ''' <param name="Pr">PrintReport</param>
-''' <param name="targetCmb">Optional Combo 部分変更時のターゲットコンボ</param>
 ''' <param name="multiNum">Optional Integer 複数行変更の際の行数</param>
 ''' <returns>Void 文字配列を参照して変更する</returns>
 	Public Sub ChangeFontSize(changeType As Integer, ByRef curWord As ArrayList, lineNo As Integer, _
 							  targetPointCmb As ComboBox, Pr As PrintReport, _
-							  Optional targetCmb As ComboBox = Nothing, Optional MultiNum As Integer = 0)
+							  Optional MultiNum As Integer = 0)
 		'END: 全体変更するのか、部分変更するのかを確認する -> パラメーターで制御
 		'END: 文字が無い時の対応が必要
 		
@@ -706,13 +711,15 @@ End sub
 				Dim lastWordXPos As Single
 
 				If lineNo <> 0 Then
-					Dim tempLastWordXPos() As Single = GetMaxWord(Wc.optWord("Common_Font"), curWord(lineNo - 1), Pr)  'Wc.curWord(lineNo - 1)(0)(3)
-					For i As Integer = 0 To curWord(lineNo - 1).Count - 1 Step 1
-						If tempLastWordXPos(1) = CSng(curWord(lineNo - 1)(i)(3)) Then
-							lastWordXPos = CSng(curWord(lineNo - 1)(i)(3))
-							exit For
-						End If
-					Next i	
+					Dim wordNum As Integer
+					Dim tempLastWordXPos() As Single = GetMaxWord(Wc.optWord("Common_Font"), curWord(lineNo - 1), Pr, wordNum)  'Wc.curWord(lineNo - 1)(0)(3)
+					lastWordXPos = CSng(curWord(lineNo - 1)(wordNum)(3))
+'					For i As Integer = 0 To curWord(lineNo - 1).Count - 1 Step 1
+'						If tempLastWordXPos(1) = CSng(curWord(lineNo - 1)(i)(3)) Then
+'							lastWordXPos = CSng(curWord(lineNo - 1)(i)(3))
+'							exit For
+'						End If
+'					Next i	
 				Else
 					lastWordXPos = 0
 				End If
@@ -772,47 +779,59 @@ End sub
 				'END: 以降の列のx軸位置を変更して行く
 				Call ShiftXPos(lineNo, curWord, startNewXPos, Pr)
 			Case 1												'★★部分変更
-				'変更文字位置が行内のどの位置にあるか確認
-				Dim changeWord As String = targetCmb.SelectedValue
-				Dim splitChangeWord(changeWord.Length - 1) As String
+				'挿入位置を取得
+				Dim insPos() As String
+				insPos = CStr(txtRow("tbl_txt_inspos")).Split(","c)
+				'挿入文字配列を取得
+				Dim insWord As array
+				insWord = CheckInsWord(txtRow("tbl_txt_inspos"), _
+    	        	                   txtRow("tbl_txt_targetword"), _
+    	        	                   txtRow("tbl_txt_targetpoint"), _
+    	        	                   lineNo _
+    	        	                   )
+			
+				Dim loopCounter As Integer = CInt(CStr(txtRow("tbl_txt_txt")).Length)
+				'挿入文字の字数をループカウンター（不変文字数）に加算する
+				For i As Integer = 0 To 2 Step 1
+					If CInt(insPos(i)) <> 9999 Then
+						loopCounter = loopCounter + CInt(insWord(i).Length -2)	
+					End If
+				Next i 
+				'不変文字と挿入文字を一つの配列に格納していく
+				Dim wordInLine As New ArrayList()
+				Dim wordDetail(3) As String
+				Dim k As Integer = 0
+				Dim l As Integer = 0
 				
-				For i As Integer = 0 To changeWord.Length -1 Step 1
-					splitChangeWord(i) = changeWord.Substring(i, 1)
+				For i As Integer = 0 To loopCounter - 1 Step 1	
+					If IsArray(insWord(k)) = True AndAlso CInt(insWord(k)(1)) = i Then
+						For j As Integer = 2 To CInt(insWord(k).Length - 1) Step 1
+							wordDetail(0) = insWord(k)(j)
+							wordDetail(1) = insWord(k)(0)
+							wordInLine.Add(wordDetail)
+							wordDetail = {"", "", "", ""}	
+							i = i + 1
+						Next j
+						i = i - 1
+						k = k + 1
+					Else
+						wordDetail(0) = CStr(txtRow("tbl_txt_txt")).Substring(l, 1)
+						wordDetail(1) = defSet("curFontSize")
+						wordInLine.add(wordDetail)
+						wordDetail = {"", "", "", ""}
+						l = l + 1
+					End If
 				Next i
-
-				Dim firstPos As Integer
-				Dim posCheckFlg As Integer = 0	
-				Dim lastPos As Integer
+				If loopCounter = 0 Then		'文字無し対策　2013/9/8 add 7 lines mb
+					wordDetail(0) = ""
+					wordDetail(1) = defSet("curFontSize")
+					wordInLine.Add(wordDetail)
+					wordDetail = {"", "", "", ""}
+				End If
 				
-				For i As Integer = 0 To curWord(lineNo).Count - 1 Step 1
-					If posCheckFlg = 1 And curWord(lineNo)(i)(0) <> splitChangeWord(1)Then
-						posCheckFlg = 0
-					ElseIf posCheckFlg = 1 And Wc.curWord(lineNo)(i)(0) = splitChangeWord(1)
-						firstPos = i - 1
-						posCheckFlg = 2
-					End If
-					
-					If posCheckFlg = 2 And  curWord(lineNo)(i)(0) = splitChangeWord(changeWord.Length - 1) Then
-						lastPos = i
-						Exit For
-					End If
-					
-					If posCheckFlg = 0 And Wc.curWord(lineNo)(i)(0) = splitChangeWord(0) Then
-						posCheckFlg = 1
-					End If
-				Next i
-				'フォントサイズの挿入
-				For i As Integer = firstPos To lastPos Step 1
-					curWord(lineNo)(i)(1) = targetPointCmb.SelectedIndex
-				Next i
-'				#If Debug Then
-'				Dim j As Integer = 0
-'				While j < curWord(lineNo).Count 
-'					Write("*" & curWord(lineNo)(j)(0))
-'					WriteLine("*" & curWord(lineNo)(j)(1))
-'					j  = j + 1
-'				End While
-'				#End If
+				Wc.curWord(lineNo).clear
+				Wc.curWord(lineNo) = wordInLine
+				
 				'CHK: イレギュラー位置の決定
 				startYPos = CheckNewYPos(txtRow("tbl_txt_newypos"))
 				
@@ -951,7 +970,6 @@ End sub
 
 'TODO: 上と下を同時に位置設定する関数
 
-
 '''■ShiftXpos
 ''' <summary>フォントサイズを変更した時の残りの行のx軸位置を増えた分だけずらす</summary>
 ''' <param name="lineNo">Integer 変更のあった行</param>
@@ -1007,46 +1025,6 @@ End sub
 		
 	End Sub
 	
-'					Dim maxWord() As Single = {0s, 0s}
-'					Dim tempMaxWord() As single = Pr.FontSizeCal(word(i)(0)(0), Wc.optWord("Common_Font"), word(i)(0)(1))
-'					Dim eachXYSize() As Single
-'					Dim xySizeList As New ArrayList
-'					Dim lastLpCnt As Integer = 0					
-'					
-'					For j As Integer = 0 To word(i).Count - 1 Step 1
-'						eachXYSize = Pr.FontSizeCal(word(i)(j)(0), Wc.optWord("Common_Font"), word(i)(j)(1))
-'						
-'						If maxWord(1) < eachXYSize(1)  Then
-'							maxWord(1) = eachXYSize(1)
-'						End If
-'			
-'						If j > 0 AndAlso (word(i)(j - 1)(1) = word(i)(j)(1)　And tempMaxWord(1) < eachXYSize(1)) Then
-'							tempMaxWord(1) = eachXYsize(1)
-'						ElseIf j > 0 AndAlso word(i)(j - 1)(1) <> word(i)(j)(1)
-'							For k As Integer = lastLpCnt To i - 1 Step 1
-'								eachXYSize(1) = tempMaxWord(1)
-'								xySizeList.Add(eachXYSize)
-'							Next k
-'							lastLpCnt = j
-'						ElseIf j = word(i).Count - 1 Then
-'							For k As Integer = lastLpCnt To j
-'								eachXYSize(1) = tempMaxWord(1)
-'								xySizeList.Add(eachXYSize)
-'							Next k
-'						End If
-'					Next j
-'					
-'					For j As Integer = 0 To word(i).count -1 Step 1
-'						If xySizeList(j)(1) < maxWord(1) Then
-'							word(i)(j)(3) = (startNewXPos - (CSng(defSet("curBasicPitch")) + maxWord(1))) + ((maxWord(1) - xySizeList(j)(1)) / 2)
-'						Else
-'							word(i)(j)(3) = startNewXPos - (CSng(defSet("curBasicPitch")) + xySizeList(j)(1))
-'						End If
-'					Next j					
-'					'次の処理用のx軸位置（最大値）
-'					startNewXPos = startNewXPos - (maxWord(1) + defSet("curBasicPitch"))
-
-
 'END: y軸の文字ピッチを文字の大小にかかわらず一定化させる
 ''' ■YPosCal
 ''' <summary>y軸方向の文字ピッチを再設定する（フォントサイズが全て同じ時）</summary>

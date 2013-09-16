@@ -74,6 +74,7 @@ Public Class ControlHandler
 				AddHandler Frm.Cmb_PointName.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				AddHandler Frm.Cmb_PointDeadName.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				AddHandler Frm.Cmb_PointImibi.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
+				AddHandler Frm.Cmb_PointEndWord.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged
 				AddHandler Frm.Cmb_PointCeremonyDate.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				AddHandler Frm.Cmb_PointAdd1.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				AddHandler Frm.Cmb_PointHostType.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
@@ -106,6 +107,7 @@ Public Class ControlHandler
 				RemoveHandler Frm.Cmb_PointName.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				RemoveHandler Frm.Cmb_PointDeadName.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				RemoveHandler Frm.Cmb_PointImibi.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
+				RemoveHandler Frm.Cmb_PointEndWord.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				RemoveHandler Frm.Cmb_PointCeremonyDate.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				RemoveHandler Frm.Cmb_PointAdd1.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
 				RemoveHandler Frm.Cmb_PointHostType.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 

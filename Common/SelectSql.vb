@@ -247,7 +247,7 @@ Public Class SelectSql
 		sqlText &= "  FROM tbl_txt "
 		sqlText &= "  WHERE "
 		sqlText &= "  tbl_txt_sizeid = " & sizeID 
-		sqlText &= "  AND tbl_txt_styleid = " & styleID										'TODO: パラメーターで選択 = Cmbで
+		sqlText &= "  AND tbl_txt_styleid = " & styleID										'END: パラメーターで選択 = Cmbで
 		sqlText &= "  ORDER BY "
 		sqlText &= "  tbl_txt_order "
 	

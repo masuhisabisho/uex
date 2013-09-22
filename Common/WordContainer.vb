@@ -8,12 +8,19 @@
 '
 Public Class WordContainer
 	
+	Private Const colRate As Single = 255	
+	
 	Private curSetting As New Hashtable
 	Private defKeyWord As New Hashtable
 	Public curWord As New ArrayList()
 
 	Public optWord As New Hashtable()
 	
+	Public Readonly Property ColorRate() As Single
+		Get
+			Return colRate
+		End Get
+	End Property
 	'END:　この辺りまとまらないか？
 '''■DefSet (移行テスト中 -> OK 2013/8/3 mb）
 ''' <summary>現在表示している内容の初期値を保存・出力する（指定する。１項目のみ）</summary>
@@ -136,9 +143,9 @@ Public Class WordContainer
 			optWord("Cmb_EndWord") = .Cmb_EndWord.SelectedValue
 			'日付
 			Dim SctSql As New SelectSql()
-			optWord("Cmb_Year") = SctSql.GetOneSql("SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = " & frm.Cmb_Year.SelectedValue)
-			optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = " & frm.Cmb_Month.SelectedValue)
-			optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = " & frm.Cmb_Day.SelectedValue)
+			optWord("Cmb_Year") = SctSql.GetOneSql("SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = '" & frm.Cmb_Year.SelectedValue & "'")
+			optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = '" & frm.Cmb_Month.SelectedValue & "'")
+			optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = '" & frm.Cmb_Day.SelectedValue & "'")
 			SctSql = Nothing
 			'テキスト
 			optWord("Txt_Add1") = .Txt_Add1.Text
@@ -156,7 +163,9 @@ Public Class WordContainer
 			optWord("Txt_PS6") = .Txt_PS6.Text
 			'一般
 			optWord("Common_Point") = DefKeyWord("curFontSize")
-			optWord("Common_Font") = .Cmb_Font.text									'END: SelectedValue, SelectedIndex, Textの違い
+			optWord("Common_Font") = .Cmb_Font.text									'END: SelectedValue, SelectedIndex = コレクションで設定した時, Textの違い
+			optWord("Thickness") = .Cmb_Thickness.SelectedValue
+			optWord("Thickness_Txt") = .Cmb_Thickness.Text							'印刷用
 			'フォントサイズ
 			optWord("Cmb_PointTitle") = .Cmb_PointTitle.Text
 			optWord("Cmb_PointName") = .Cmb_PointName.Text

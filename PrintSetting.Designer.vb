@@ -38,6 +38,8 @@ Partial Class PrintSetting
 		Me.Lbl_Direction = New System.Windows.Forms.Label()
 		Me.Lbl_Paper = New System.Windows.Forms.Label()
 		Me.Grp2 = New System.Windows.Forms.GroupBox()
+		Me.Nud_Ypos = New System.Windows.Forms.NumericUpDown()
+		Me.Nud_Xpos = New System.Windows.Forms.NumericUpDown()
 		Me.Cmb_PaperSize = New System.Windows.Forms.ComboBox()
 		Me.Lbl_SelectPrinter = New System.Windows.Forms.Label()
 		Me.Cmb_SelectPrinter = New System.Windows.Forms.ComboBox()
@@ -45,13 +47,12 @@ Partial Class PrintSetting
 		Me.Lbl_PosX = New System.Windows.Forms.Label()
 		Me.Nud_Num = New System.Windows.Forms.NumericUpDown()
 		Me.Lbl_Num = New System.Windows.Forms.Label()
-		Me.Txt_PosY = New System.Windows.Forms.TextBox()
-		Me.Txt_PosX = New System.Windows.Forms.TextBox()
 		Me.Btn_Print = New System.Windows.Forms.Button()
 		Me.Btn_Cancel = New System.Windows.Forms.Button()
 		Me.printDocument1 = New System.Drawing.Printing.PrintDocument()
-		Me.printDocument2 = New System.Drawing.Printing.PrintDocument()
 		Me.Grp2.SuspendLayout
+		CType(Me.Nud_Ypos,System.ComponentModel.ISupportInitialize).BeginInit
+		CType(Me.Nud_Xpos,System.ComponentModel.ISupportInitialize).BeginInit
 		CType(Me.Nud_Num,System.ComponentModel.ISupportInitialize).BeginInit
 		Me.SuspendLayout
 		'
@@ -80,6 +81,8 @@ Partial Class PrintSetting
 		'
 		'Grp2
 		'
+		Me.Grp2.Controls.Add(Me.Nud_Ypos)
+		Me.Grp2.Controls.Add(Me.Nud_Xpos)
 		Me.Grp2.Controls.Add(Me.Cmb_PaperSize)
 		Me.Grp2.Controls.Add(Me.Lbl_SelectedDirection)
 		Me.Grp2.Controls.Add(Me.Lbl_Paper)
@@ -90,14 +93,32 @@ Partial Class PrintSetting
 		Me.Grp2.Controls.Add(Me.Lbl_PosX)
 		Me.Grp2.Controls.Add(Me.Nud_Num)
 		Me.Grp2.Controls.Add(Me.Lbl_Num)
-		Me.Grp2.Controls.Add(Me.Txt_PosY)
-		Me.Grp2.Controls.Add(Me.Txt_PosX)
 		Me.Grp2.Location = New System.Drawing.Point(16, 111)
 		Me.Grp2.Name = "Grp2"
 		Me.Grp2.Size = New System.Drawing.Size(425, 167)
 		Me.Grp2.TabIndex = 1
 		Me.Grp2.TabStop = false
 		Me.Grp2.Text = "設定"
+		'
+		'Nud_Ypos
+		'
+		Me.Nud_Ypos.DecimalPlaces = 1
+		Me.Nud_Ypos.Location = New System.Drawing.Point(300, 103)
+		Me.Nud_Ypos.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
+		Me.Nud_Ypos.Minimum = New Decimal(New Integer() {20, 0, 0, -2147483648})
+		Me.Nud_Ypos.Name = "Nud_Ypos"
+		Me.Nud_Ypos.Size = New System.Drawing.Size(65, 19)
+		Me.Nud_Ypos.TabIndex = 22
+		'
+		'Nud_Xpos
+		'
+		Me.Nud_Xpos.DecimalPlaces = 1
+		Me.Nud_Xpos.Location = New System.Drawing.Point(140, 103)
+		Me.Nud_Xpos.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
+		Me.Nud_Xpos.Minimum = New Decimal(New Integer() {20, 0, 0, -2147483648})
+		Me.Nud_Xpos.Name = "Nud_Xpos"
+		Me.Nud_Xpos.Size = New System.Drawing.Size(65, 19)
+		Me.Nud_Xpos.TabIndex = 21
 		'
 		'Cmb_PaperSize
 		'
@@ -127,7 +148,7 @@ Partial Class PrintSetting
 		'
 		'Lbl_PosY
 		'
-		Me.Lbl_PosY.Location = New System.Drawing.Point(205, 110)
+		Me.Lbl_PosY.Location = New System.Drawing.Point(219, 110)
 		Me.Lbl_PosY.Name = "Lbl_PosY"
 		Me.Lbl_PosY.Size = New System.Drawing.Size(85, 16)
 		Me.Lbl_PosY.TabIndex = 17
@@ -157,24 +178,6 @@ Partial Class PrintSetting
 		Me.Lbl_Num.Size = New System.Drawing.Size(100, 12)
 		Me.Lbl_Num.TabIndex = 3
 		Me.Lbl_Num.Text = "枚数："
-		'
-		'Txt_PosY
-		'
-		Me.Txt_PosY.Location = New System.Drawing.Point(296, 106)
-		Me.Txt_PosY.Name = "Txt_PosY"
-		Me.Txt_PosY.Size = New System.Drawing.Size(40, 19)
-		Me.Txt_PosY.TabIndex = 15
-		Me.Txt_PosY.Text = "0"
-		Me.Txt_PosY.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-		'
-		'Txt_PosX
-		'
-		Me.Txt_PosX.Location = New System.Drawing.Point(140, 106)
-		Me.Txt_PosX.Name = "Txt_PosX"
-		Me.Txt_PosX.Size = New System.Drawing.Size(40, 19)
-		Me.Txt_PosX.TabIndex = 14
-		Me.Txt_PosX.Text = "0"
-		Me.Txt_PosX.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
 		'
 		'Btn_Print
 		'
@@ -214,17 +217,17 @@ Partial Class PrintSetting
 		Me.Text = "印刷"
 		AddHandler Load, AddressOf Me.PrintSetting_Load
 		Me.Grp2.ResumeLayout(false)
-		Me.Grp2.PerformLayout
+		CType(Me.Nud_Ypos,System.ComponentModel.ISupportInitialize).EndInit
+		CType(Me.Nud_Xpos,System.ComponentModel.ISupportInitialize).EndInit
 		CType(Me.Nud_Num,System.ComponentModel.ISupportInitialize).EndInit
 		Me.ResumeLayout(false)
 	End Sub
+	Private Nud_Xpos As System.Windows.Forms.NumericUpDown
+	Private Nud_Ypos As System.Windows.Forms.NumericUpDown
 	Private Cmb_PaperSize As System.Windows.Forms.ComboBox
 	Private Cmb_SelectPrinter As System.Windows.Forms.ComboBox
 	Private Lbl_SelectPrinter As System.Windows.Forms.Label
-	Private printDocument2 As System.Drawing.Printing.PrintDocument
 	Private printDocument1 As System.Drawing.Printing.PrintDocument
-	Friend Txt_PosX As System.Windows.Forms.TextBox
-	Friend Txt_PosY As System.Windows.Forms.TextBox
 	Private Lbl_PosX As System.Windows.Forms.Label
 	Private Lbl_PosY As System.Windows.Forms.Label
 	Private Lbl_Direction As System.Windows.Forms.Label

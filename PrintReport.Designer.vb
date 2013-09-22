@@ -962,6 +962,7 @@ Partial Class PrintReport
 		'
 		Me.Pnl_Main.AutoScroll = true
 		Me.Pnl_Main.AutoScrollMargin = New System.Drawing.Size(5, 5)
+		Me.Pnl_Main.BackColor = System.Drawing.Color.White
 		Me.Pnl_Main.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
 		Me.Pnl_Main.Controls.Add(Me.Pic_Main)
 		Me.Pnl_Main.Location = New System.Drawing.Point(375, 10)

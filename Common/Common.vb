@@ -1251,7 +1251,7 @@ Public Function CheckLineLength(word As ArrayList, font As String, Pr As PrintRe
 	Public Function CheckNewYPos(newXpos As Single) As Single
 		Dim resultPos As Single = 0
 		If newXpos <> 9999 Then
-			resultPos = newXpos
+			resultPos = CSng(Wc.DefSet(3)) + newXpos
 			Return resultPos
 		End If
 			Return defSet("curTopYPos")

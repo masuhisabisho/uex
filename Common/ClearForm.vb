@@ -28,7 +28,7 @@ Public Class ClearForm
                     
                     '下記３つ現画面で廃止予定
                     .Cmb_Magnify.SelectedValue = 1
-                    .Cmb_Thickness.SelectedValue = 0
+                    .Cmb_Thickness.SelectedIndex = 	8					'TODO: デフォルトの読み込み
                     
                     '初期設定の値は下の通り
                     'Specific part
@@ -49,7 +49,7 @@ Public Class ClearForm
                     .Cmb_EndWord.SelectedValue = "敬具"
                     .Cmb_Year.SelectedValue = currentDt(0)
                     .Cmb_Month.SelectedValue = currentDt(1)
-                    .Cmb_Day.SelectedValue = currentDt(2)
+                    .Cmb_Day.SelectedValue = "印刷無し"
                     .Cmb_HostType.SelectedValue = "施主"
                     .Cmb_HostType.Enabled = False
                     .Txt_PS1.Text = "追伸" 

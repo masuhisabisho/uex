@@ -11,18 +11,27 @@ Imports System.Data
 
 Public Partial Class PrintSetting
 	
-	Private img As Image = Nothing
+	'Private img As Image = Nothing
+	Private Const inchUnit As Single = 0.254
+	
 	Private selectedPaper As String = ""
 	Private selectedDirec As String = ""
+	Private Wc As WordContainer
 	
-	Public Sub New(imgData As Image, paperSize As String, printDirection As String)
-		'The Me.InitializeComponent call is required for Windows Forms designer support.
+	'Public Sub New(imgData As Image, paperSize As String, printDirection As String)  'out 2013/9/22
+	Public sub new(wordCont As WordContainer)
+	'	The Me.InitializeComponent call is required for Windows Forms designer support.
 		Me.InitializeComponent()
+		Wc = wordCont  'add 2013/9/22
 		'イメージの取り込み
-		img = imgData
+		'img = imgData  out 2013/9/22
 		'用紙情報
-		selectedPaper = paperSize
-		selectedDirec = printDirection
+'		selectedPaper = paperSize
+'		selectedDirec = printDirection
+		selectedPaper = Wc.DefSet(7)
+		selectedDirec = Wc.DefSet(8)
+
+
 	End Sub
 	
 	Private Sub PrintSetting_Load(sender As Object, e As EventArgs)
@@ -67,7 +76,44 @@ Public Partial Class PrintSetting
 	
 	'PrintDocument Object
 	Private Sub PrintDocument1_PrintPage(sender As Object, e As System.Drawing.Printing.PrintPageEventArgs)
-		e.Graphics.DrawImage(img, e.MarginBounds)
+		'e.Graphics.DrawImage(img, e.MarginBounds)
+		e.Graphics.DrawString("薔",New Font("ＭＳ Ｐ明朝", 36), New SolidBrush(Color.FromArgb(127, 127, 127)) 	, 0, 0)
+		'e.Graphics.DrawString("薇",New Font("ＭＳ Ｐ明朝", 100), New SolidBrush(Color.FromArgb(127, 127, 127)) 	, 100, 300)
+		'e.Graphics.FillRectangle(New SolidBrush(Color.FromArgb(80, Color.white)), 0, 0, 1800, 500)
+		
+		'END: 文字印刷はDrawImageでは無くDrawStringで（画像では汚いので）
+		'END: 濃淡は変数に置き換える
+		'TODO: 印刷不可能領域は10mmづつとる
+
+		Dim rgbRate As Integer = CInt(Math.Round(Wc.ColorRate * (CDbl(Wc.optWord("Thickness_Txt")) / 100)))
+		Dim addXPos As Single = 0
+		Dim addYPos As Single = 0
+		
+		'位置調整
+		If Me.Nud_Ypos.Value <> 0 Then
+			addYPos = CSng(Me.Nud_Ypos.Value) / inchUnit
+		End If
+		
+		If Me.Nud_Xpos.value <> 0 Then
+			addXPos = CSng(Me.Nud_Xpos.value) / inchUnit
+		End If
+		
+		
+		For i As Integer = 0 To Wc.curWord.Count -1 Step 1
+			If Wc.curWord(i)(0)(0) = "" Then
+				Continue For
+			End If
+			
+			For j As Integer = 0 To Wc.curWord(i).count -1 Step 1
+				e.Graphics.DrawString(Wc.curWord(i)(j)(0), _
+										New Font(Wc.optWord("Common_Font").ToString(), CInt(Wc.curWord(i)(j)(1))), _
+										New SolidBrush(Color.FromArgb(rgbRate, rgbRate, rgbRate)), _
+										CSng(Wc.curWord(i)(j)(3)) + addXPos, _
+										CSng(Wc.curWord(i)(j)(2)) + addYPos, _
+										New StringFormat(StringFormatFlags.DirectionVertical) _
+									)
+			Next j
+		Next i
 		e.HasMorePages = False
 		Me.Close
 	End Sub
@@ -112,7 +158,7 @@ Public Partial Class PrintSetting
 					Exit Sub
 				End If
 			Case "奉書挨拶状"							'以下その他の特殊サイズ
-				Dim irrSize As New Printing.PaperSize("奉書挨拶状", 5300, 1950)
+				Dim irrSize As New Printing.PaperSize("奉書挨拶状",195 / inchUnit, 530 / inchUnit)
 				PrintDocument1.DefaultPageSettings.PaperSize = irrSize
 			Case "単カード"
 				Dim irrSize As New Printing.PaperSize("単カード", 1030, 1520)
@@ -133,9 +179,9 @@ Public Partial Class PrintSetting
 				Dim irrSize As New Printing.PaperSize("のし紙", 950, 1800)
 				PrintDocument1.DefaultPageSettings.PaperSize = irrSize
 		End Select
-		
+		'TODO: 印刷の向きは可変にする必要あり
 		With Me.printDocument1
-			.DefaultPageSettings.Landscape = False												'横。縦はFalse
+			.DefaultPageSettings.Landscape = True												'横。縦はFalse
 			.PrinterSettings.Copies = CShort(Me.Nud_Num.Value)									'枚数
 			.PrinterSettings.PrinterName = Me.Cmb_SelectPrinter.SelectedValue.ToString()		'選択されたプリンター
 			.Print()																			'印刷

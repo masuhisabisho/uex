@@ -9,6 +9,10 @@
 Option Explicit
 Public Partial Class PrintReport
 	
+	'TODO: 発注画面を組み込む
+	'TODO: 印刷設定を保持しておく
+	'TODO: CSVやEXCELを読み込めるようにする
+	
 	Dim Wc As New WordContainer()
 	Private const zero As Integer = 0
 	
@@ -48,6 +52,7 @@ Public Partial Class PrintReport
 		Me.SetStyle(ControlStyles.DoubleBuffer, True)
 		Me.SetStyle(ControlStyles.UserPaint, True)
 		Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
+		
 		'ハンドラーをキャンセルしておく
 		Dim Ch As New ControlHandler()
 		Ch.AllTCHandleShifter(False, Me)
@@ -57,7 +62,7 @@ Public Partial Class PrintReport
 		Dim SctSql As New SelectSql
 		Call SctSql.SetDefaultVal(0, Wc)
 		
-		
+		'TODO: フォントを追加できるようにする
 		'フォント設定
 		Dim fontList As New ArrayList
 		Dim installedFont As New System.Drawing.Text.InstalledFontCollection
@@ -103,8 +108,9 @@ Public Partial Class PrintReport
 
 		'描画用Bitmapを準備
 		With Pic_Main
-			.Size = New Size(CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))				'CHK: New sizeはわかった、Bitmapの値はなんなのか？要確認
-			.Image = New Bitmap(1800, 668)											'TODO: 可変にする　
+			.Size = New Size(CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))				'END: New sizeはわかった、Bitmapの関連性
+			'.Image = New Bitmap(1800, 668)											'END: 可変にする　
+			.Image = New Bitmap(CInt(Wc.defset(2)), CInt(Wc.defset(4)))	
 		End With
 		
 		'DB内の文章を単語に分割する
@@ -114,6 +120,8 @@ Public Partial Class PrintReport
 		storageWord = Cmn.WordPreparer(mainTxt, Wc.DefSet(1))
 		'文字を描画していく
 		Call Cmn.WordArranger(mainTxt, storageWord, Me)
+		
+		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
 		
 		'ハンドラーを付与する
 		Ch.AllTCHandleShifter(True, Me)
@@ -145,50 +153,51 @@ Public Partial Class PrintReport
 		             sqlText &= " WHERE tbl_txt_sizeid = " & Wc.CurrentSet(0) & " AND tbl_txt_styleid = " & Wc.CurrentSet(1) & " AND tbl_txt_order = "
 		Dim yStyle As Integer
 		
-		With Pic_Main
-			If Not (.Image Is Nothing) Then									'TODO: 関数に置き換え
-				.Image.Dispose()
-				.Image = Nothing
-
-				.Size = New Size(1800, 668)
- 				.image = New Bitmap(1800,668)
-			End If
-		End With
+'		With Pic_Main
+'			If Not (.Image Is Nothing) Then												'END: 関数に置き換え
+'				.Image.Dispose()
+'				.Image = Nothing
+'
+'				.Size = New Size(Wc.DefSet(2), Wc.DefSet(4))
+' 				.image = New Bitmap(1800,668)
+'			End If
+'		End With
+		ClearPicture(Me.Pic_Main, Cint(Wc.DefSet(2)), Cint(Wc.DefSet(4)))
 		
 		Select Case True
 			'文字列
 			Case sender Is Me.Cmb_Font
-				Wc.optWord("Common_Font") = Me.Cmb_Font.Text				'END: フォント 2013/7/21 mb 
+				Wc.optWord("Common_Font") = Me.Cmb_Font.Text							'END: フォント 2013/7/21 mb 
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 
-			Case sender Is	Me.Cmb_SeasonWord								'END: 季語 2013/7/20 mb
+			Case sender Is	Me.Cmb_SeasonWord											'END: 季語 2013/7/20 mb
 				sqlText &= "0"
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
 				
-				Call Cmn.WordReplacer(0, me, yStyle, CType(sender, ComboBox),)	'CHK: 行数を変数にするか？
+				Call Cmn.WordReplacer(0, me, yStyle, CType(sender, ComboBox),)
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 				
-			Case sender Is	Me.Cmb_Time1									'END: 時期1 2013/7/20 mb
+			Case sender Is	Me.Cmb_Time1												'END: 時期1 2013/7/20 mb
 				sqlText &= "3"
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
 				
 				Call Cmn.WordReplacer(3, Me, yStyle, CType(sender, ComboBox),)
 				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 				
-			Case sender Is	Me.Cmb_Title									'END: 続柄　2013/7/20 mb
+			Case sender Is	Me.Cmb_Title												'END: 続柄　2013/7/20 mb
 				sqlText &= "3"
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
 				
 				Call Cmn.WordReplacer(3, Me, yStyle, CType(sender, ComboBox), )
 				Call RecreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 				
-			Case sender Is	Me.Cmb_DeathWay									'END: 死亡告知 2013/7/20 mb
+			Case sender Is	Me.Cmb_DeathWay												'END: 死亡告知 2013/7/20 mb
 				sqlText &= "4"
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
 				
 				Call Cmn.WordReplacer(4, Me, yStyle, CType(sender, ComboBox),)
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
-'			Case sender Is	Me.Cmb_Time2									'TODO: 未使用 2013/9/16
+'			Case sender Is	Me.Cmb_Time2												'TODO: 未使用 2013/9/16
 '				Wc.optWord("Cmb_Time2") = Me.Cmb_Time2.SelectedValue
 '			Case sender Is	Me.Cmb_Donation
 '				Wc.optWord("Cmb_Donation") = Me.Cmb_Donation.SelectedValue
@@ -198,25 +207,25 @@ Public Partial Class PrintReport
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
 				
 				Call Cmn.WordReplacer(8, me, yStyle, CType(sender, ComboBox),)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())	'END: 忌日 2013/7/21 mb
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())		'END: 忌日 2013/7/21 mb
 				
 			Case sender Is	Me.Cmb_EndWord
 				sqlText &= "14"
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
 				
-				Call Cmn.WordReplacer(14, me, yStyle, CType(sender, ComboBox),) 	'END: 結語 2013/7/21 mb
+				Call Cmn.WordReplacer(14, me, yStyle, CType(sender, ComboBox),) 		'END: 結語 2013/7/21 mb
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 				
 			Case sender Is	Me.Cmb_Year
-				Wc.optWord("Cmb_Year") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = " & Me.Cmb_Year.SelectedValue.ToString())
+				Wc.optWord("Cmb_Year") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = '" & Me.Cmb_Year.SelectedValue & "'")
 				sqlText &= "15"
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
 				
-				Call Cmn.WordReplacer(15, Me, yStyle, CType(sender, ComboBox),)		'END: 日付関連 2013/7/21 mb
+				Call Cmn.WordReplacer(15, Me, yStyle, CType(sender, ComboBox),)			'END: 日付関連 2013/7/21 mb
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 				
 			Case sender Is	Me.Cmb_Month
-				Wc.optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = " & Me.Cmb_Month.SelectedValue.ToString())
+				Wc.optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = '" & Me.Cmb_Month.SelectedValue & "'")
 				sqlText &= "15"
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
 				
@@ -224,10 +233,10 @@ Public Partial Class PrintReport
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 				
 			Case sender Is	Me.Cmb_Day
-				If Me.Cmb_Day.SelectedValue.ToString() = "" Then					'文字が無い時のSQLエラー回避
+				If Me.Cmb_Day.SelectedValue.ToString() = "" Then						'文字が無い時のSQLエラー回避
 					Wc.optWord("Cmb_Day") = ""
 				Else
-					Wc.optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = " & Cmb_Day.SelectedValue.ToString())
+					Wc.optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = '" & Cmb_Day.SelectedValue & "'")
 				End If
 				sqlText &= "15"
 				yStyle = CInt(SctSql.GetOneSql(sqlText))
@@ -305,7 +314,7 @@ Public Partial Class PrintReport
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 		End Select
 		'END: ControlThickness()を入れる(濃淡を維持する為)
-		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), 1800, 668)
+		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
 	End Sub
 	
 	'文字変更
@@ -317,16 +326,18 @@ Public Partial Class PrintReport
 		'TODO: 用紙サイズ・文例の変更
 		'END: 取り込みデータを元に変更画像を作成
 '		'END: ピクチャーの破棄・再設定
-		With Pic_Main								'TODO: 関数に置き換え
-			If Not (.Image Is Nothing) Then
-				.Image.Dispose()
-				.Image = Nothing
-				
-				.Size = New Size(1800, 668)
- 				.image = New Bitmap(1800,668)
-			End If
-		End With
-		
+'		With Pic_Main								'END: 関数に置き換え
+'			If Not (.Image Is Nothing) Then
+'				.Image.Dispose()
+'				.Image = Nothing
+'				
+'				.Size = New Size(Wc.DefSet(2), Wc.DefSet(4))
+' 				.image = New Bitmap(Wc.DefSet(2), Wc.DefSet(4))
+'			End If
+'		End With
+
+		ClearPicture(Me.Pic_Main, CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
+
 		Dim Cmn As New Common (Wc)
 		
 		Dim SctSql As New SelectSql
@@ -432,14 +443,15 @@ Public Partial Class PrintReport
 				
 		End Select	
 		'END: ControlThickness()を入れる
-		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), 1800, 668)
+		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
 		
 	End Sub
 	
 
 	'印刷フォームを開く
 	Private Sub Btn_Print_Click(sender As Object, e As EventArgs)
-		Dim Ps As New PrintSetting(Me.Pic_Main.Image, Wc.DefSet(7), Wc.DefSet(8))
+		'Dim Ps As New PrintSetting(Me.Pic_Main.Image, Wc.DefSet(7), Wc.DefSet(8))
+		Dim Ps As New PrintSetting(Wc)
 		Ps.ShowDialog()
 		Ps.Dispose()
 		Ps = Nothing
@@ -456,21 +468,22 @@ Public Partial Class PrintReport
 
 	'文字の濃淡変更
 	Public Sub Cmb_Thickness_SelectedIndexChanged(sender As Object, e As EventArgs)
-		
-		Call ClearPicture(Me.Pic_Main, 1800, 668)													'TODO: 変数に置き換える
+		Wc.optWord("Thickness") = Me.Cmb_Thickness.SelectedValue
+		Wc.optWord("Thickness_Txt") = Me.Cmb_Thickness.Text
+		Call ClearPicture(Me.Pic_Main, Cint(Wc.DefSet(2)), Cint(Wc.DefSet(4)))														'END: 変数に置き換える
 		Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
-		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), 1800, 668)			'TODO: 変数に置き換える
+		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))			'END: 変数に置き換える
 
 	End Sub
 	
 	'画像拡大
 	Public Sub Cmb_Magnify_SelectedIndexChanged(sender As Object, e As EventArgs)
 		'TODO: PictureBox　と BitMapのサイズを変える、描画位置も考える
-		Call ClearPicture(Me.Pic_Main, 1800, 668)													'TODO: 変数に置き換える
+		Call ClearPicture(Me.Pic_Main, Cint(Wc.DefSet(2)), Cint(Wc.DefSet(4)))														'END: 変数に置き換える
 		Call ReCreateWord(Wc.curWord, Wc.optWord("Common_Font").ToString())
 		
 		If CDbl(Me.Cmb_Thickness.SelectedValue) <> 0 Then
-			Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), 1800, 668)		'TODO: 変数に置き換える
+			Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))		'END: 変数に置き換える
 		End If
 		
 		Me.Pic_Main.Image = Magnify(Me.Pic_Main.Image, CDbl(Me.Cmb_Magnify.SelectedValue))
@@ -518,6 +531,7 @@ Public Partial Class PrintReport
 
 	End Function
 	
+
 '''■ControlThickness
 ''' <summary>文字に濃淡をつける</summary>
 ''' <param name="picBox">PictureBox ピクチャーボックス</param>
@@ -568,6 +582,7 @@ Public Partial Class PrintReport
 ''' <param name="font">String フォント</param>
 ''' <returns>Void</returns>
 	Public Sub ReCreateWord(word As ArrayList, font As String)
+		
 		For Each item As ArrayList In word
 			For i As Integer = 0 To CInt(item.Count) -1 Step 1
 				If item(i)(0) = "" Then  							'空白行はスキップする
@@ -577,10 +592,11 @@ Public Partial Class PrintReport
 				Dim g As System.Drawing.Graphics
 				g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
 				g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+				'New Font(font, item(i)(1),GraphicsUnit.Pixel), _ 
 				
 				g.DrawString(item(i)(0), _
-							New Font(font, item(i)(1), GraphicsUnit.Pixel), _ 
-							Brushes.Black, _ 
+							New Font(font, item(i)(1)), _ 
+							Brushes.Black, _
 							item(i)(3), _ 
 							item(i)(2), _
 							New StringFormat(StringFormatFlags.DirectionVertical) _
@@ -603,11 +619,14 @@ Public Partial Class PrintReport
 		
 		For i As Integer = 0 To word.Count - 1 Step 1
 			Dim g As System.Drawing.Graphics
-			
 			g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
 			g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+			g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
+			'New Font(font, item(i)(1),GraphicsUnit.Pixel), _ 
+			
+			
 			g.DrawString(word(i)(0), _
-						New Font(font, CSng(word(i)(1)), GraphicsUnit.Pixel), _ 
+						New Font(font, CSng(word(i)(1))) , _ 
 						Brushes.Black, _ 
 						word(i)(3), _ 
 						word(i)(2), _
@@ -653,7 +672,8 @@ Public Partial Class PrintReport
 ''' <returns>Single() 文字の 縦 = 0・横 = 1 を返す</returns>
 	Public Function FontSizeCal(word As String, font As String, point As Integer) As Single()
 		Dim resultAl(1) As Single 
-		Dim stringFont As New Font(font, point, GraphicsUnit.Pixel)
+		'Dim stringFont As New Font(font, point, GraphicsUnit.Pixel)
+		Dim stringFont As New Font(font, point)
 		Dim stringSize As New SizeF
 	
 		Dim gr As Graphics = CreateGraphics()

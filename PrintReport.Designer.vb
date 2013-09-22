@@ -953,7 +953,7 @@ Partial Class PrintReport
 		Me.Pic_Main.InitialImage = Nothing
 		Me.Pic_Main.Location = New System.Drawing.Point(3, 2)
 		Me.Pic_Main.Name = "Pic_Main"
-		Me.Pic_Main.Size = New System.Drawing.Size(768, 668)
+		Me.Pic_Main.Size = New System.Drawing.Size(768, 805)
 		Me.Pic_Main.TabIndex = 16
 		Me.Pic_Main.TabStop = false
 		Me.Pic_Main.WaitOnLoad = true
@@ -967,14 +967,14 @@ Partial Class PrintReport
 		Me.Pnl_Main.Controls.Add(Me.Pic_Main)
 		Me.Pnl_Main.Location = New System.Drawing.Point(375, 10)
 		Me.Pnl_Main.Name = "Pnl_Main"
-		Me.Pnl_Main.Size = New System.Drawing.Size(790, 687)
+		Me.Pnl_Main.Size = New System.Drawing.Size(790, 825)
 		Me.Pnl_Main.TabIndex = 17
 		'
 		'PrintReport
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 12!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.ClientSize = New System.Drawing.Size(1176, 714)
+		Me.ClientSize = New System.Drawing.Size(1176, 847)
 		Me.Controls.Add(Me.Pnl_Main)
 		Me.Controls.Add(Me.panel1)
 		Me.Controls.Add(Me.Grb_Common)

@@ -171,9 +171,9 @@ Public Class Common
 																Pr _
 																)
 							
-							Dim newXpitch As Single = CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
-							If newXpitch <> 0 Then
-								startXPos = startXPos - newXpitch							'x軸イレギュラースタートの確認
+							Dim newXPos As Single = CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
+							If newXPos <> 0 Then
+								startXPos = startXPos + newXPos
 							End If
 							If storageWord(i)(0)(0) <> "" Then							'文字あり
 								Dim fontSize() As Single = GetMaxWord(Wc.optWord("Common_Font"),storageWord(i), Pr)
@@ -234,7 +234,7 @@ Public Class Common
 						If FontSizeDifChecker(storageWord(i)) = True Then						'★★全て同じフォントサイズの時★★
 							Dim newXPos As Single = CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
 							If newXPos <> 0 Then
-								startXPos = startXPos - newXPos
+								startXPos = startXPos + newXPos
 							End If
 							
 							Dim fontSize() As Single
@@ -324,9 +324,9 @@ Public Class Common
 																)
 						
 							Dim newXPos As Single = CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
-'							If newXPos <> 0 Then  2013/9/1 out 3 lines mb
-'								startXPos = startXPos - newXPos									'x軸イレギュラースタートの確認
-'							End If	
+							If newXPos <> 0 Then  
+								startXPos = startXPos + newXPos									'x軸イレギュラースタートの確認
+							End If	
 							
 							If storageWord(i)(0)(0) <> "" Then							'文字あり
 								Dim fontSize() As Single = GetMaxWord(Wc.optWord("Common_Font"),storageWord(i), Pr)
@@ -853,7 +853,7 @@ End sub
 						curWord(lineNo)(i)(3) = startNewXPos
 					Next i
 					
-					startYPos= CheckNewYPos(CSng(txtRow("tbl_txt_newypos")))
+					'startYPos= CheckNewYPos(CSng(txtRow("tbl_txt_newypos")))
 					
 					Dim properPit As Single = PitchCal(startYPos, _
 														CSng(defSet("curBottomYPos")), _
@@ -873,7 +873,7 @@ End sub
 							Else
 								startYPos = CSng(defSet("curBottomYPos")) - (addHeight + (properPit * (curWord(lineNo).Count -1)))　
 							End If
-							Call YPosCal(curWord(lineNo), Wc.optWord("Common_Font"), startYPos, properPit, Pr)
+							'Call YPosCal(curWord(lineNo), Wc.optWord("Common_Font"), startYPos, properPit, Pr)
 					End Select
 					Call ShiftXPos(lineNo, curWord, startNewXPos, Pr)
 				Else
@@ -919,11 +919,12 @@ End sub
 							tempWordInLine = Nothing
 							tempCurWord = Nothing
 					End If
-					
+					Dim txtRow2 As New Hashtable 
+					txtRow2 = SctSql.GetTbl_TxtRow(Wc.CurrentSet(0), Wc.CurrentSet(1), i)
 					If i = lineNo Then
-						startNewXPos =lastWordXPos - (maxWordSize(1) + Csng(DefSet("curBasicPitch")))
+						startNewXPos =lastWordXPos - (maxWordSize(1) + Csng(DefSet("curBasicPitch"))) + CheckNewXPos(CSng(txtRow2("tbl_txt_newxpos")))
 					Else
-						startNewXPos = startNewXPos - (maxWordSize(1) + Csng(DefSet("curBasicPitch")))
+						startNewXPos = startNewXPos - (maxWordSize(1) + Csng(DefSet("curBasicPitch"))) + CheckNewXPos(CSng(txtRow2("tbl_txt_newxpos")))
 					End If
 					'x軸位置を突っ込む
 					For j As Integer = 0 To curWord(i).Count - 1 Step 1
@@ -978,28 +979,29 @@ End sub
 ''' <param name="Pr">PrintReport</param>
 ''' <returns>Void wordに計算値を当て込んでいく</returns>
 	Public Sub ShiftXPos(ByVal lineNo As Integer, ByRef word As ArrayList, ByVal startNewXPos As Single, Pr As PrintReport)
+		
 		For i As Integer = lineNo + 1 To word.Count - 1 Step 1
 			Dim MaxWidth() As Single
-
+			Dim SctSql As New SelectSql
+			Dim txtRow As New Hashtable 
+			txtRow = SctSql.GetTbl_TxtRow(Wc.CurrentSet(0), Wc.CurrentSet(1), i)
+			SctSql = Nothing
+			
 			If word(i)(0)(0) <> "" Then						'END: イレギュラー行に対応する
 				If FontSizeDifChecker(word(i)) = False Then
-					Dim SctSql As New SelectSql
-					Dim txtRow As New Hashtable 
-					txtRow = SctSql.GetTbl_TxtRow(Wc.CurrentSet(0), Wc.CurrentSet(1), lineNo)
-					SctSql = Nothing
 					
 					Dim maxWord As Single = SetIrregXYPos(i, _
 															txtRow("tbl_txt_ystyle"), _
 															word(i), _
 															Wc.optWord("Common_Font"), _ 
-															CheckNewYPos(txtRow("tbl_txt_newypos")), _
+															CheckNewYPos(CSng((txtRow("tbl_txt_newypos")))), _
 															startNewXPos, _
 															Pr
 														 )
-					startNewXPos = maxWord
+					startNewXPos = maxWord + CheckNewXPos(CSng(txtRow("tbl_txt_newxpos")))
 				Else
 					MaxWidth = GetMaxWord(Wc.optWord("Common_Font"), word(i), Pr)
-					startNewXPos = startNewXPos - (MaxWidth(1) + DefSet("curBasicPitch"))
+					startNewXPos = startNewXPos - (MaxWidth(1) + DefSet("curBasicPitch")) + CheckNewXPos(CSng(txtRow("tbl_txt_newxpos")))
 			
 					For j As Integer = 0 To word(i).Count - 1 Step 1
 						word(i)(j)(3) = startNewXPos
@@ -1017,12 +1019,12 @@ End sub
 				tempWordDetail = Nothing
 				tempWordInLine = Nothing
 				tempCurWord = Nothing
-				startNewXPos = startNewXPos - (MaxWidth(1) + DefSet("curBasicPitch"))
+				startNewXPos = startNewXPos - (MaxWidth(1) + DefSet("curBasicPitch")) + CheckNewXPos(CSng(txtRow("tbl_txt_newxpos")))
 				word(i)(0)(3) = startNewXPos
 				
 			End If
 		Next i
-		
+
 	End Sub
 	
 'END: y軸の文字ピッチを文字の大小にかかわらず一定化させる
@@ -1077,9 +1079,9 @@ End sub
 Try
 #End If
 		'y軸開始位置の設定
-		dim startYPos = CheckNewYPos(topYpos)
+		'dim startYPos = CheckNewYPos(topYpos)
 
-		Dim properPit As Single = PitchCal(startYPos, _
+		Dim properPit As Single = PitchCal(topYpos, _
 											CSng(defSet("curBottomYPos")), _
 											storageWord, _
 											Wc.optWord("Common_Font"), _
@@ -1091,10 +1093,10 @@ Try
 		If yStyle = "1" Then
 			Dim addHeight As Single = CheckLineLength(storageWord, Wc.optWord("Common_Font"), Pr）
 			addHeight = CSng(defSet("curBottomYPos")) - (addHeight + (properPit * (storageWord.Count -1)))
-			If addHeight <= startYPos Then														'y軸の最大値を超えないようにする
-				startYPos = addHeight
+			If addHeight <= topYpos Then														'y軸の最大値を超えないようにする
+				topYpos = addHeight
 			Else
-				startYPos = defSet("curTopYPos")
+				topYpos = defSet("curTopYPos")
 			End If
 		End If
 		
@@ -1129,7 +1131,7 @@ Try
 					'y軸位置を決めていく
 					'If j = loopPos Then
 					If j = 0 And loopPos = 0 Then
-						storageWord(j)(2) = startYPos
+						storageWord(j)(2) = topYpos
 						'aftFirstLp = True
 					ElseIf j = loopPos Then
 						'一つ前の文字のポジション + 文字の大きさ + ピッチ
@@ -1248,10 +1250,10 @@ Public Function CheckLineLength(word As ArrayList, font As String, Pr As PrintRe
 ''' <param name="newXPos">ニューポジションが格納された変数</param>
 ''' <returns>新しい開始位置（無いときは0を返す）</returns>
 ''' <remarks>列が変わった時に次の列のy軸スタート位置が違うかどうかの判定に使用</remarks>
-	Public Function CheckNewYPos(newXpos As Single) As Single
+	Public Function CheckNewYPos(newYpos As Single) As Single
 		Dim resultPos As Single = 0
-		If newXpos <> 9999 Then
-			resultPos = CSng(Wc.DefSet(3)) + newXpos
+		If newYpos <> 9999 Then
+			resultPos = CSng(Wc.DefSet(3)) + newYpos
 			Return resultPos
 		End If
 			Return defSet("curTopYPos")

@@ -15,7 +15,7 @@ Public Partial Class PrintReport
 	
 	Dim Wc As New WordContainer()
 	Private Const zero As Integer = 0
-	Private magnifyFlg As Boolean = False
+
 	
 	Public Sub New()
 		' The Me.InitializeComponent call is required for Windows Forms designer support.
@@ -110,7 +110,7 @@ Public Partial Class PrintReport
 		SctSql = Nothing
 
 		'描画用Bitmapを準備
-		With Pic_Main
+		With Me.Pic_Main
 			.Size = New Size(CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))				'END: New sizeはわかった、Bitmapの関連性
 			'.Image = New Bitmap(1800, 668)											'END: 可変にする　
 			.Image = New Bitmap(CInt(Wc.defset(2)), CInt(Wc.defset(4)))	
@@ -120,7 +120,8 @@ Public Partial Class PrintReport
 		Dim Cmn As New Common(Wc)
 		
 		Dim storageWord As New ArrayList
-		storageWord = Cmn.WordPreparer(mainTxt, Wc.DefSet(1))
+		'storageWord = Cmn.WordPreparer(mainTxt, Wc.DefSet(1))
+		storageWord = Cmn.WordPreparer(mainTxt)
 		'文字を描画していく
 		Call Cmn.WordArranger(mainTxt, storageWord, Me)
 		
@@ -156,7 +157,7 @@ Public Partial Class PrintReport
 		             sqlText &= " WHERE tbl_txt_sizeid = " & Wc.CurrentSet(0) & " AND tbl_txt_styleid = " & Wc.CurrentSet(1) & " AND tbl_txt_order = "
 		Dim yStyle As Integer
 		
-'		With Pic_Main
+'		With Me.Pic_Main
 '			If Not (.Image Is Nothing) Then												'END: 関数に置き換え
 '				.Image.Dispose()
 '				.Image = Nothing
@@ -329,7 +330,7 @@ Public Partial Class PrintReport
 		'TODO: 用紙サイズ・文例の変更
 		'END: 取り込みデータを元に変更画像を作成
 '		'END: ピクチャーの破棄・再設定
-'		With Pic_Main								'END: 関数に置き換え
+'		With Me.Pic_Main								'END: 関数に置き換え
 '			If Not (.Image Is Nothing) Then
 '				.Image.Dispose()
 '				.Image = Nothing
@@ -453,7 +454,7 @@ Public Partial Class PrintReport
 
 	'印刷フォームを開く
 	Private Sub Btn_Print_Click(sender As Object, e As EventArgs)
-		'Dim Ps As New PrintSetting(Me.Pic_Main.Image, Wc.DefSet(7), Wc.DefSet(8))
+		'Dim Ps As New PrintSetting(Me.Me.Pic_Main.Image, Wc.DefSet(7), Wc.DefSet(8))
 		Dim Ps As New PrintSetting(Wc)
 		Ps.ShowDialog()
 		Ps.Dispose()
@@ -482,53 +483,39 @@ Public Partial Class PrintReport
 	'画像拡大
 	Public Sub Cmb_Magnify_SelectedIndexChanged(sender As Object, e As EventArgs)
 		'TODO: PictureBox　と BitMapのサイズを変える、描画位置も考える
-'		Call ClearPicture(Me.Pic_Main, Cint(Wc.DefSet(2)), Cint(Wc.DefSet(4)))														'END: 変数に置き換える
+'		Call ClearPicture(Me.Me.Pic_Main, Cint(Wc.DefSet(2)), Cint(Wc.DefSet(4)))														'END: 変数に置き換える
 '		Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 '		
 '		If CDbl(Me.Cmb_Thickness.SelectedValue) <> 0 Then
-'			Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))		'END: 変数に置き換える
+'			Call ControlThickness(Me.Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))		'END: 変数に置き換える
 '		End If
 
 		Call ControlViewSize(Wc.curWord)
 
-		'Me.Pic_Main.Image = Magnify(Me.Pic_Main.Image, CDbl(Me.Cmb_Magnify.SelectedValue))
+		'Me.Me.Pic_Main.Image = Magnify(Me.Me.Pic_Main.Image, CDbl(Me.Cmb_Magnify.SelectedValue))
 		
 	End Sub
 
 #End Region
 	
 #Region "文字描画"
-
-Private Sub ControlViewSize(ByRef storageWord As ArrayList)
+	
+'''■ControlViewSize
+''' <summary></summary>
+''' <param name="storageWord"></param>
+	Private Sub ControlViewSize(ByRef storageWord As ArrayList)
 	'TODO: フォントの増減レートを考える
 		If Me.Cmb_Magnify.SelectedValue.ToString() <> "50" Then
+			
 			Dim rate As Double = CDbl(Me.Cmb_Magnify.SelectedValue) * 0.02
 			
 			Call ClearPicture(Me.Pic_Main, CInt(CDbl(Wc.DefSet(2)) * rate), CInt(CDbl(Wc.DefSet(4)) * rate))
-			
-			Dim clearArrayList As New ArrayList(New String(){""})
-			Wc.TempCurrentWord(1) = clearArrayList
-				
-			For Each item As ArrayList In Wc.curWord
-				Dim wordInLine As New ArrayList
-				For i As Integer = 0 To item.Count - 1 Step 1
-					Dim wordDetail(3) As String
-					wordDetail(0) = item(i)(0).Tostring()
-					wordDetail(1) = (CDbl(item(i)(1)) * rate).ToString()
-					wordDetail(2) = (CDbl(item(i)(2)) * rate).ToString()
-					wordDetail(3) = (CDbl(item(i)(3)) * rate).ToString()
-					wordInLine.Add(wordDetail)
-					wordDetail = {"", "", "", ""}
-				Next i
-				Wc.TempCurrentWord(0) = wordInLine
-			Next
-			
+			Call CopyMagnifyData(storageWord, rate)
 			Call ReCreateWord(Wc.TempCurrentWord(), Wc.optWord("Cmb_Font").ToString())
 			
 			If CDbl(Me.Cmb_Thickness.SelectedValue) <> 0 Then
 				Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(CDbl(Wc.DefSet(2)) * rate), CInt(CDbl(Wc.DefSet(4)) * rate))		'END: 変数に置き換える
 			End If
-			magnifyFlg = True
 		Else
 			Call ClearPicture(Me.Pic_Main, CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
 			Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
@@ -536,11 +523,35 @@ Private Sub ControlViewSize(ByRef storageWord As ArrayList)
 			If CDbl(Me.Cmb_Thickness.SelectedValue) <> 0 Then
 				Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))		'END: 変数に置き換える
 			End If	
-			magnifyFlg = False
 		End If
 		
 	End Sub
-
+	
+'''■CopyMagnifyData
+''' <summary></summary>
+''' <param name="storageWord"></param>
+''' <param name="rate"></param>
+	Private Sub CopyMagnifyData(ByRef storageWord As ArrayList, rate As Double)
+		
+		Dim clearArrayList As New ArrayList(New String(){""})
+		Wc.TempCurrentWord(1) = clearArrayList
+				
+		For Each item As ArrayList In Wc.curWord
+			Dim wordInLine As New ArrayList
+			For i As Integer = 0 To item.Count - 1 Step 1
+				Dim wordDetail(3) As String
+				wordDetail(0) = item(i)(0).Tostring()
+				wordDetail(1) = (CDbl(item(i)(1)) * rate).ToString()
+				wordDetail(2) = (CDbl(item(i)(2)) * rate).ToString()
+				wordDetail(3) = (CDbl(item(i)(3)) * rate).ToString()
+				wordInLine.Add(wordDetail)
+				wordDetail = {"", "", "", ""}
+			Next i
+				Wc.TempCurrentWord(0) = wordInLine
+		Next
+		
+	End Sub
+	
 '''■ControlThickness
 ''' <summary>文字に濃淡をつける</summary>
 ''' <param name="picBox">PictureBox ピクチャーボックス</param>
@@ -592,52 +603,57 @@ Private Sub ControlViewSize(ByRef storageWord As ArrayList)
 ''' <returns>Void</returns>
 	Public Sub ReCreateWord(storageWord As ArrayList, font As String)
 		
-'		If magnifyFlg = True Then
-'			Dim rate As Double = CDbl(Me.Cmb_Magnify.SelectedValue) * 0.02
-'			
-'			Call ClearPicture(Me.Pic_Main, CInt(CDbl(Wc.DefSet(2)) * rate), CInt(CDbl(Wc.DefSet(4)) * rate))
-'			
-'			Dim clearArrayList As New ArrayList(New String(){""})
-'			Wc.TempCurrentWord(1) = clearArrayList
-'				
-'			For Each item As ArrayList In Wc.curWord
-'				Dim wordInLine As New ArrayList
-'				For i As Integer = 0 To item.Count - 1 Step 1
-'					Dim wordDetail(3) As String
-'					wordDetail(0) = item(i)(0).Tostring()
-'					wordDetail(1) = (CDbl(item(i)(1)) * rate).ToString()
-'					wordDetail(2) = (CDbl(item(i)(2)) * rate).ToString()
-'					wordDetail(3) = (CDbl(item(i)(3)) * rate).ToString()
-'					wordInLine.Add(wordDetail)
-'					wordDetail = {"", "", "", ""}
-'				Next i
-'				Wc.TempCurrentWord(0) = wordInLine
-'			Next
-'			
-'		End If
-		
-		For Each item As ArrayList In storageWord
-			For i As Integer = 0 To CInt(item.Count) -1 Step 1
-				If item(i)(0) Is Nothing Then  							'空白行はスキップする
-					Continue For
-				End If
+		If Me.Cmb_Magnify.SelectedValue.ToString() <> "50" Then
+			Dim rate As Double = CDbl(Me.Cmb_Magnify.SelectedValue) * 0.02
+			
+			Call CopyMagnifyData(storageWord, rate)
+			
+			For Each item As ArrayList In Wc.TempCurrentWord()
+				For i As Integer = 0 To CInt(item.Count) -1 Step 1
+					If item(i)(0) Is Nothing Then  							'空白行はスキップする
+						Continue For
+					End If
 				
-				Dim g As System.Drawing.Graphics
-				g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
-				g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-				'New Font(font, item(i)(1),GraphicsUnit.Pixel), _ 
+					Dim g As System.Drawing.Graphics
+					g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
+					g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+					'New Font(font, item(i)(1),GraphicsUnit.Pixel), _ 
 				
-				g.DrawString(item(i)(0).Tostring(), _
-							New Font(font, CSng(item(i)(1))), _ 
-							Brushes.Black, _
-							CSng(item(i)(3)), _ 
-							CSng(item(i)(2)), _
-							New StringFormat(StringFormatFlags.DirectionVertical) _
-							)
-				g.Dispose()
-				g = Nothing
-			Next i
-		Next 
+					g.DrawString(item(i)(0).Tostring(), _
+								New Font(font, CSng(item(i)(1))), _ 
+								Brushes.Black, _
+								CSng(item(i)(3)), _ 
+								CSng(item(i)(2)), _
+								New StringFormat(StringFormatFlags.DirectionVertical) _
+								)
+					g.Dispose()
+					g = Nothing
+				Next i
+			Next
+		Else	
+			For Each item As ArrayList In storageWord
+				For i As Integer = 0 To CInt(item.Count) -1 Step 1
+					If item(i)(0) = "" Then  							'空白行はスキップする
+						Continue For
+					End If
+					
+					Dim g As System.Drawing.Graphics
+					g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
+					g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+					'New Font(font, item(i)(1),GraphicsUnit.Pixel), _ 
+					
+						g.DrawString(item(i)(0).Tostring(), _
+								New Font(font, CSng(item(i)(1))), _ 
+								Brushes.Black, _
+								CSng(item(i)(3)), _ 
+								CSng(item(i)(2)), _
+								New StringFormat(StringFormatFlags.DirectionVertical) _
+								)
+					g.Dispose()
+					g = Nothing
+				Next i
+			Next	
+		End If
 		
 	End Sub
 	
@@ -675,17 +691,17 @@ Private Sub ControlViewSize(ByRef storageWord As ArrayList)
 			wordDetail(3) = storageWord(i)(3)
 			wordInLine.Add(wordDetail)
 			
-'			#If Debug Then
-'				System.Diagnostics.Debug.Write(wordDetail(0))
-'				System.Diagnostics.Debug.Write("<>")
-'				System.Diagnostics.Debug.Write(wordDetail(1))
-'				System.Diagnostics.Debug.Write("<>")
-'				System.Diagnostics.Debug.Write(wordDetail(2))
-'				System.Diagnostics.Debug.Write("<>")
-'				System.Diagnostics.Debug.Write(wordDetail(3))
-'				System.Diagnostics.Debug.Write(",")
-'				System.Diagnostics.Debug.WriteLine(vbCrLf)
-'			#End if	
+#If Debug Then
+				System.Diagnostics.Debug.Write(wordDetail(0))
+				System.Diagnostics.Debug.Write("<>")
+				System.Diagnostics.Debug.Write(wordDetail(1))
+				System.Diagnostics.Debug.Write("<>")
+				System.Diagnostics.Debug.Write(wordDetail(2))
+				System.Diagnostics.Debug.Write("<>")
+				System.Diagnostics.Debug.Write(wordDetail(3))
+				System.Diagnostics.Debug.Write(",")
+				System.Diagnostics.Debug.WriteLine(vbCrLf)
+#End if	
 			
 			wordDetail = {"", "", "", ""}
 			
@@ -728,16 +744,9 @@ Private Sub ControlViewSize(ByRef storageWord As ArrayList)
 #End Region
 
 	
-	Sub Button1_Click(sender As Object, e As EventArgs)
-		' TODO: Implement Button1_Click
-		Me.Pic_Main.Image.Dispose()
-		Me.Pic_Main.Image = Nothing
-	End Sub
 	
-	Sub Button2_Click(sender As Object, e As EventArgs)
-		' TODO: Implement Button2_Click
-		Me.Pic_Main.Size = New Size(Cint(Wc.DefSet(2)) , CInt(Wc.DefSet(4)))
- 		Me.Pic_Main.image = New Bitmap(Cint(Wc.DefSet(2)) , CInt(Wc.DefSet(4)))
+	Sub Cmb_Month_SelectedIndexChanged(sender As Object, e As EventArgs)
+		' TODO: Implement Cmb_Month_SelectedIndexChanged
 	End Sub
 End Class
 '''''■Magnify

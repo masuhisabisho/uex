@@ -25,13 +25,13 @@ Public Class Common
 ''' <param name="mainText">ArrayList メインテキスト</param>
 ''' <param name="fontSize">String フォントサイズ</param>
 ''' <returns>単語・フォントサイズを格納した配列を返す</returns>	
-	Public function WordPreparer(mainTxt As ArrayList, fontSize As String) As ArrayList
+	'Public function WordPreparer(mainTxt As ArrayList, fontSize As String) As ArrayList
+	Public function WordPreparer(mainTxt As ArrayList) As ArrayList
 		Dim lineCounter As Integer = mainTxt.Count - 1								'メインセンテンスの行数
 		Dim insWord As Array
 		Dim storageWord As New ArrayList
 		Dim registerChkFlg As Boolean = False
-
-		Dim basicPoint As String = fontSize
+		'Dim basicPoint As String = fontSize
 		
 		For i As Integer = 0 To lineCounter Step 1
 			Dim insPos() As String = {"", "", ""}									'挿入文字位置パラメータを格納する配列 
@@ -80,13 +80,14 @@ Public Class Common
 						Continue For
 					Else
 						wordDetail(0) = fixedWord.Substring(m, 1)					'固定文字を格納
-						
-						Dim tempBasicpoint As String = BasicPointChecker(mainTxt(i)) '行単位のフォントサイズの変更がないか確認
-						If  tempBasicpoint <> "0" Then
-							basicPoint = tempBasicpoint
+																						
+						Dim tempBasipoint As String = BasicPointChecker(mainTxt(i))
+						If  tempBasipoint <> "0" Then
+							wordDetail(1) = tempBasipoint
+						Else
+							wordDetail(1) = Wc.DefSet(1)
 						End If
 						
-						wordDetail(1) = basicPoint
 						wordInLine.Add(wordDetail)
 						wordDetail = {"", "", "", ""}
 						registerChkFlg  = True
@@ -98,9 +99,11 @@ Public Class Common
 					
 					Dim tempBasipoint As String = BasicPointChecker(mainTxt(i))
 					If  tempBasipoint <> "0" Then
-						basicPoint = tempBasipoint
+						wordDetail(1) = tempBasipoint
+					Else
+						wordDetail(1) = Wc.DefSet(1)
 					End If
-					wordDetail(1) = basicPoint
+					
 					wordInLine.Add(wordDetail)
 					wordDetail = {"", "", "", ""}
 					registerChkFlg  = True
@@ -120,6 +123,7 @@ Public Class Common
 			insFlg = False
 		Next i
 		
+'#If debug then
 '		'2013/8/20 不具合発生。再度確認
 '		Dim z As Integer = 0
 '		Do Until z = storageWord.Count
@@ -135,6 +139,7 @@ Public Class Common
 '			WriteLine("")
 '			z += 1
 '		Loop
+'#End If
 		
 		Return storageWord
 	End Function

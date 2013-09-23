@@ -51,7 +51,10 @@ Partial Class PrintReport
 		Me.Cmb_Font = New System.Windows.Forms.ComboBox()
 		Me.Cmb_Size = New System.Windows.Forms.ComboBox()
 		Me.Grb_Contents = New System.Windows.Forms.GroupBox()
-		Me.button1 = New System.Windows.Forms.Button()
+		Me.Cmb_Hyodai = New System.Windows.Forms.ComboBox()
+		Me.Cmb_Namae = New System.Windows.Forms.ComboBox()
+		Me.LblNamae = New System.Windows.Forms.Label()
+		Me.Lbl_Namae = New System.Windows.Forms.Label()
 		Me.Btn_Dtp = New System.Windows.Forms.Button()
 		Me.Lbl_Month = New System.Windows.Forms.Label()
 		Me.Lbl_Day = New System.Windows.Forms.Label()
@@ -122,14 +125,13 @@ Partial Class PrintReport
 		Me.Lbl_Donation = New System.Windows.Forms.Label()
 		Me.Lbl_Imibi = New System.Windows.Forms.Label()
 		Me.panel1 = New System.Windows.Forms.Panel()
-		Me.Pic_Main = New System.Windows.Forms.PictureBox()
 		Me.Pnl_Main = New System.Windows.Forms.Panel()
-		Me.button2 = New System.Windows.Forms.Button()
+		Me.Pic_Main = New System.Windows.Forms.PictureBox()
 		Me.Grb_Common.SuspendLayout
 		Me.Grb_Contents.SuspendLayout
 		Me.panel1.SuspendLayout
-		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).BeginInit
 		Me.Pnl_Main.SuspendLayout
+		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).BeginInit
 		Me.SuspendLayout
 		'
 		'Grb_Common
@@ -281,8 +283,10 @@ Partial Class PrintReport
 		'
 		'Grb_Contents
 		'
-		Me.Grb_Contents.Controls.Add(Me.button2)
-		Me.Grb_Contents.Controls.Add(Me.button1)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_Hyodai)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_Namae)
+		Me.Grb_Contents.Controls.Add(Me.LblNamae)
+		Me.Grb_Contents.Controls.Add(Me.Lbl_Namae)
 		Me.Grb_Contents.Controls.Add(Me.Btn_Dtp)
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Month)
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Day)
@@ -354,25 +358,49 @@ Partial Class PrintReport
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Imibi)
 		Me.Grb_Contents.Location = New System.Drawing.Point(6, 3)
 		Me.Grb_Contents.Name = "Grb_Contents"
-		Me.Grb_Contents.Size = New System.Drawing.Size(348, 503)
+		Me.Grb_Contents.Size = New System.Drawing.Size(348, 661)
 		Me.Grb_Contents.TabIndex = 2
 		Me.Grb_Contents.TabStop = false
 		Me.Grb_Contents.Text = "内容設定"
 		'
-		'button1
+		'Cmb_Hyodai
 		'
-		Me.button1.Location = New System.Drawing.Point(262, 415)
-		Me.button1.Name = "button1"
-		Me.button1.Size = New System.Drawing.Size(75, 23)
-		Me.button1.TabIndex = 102
-		Me.button1.Text = "button1"
-		Me.button1.UseVisualStyleBackColor = true
-		AddHandler Me.button1.Click, AddressOf Me.Button1_Click
+		Me.Cmb_Hyodai.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.Cmb_Hyodai.FormattingEnabled = true
+		Me.Cmb_Hyodai.Location = New System.Drawing.Point(75, 30)
+		Me.Cmb_Hyodai.Name = "Cmb_Hyodai"
+		Me.Cmb_Hyodai.Size = New System.Drawing.Size(180, 20)
+		Me.Cmb_Hyodai.TabIndex = 105
+		'
+		'Cmb_Namae
+		'
+		Me.Cmb_Namae.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.Cmb_Namae.FormattingEnabled = true
+		Me.Cmb_Namae.Location = New System.Drawing.Point(75, 50)
+		Me.Cmb_Namae.Name = "Cmb_Namae"
+		Me.Cmb_Namae.Size = New System.Drawing.Size(180, 20)
+		Me.Cmb_Namae.TabIndex = 104
+		'
+		'LblNamae
+		'
+		Me.LblNamae.Location = New System.Drawing.Point(5, 33)
+		Me.LblNamae.Name = "LblNamae"
+		Me.LblNamae.Size = New System.Drawing.Size(81, 18)
+		Me.LblNamae.TabIndex = 103
+		Me.LblNamae.Text = "表題："
+		'
+		'Lbl_Namae
+		'
+		Me.Lbl_Namae.Location = New System.Drawing.Point(5, 53)
+		Me.Lbl_Namae.Name = "Lbl_Namae"
+		Me.Lbl_Namae.Size = New System.Drawing.Size(81, 18)
+		Me.Lbl_Namae.TabIndex = 102
+		Me.Lbl_Namae.Text = "名前："
 		'
 		'Btn_Dtp
 		'
 		Me.Btn_Dtp.Image = CType(resources.GetObject("Btn_Dtp.Image"),System.Drawing.Image)
-		Me.Btn_Dtp.Location = New System.Drawing.Point(319, 230)
+		Me.Btn_Dtp.Location = New System.Drawing.Point(291, 290)
 		Me.Btn_Dtp.Name = "Btn_Dtp"
 		Me.Btn_Dtp.Size = New System.Drawing.Size(24, 20)
 		Me.Btn_Dtp.TabIndex = 101
@@ -381,7 +409,7 @@ Partial Class PrintReport
 		'
 		'Lbl_Month
 		'
-		Me.Lbl_Month.Location = New System.Drawing.Point(183, 231)
+		Me.Lbl_Month.Location = New System.Drawing.Point(82, 291)
 		Me.Lbl_Month.Name = "Lbl_Month"
 		Me.Lbl_Month.Size = New System.Drawing.Size(17, 14)
 		Me.Lbl_Month.TabIndex = 100
@@ -390,7 +418,7 @@ Partial Class PrintReport
 		'
 		'Lbl_Day
 		'
-		Me.Lbl_Day.Location = New System.Drawing.Point(239, 231)
+		Me.Lbl_Day.Location = New System.Drawing.Point(83, 313)
 		Me.Lbl_Day.Name = "Lbl_Day"
 		Me.Lbl_Day.Size = New System.Drawing.Size(14, 14)
 		Me.Lbl_Day.TabIndex = 99
@@ -399,7 +427,7 @@ Partial Class PrintReport
 		'
 		'Lbl_year
 		'
-		Me.Lbl_year.Location = New System.Drawing.Point(125, 231)
+		Me.Lbl_year.Location = New System.Drawing.Point(83, 270)
 		Me.Lbl_year.Name = "Lbl_year"
 		Me.Lbl_year.Size = New System.Drawing.Size(17, 14)
 		Me.Lbl_year.TabIndex = 98
@@ -410,27 +438,28 @@ Partial Class PrintReport
 		'
 		Me.Cmb_Day.FormattingEnabled = true
 		Me.Cmb_Day.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_Day.Location = New System.Drawing.Point(201, 228)
+		Me.Cmb_Day.Location = New System.Drawing.Point(109, 309)
 		Me.Cmb_Day.Name = "Cmb_Day"
-		Me.Cmb_Day.Size = New System.Drawing.Size(36, 20)
+		Me.Cmb_Day.Size = New System.Drawing.Size(145, 20)
 		Me.Cmb_Day.TabIndex = 97
 		'
 		'Cmb_Month
 		'
 		Me.Cmb_Month.FormattingEnabled = true
 		Me.Cmb_Month.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_Month.Location = New System.Drawing.Point(144, 228)
+		Me.Cmb_Month.Location = New System.Drawing.Point(109, 288)
 		Me.Cmb_Month.Name = "Cmb_Month"
-		Me.Cmb_Month.Size = New System.Drawing.Size(36, 20)
+		Me.Cmb_Month.Size = New System.Drawing.Size(145, 20)
 		Me.Cmb_Month.TabIndex = 96
+		AddHandler Me.Cmb_Month.SelectedIndexChanged, AddressOf Me.Cmb_Month_SelectedIndexChanged
 		'
 		'Cmb_Year
 		'
 		Me.Cmb_Year.FormattingEnabled = true
 		Me.Cmb_Year.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_Year.Location = New System.Drawing.Point(75, 228)
+		Me.Cmb_Year.Location = New System.Drawing.Point(109, 268)
 		Me.Cmb_Year.Name = "Cmb_Year"
-		Me.Cmb_Year.Size = New System.Drawing.Size(49, 20)
+		Me.Cmb_Year.Size = New System.Drawing.Size(145, 20)
 		Me.Cmb_Year.TabIndex = 95
 		'
 		'Cmb_PointHostName3
@@ -438,7 +467,7 @@ Partial Class PrintReport
 		Me.Cmb_PointHostName3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointHostName3.FormattingEnabled = true
 		Me.Cmb_PointHostName3.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointHostName3.Location = New System.Drawing.Point(260, 343)
+		Me.Cmb_PointHostName3.Location = New System.Drawing.Point(260, 424)
 		Me.Cmb_PointHostName3.Name = "Cmb_PointHostName3"
 		Me.Cmb_PointHostName3.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointHostName3.TabIndex = 93
@@ -448,7 +477,7 @@ Partial Class PrintReport
 		Me.Cmb_PointHostName4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointHostName4.FormattingEnabled = true
 		Me.Cmb_PointHostName4.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointHostName4.Location = New System.Drawing.Point(260, 363)
+		Me.Cmb_PointHostName4.Location = New System.Drawing.Point(260, 444)
 		Me.Cmb_PointHostName4.Name = "Cmb_PointHostName4"
 		Me.Cmb_PointHostName4.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointHostName4.TabIndex = 92
@@ -458,7 +487,7 @@ Partial Class PrintReport
 		Me.Cmb_PointPS1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointPS1.FormattingEnabled = true
 		Me.Cmb_PointPS1.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointPS1.Location = New System.Drawing.Point(260, 382)
+		Me.Cmb_PointPS1.Location = New System.Drawing.Point(260, 463)
 		Me.Cmb_PointPS1.Name = "Cmb_PointPS1"
 		Me.Cmb_PointPS1.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointPS1.TabIndex = 91
@@ -468,7 +497,7 @@ Partial Class PrintReport
 		Me.Cmb_PointName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointName.FormattingEnabled = true
 		Me.Cmb_PointName.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointName.Location = New System.Drawing.Point(260, 89)
+		Me.Cmb_PointName.Location = New System.Drawing.Point(260, 129)
 		Me.Cmb_PointName.Name = "Cmb_PointName"
 		Me.Cmb_PointName.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointName.TabIndex = 90
@@ -478,7 +507,7 @@ Partial Class PrintReport
 		Me.Cmb_PointDeadName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointDeadName.FormattingEnabled = true
 		Me.Cmb_PointDeadName.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointDeadName.Location = New System.Drawing.Point(260, 148)
+		Me.Cmb_PointDeadName.Location = New System.Drawing.Point(260, 188)
 		Me.Cmb_PointDeadName.Name = "Cmb_PointDeadName"
 		Me.Cmb_PointDeadName.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointDeadName.TabIndex = 89
@@ -488,7 +517,7 @@ Partial Class PrintReport
 		Me.Cmb_PointImibi.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointImibi.FormattingEnabled = true
 		Me.Cmb_PointImibi.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointImibi.Location = New System.Drawing.Point(260, 188)
+		Me.Cmb_PointImibi.Location = New System.Drawing.Point(260, 228)
 		Me.Cmb_PointImibi.Name = "Cmb_PointImibi"
 		Me.Cmb_PointImibi.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointImibi.TabIndex = 88
@@ -498,7 +527,7 @@ Partial Class PrintReport
 		Me.Cmb_PointEndWord.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointEndWord.FormattingEnabled = true
 		Me.Cmb_PointEndWord.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointEndWord.Location = New System.Drawing.Point(260, 208)
+		Me.Cmb_PointEndWord.Location = New System.Drawing.Point(260, 248)
 		Me.Cmb_PointEndWord.Name = "Cmb_PointEndWord"
 		Me.Cmb_PointEndWord.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointEndWord.TabIndex = 87
@@ -508,7 +537,7 @@ Partial Class PrintReport
 		Me.Cmb_PointCeremonyDate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointCeremonyDate.FormattingEnabled = true
 		Me.Cmb_PointCeremonyDate.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointCeremonyDate.Location = New System.Drawing.Point(260, 228)
+		Me.Cmb_PointCeremonyDate.Location = New System.Drawing.Point(260, 268)
 		Me.Cmb_PointCeremonyDate.Name = "Cmb_PointCeremonyDate"
 		Me.Cmb_PointCeremonyDate.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointCeremonyDate.TabIndex = 86
@@ -518,7 +547,7 @@ Partial Class PrintReport
 		Me.Cmb_PointAdd1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointAdd1.FormattingEnabled = true
 		Me.Cmb_PointAdd1.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointAdd1.Location = New System.Drawing.Point(260, 248)
+		Me.Cmb_PointAdd1.Location = New System.Drawing.Point(260, 329)
 		Me.Cmb_PointAdd1.Name = "Cmb_PointAdd1"
 		Me.Cmb_PointAdd1.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointAdd1.TabIndex = 85
@@ -528,7 +557,7 @@ Partial Class PrintReport
 		Me.Cmb_PointHostType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointHostType.FormattingEnabled = true
 		Me.Cmb_PointHostType.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointHostType.Location = New System.Drawing.Point(260, 285)
+		Me.Cmb_PointHostType.Location = New System.Drawing.Point(260, 366)
 		Me.Cmb_PointHostType.Name = "Cmb_PointHostType"
 		Me.Cmb_PointHostType.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointHostType.TabIndex = 84
@@ -538,7 +567,7 @@ Partial Class PrintReport
 		Me.Cmb_PointHostName1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointHostName1.FormattingEnabled = true
 		Me.Cmb_PointHostName1.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointHostName1.Location = New System.Drawing.Point(260, 304)
+		Me.Cmb_PointHostName1.Location = New System.Drawing.Point(260, 385)
 		Me.Cmb_PointHostName1.Name = "Cmb_PointHostName1"
 		Me.Cmb_PointHostName1.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointHostName1.TabIndex = 83
@@ -548,56 +577,56 @@ Partial Class PrintReport
 		Me.Cmb_PointHostName2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointHostName2.FormattingEnabled = true
 		Me.Cmb_PointHostName2.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointHostName2.Location = New System.Drawing.Point(260, 323)
+		Me.Cmb_PointHostName2.Location = New System.Drawing.Point(260, 404)
 		Me.Cmb_PointHostName2.Name = "Cmb_PointHostName2"
 		Me.Cmb_PointHostName2.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointHostName2.TabIndex = 82
 		'
 		'Txt_PS3
 		'
-		Me.Txt_PS3.Location = New System.Drawing.Point(75, 420)
+		Me.Txt_PS3.Location = New System.Drawing.Point(74, 501)
 		Me.Txt_PS3.Name = "Txt_PS3"
 		Me.Txt_PS3.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_PS3.TabIndex = 81
 		'
 		'Txt_PS6
 		'
-		Me.Txt_PS6.Location = New System.Drawing.Point(75, 477)
+		Me.Txt_PS6.Location = New System.Drawing.Point(74, 558)
 		Me.Txt_PS6.Name = "Txt_PS6"
 		Me.Txt_PS6.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_PS6.TabIndex = 78
 		'
 		'Txt_PS2
 		'
-		Me.Txt_PS2.Location = New System.Drawing.Point(75, 401)
+		Me.Txt_PS2.Location = New System.Drawing.Point(74, 482)
 		Me.Txt_PS2.Name = "Txt_PS2"
 		Me.Txt_PS2.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_PS2.TabIndex = 77
 		'
 		'Txt_PS5
 		'
-		Me.Txt_PS5.Location = New System.Drawing.Point(75, 458)
+		Me.Txt_PS5.Location = New System.Drawing.Point(74, 539)
 		Me.Txt_PS5.Name = "Txt_PS5"
 		Me.Txt_PS5.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_PS5.TabIndex = 79
 		'
 		'Txt_HostName1
 		'
-		Me.Txt_HostName1.Location = New System.Drawing.Point(75, 306)
+		Me.Txt_HostName1.Location = New System.Drawing.Point(74, 387)
 		Me.Txt_HostName1.Name = "Txt_HostName1"
 		Me.Txt_HostName1.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_HostName1.TabIndex = 76
 		'
 		'Txt_PS4
 		'
-		Me.Txt_PS4.Location = New System.Drawing.Point(75, 439)
+		Me.Txt_PS4.Location = New System.Drawing.Point(74, 520)
 		Me.Txt_PS4.Name = "Txt_PS4"
 		Me.Txt_PS4.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_PS4.TabIndex = 80
 		'
 		'Txt_HostName2
 		'
-		Me.Txt_HostName2.Location = New System.Drawing.Point(75, 325)
+		Me.Txt_HostName2.Location = New System.Drawing.Point(74, 406)
 		Me.Txt_HostName2.Name = "Txt_HostName2"
 		Me.Txt_HostName2.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_HostName2.TabIndex = 75
@@ -605,14 +634,14 @@ Partial Class PrintReport
 		'
 		'Txt_HostName3
 		'
-		Me.Txt_HostName3.Location = New System.Drawing.Point(75, 344)
+		Me.Txt_HostName3.Location = New System.Drawing.Point(74, 425)
 		Me.Txt_HostName3.Name = "Txt_HostName3"
 		Me.Txt_HostName3.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_HostName3.TabIndex = 74
 		'
 		'Txt_HostName4
 		'
-		Me.Txt_HostName4.Location = New System.Drawing.Point(75, 363)
+		Me.Txt_HostName4.Location = New System.Drawing.Point(74, 444)
 		Me.Txt_HostName4.Name = "Txt_HostName4"
 		Me.Txt_HostName4.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_HostName4.TabIndex = 73
@@ -622,14 +651,14 @@ Partial Class PrintReport
 		Me.Cmb_PointTitle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_PointTitle.FormattingEnabled = true
 		Me.Cmb_PointTitle.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
-		Me.Cmb_PointTitle.Location = New System.Drawing.Point(260, 70)
+		Me.Cmb_PointTitle.Location = New System.Drawing.Point(260, 110)
 		Me.Cmb_PointTitle.Name = "Cmb_PointTitle"
 		Me.Cmb_PointTitle.Size = New System.Drawing.Size(55, 20)
 		Me.Cmb_PointTitle.TabIndex = 56
 		'
 		'Txt_PS1
 		'
-		Me.Txt_PS1.Location = New System.Drawing.Point(75, 382)
+		Me.Txt_PS1.Location = New System.Drawing.Point(74, 463)
 		Me.Txt_PS1.Name = "Txt_PS1"
 		Me.Txt_PS1.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_PS1.TabIndex = 72
@@ -638,21 +667,21 @@ Partial Class PrintReport
 		'
 		Me.Cmb_HostType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_HostType.FormattingEnabled = true
-		Me.Cmb_HostType.Location = New System.Drawing.Point(75, 286)
+		Me.Cmb_HostType.Location = New System.Drawing.Point(74, 367)
 		Me.Cmb_HostType.Name = "Cmb_HostType"
 		Me.Cmb_HostType.Size = New System.Drawing.Size(180, 20)
 		Me.Cmb_HostType.TabIndex = 71
 		'
 		'Txt_Add1
 		'
-		Me.Txt_Add1.Location = New System.Drawing.Point(75, 248)
+		Me.Txt_Add1.Location = New System.Drawing.Point(74, 329)
 		Me.Txt_Add1.Name = "Txt_Add1"
 		Me.Txt_Add1.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_Add1.TabIndex = 70
 		'
 		'Txt_Add2
 		'
-		Me.Txt_Add2.Location = New System.Drawing.Point(75, 267)
+		Me.Txt_Add2.Location = New System.Drawing.Point(74, 348)
 		Me.Txt_Add2.Name = "Txt_Add2"
 		Me.Txt_Add2.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_Add2.TabIndex = 69
@@ -661,7 +690,7 @@ Partial Class PrintReport
 		'
 		Me.Cmb_EndWord.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_EndWord.FormattingEnabled = true
-		Me.Cmb_EndWord.Location = New System.Drawing.Point(75, 208)
+		Me.Cmb_EndWord.Location = New System.Drawing.Point(75, 248)
 		Me.Cmb_EndWord.Name = "Cmb_EndWord"
 		Me.Cmb_EndWord.Size = New System.Drawing.Size(180, 20)
 		Me.Cmb_EndWord.TabIndex = 66
@@ -670,7 +699,7 @@ Partial Class PrintReport
 		'
 		Me.Cmb_Imibi.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_Imibi.FormattingEnabled = true
-		Me.Cmb_Imibi.Location = New System.Drawing.Point(75, 188)
+		Me.Cmb_Imibi.Location = New System.Drawing.Point(75, 228)
 		Me.Cmb_Imibi.Name = "Cmb_Imibi"
 		Me.Cmb_Imibi.Size = New System.Drawing.Size(180, 20)
 		Me.Cmb_Imibi.TabIndex = 65
@@ -679,14 +708,14 @@ Partial Class PrintReport
 		'
 		Me.Cmb_Donation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_Donation.FormattingEnabled = true
-		Me.Cmb_Donation.Location = New System.Drawing.Point(75, 168)
+		Me.Cmb_Donation.Location = New System.Drawing.Point(75, 208)
 		Me.Cmb_Donation.Name = "Cmb_Donation"
 		Me.Cmb_Donation.Size = New System.Drawing.Size(180, 20)
 		Me.Cmb_Donation.TabIndex = 64
 		'
 		'Txt_DeadName
 		'
-		Me.Txt_DeadName.Location = New System.Drawing.Point(75, 149)
+		Me.Txt_DeadName.Location = New System.Drawing.Point(75, 189)
 		Me.Txt_DeadName.Name = "Txt_DeadName"
 		Me.Txt_DeadName.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_DeadName.TabIndex = 62
@@ -695,7 +724,7 @@ Partial Class PrintReport
 		'
 		Me.Cmb_Time2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_Time2.FormattingEnabled = true
-		Me.Cmb_Time2.Location = New System.Drawing.Point(75, 129)
+		Me.Cmb_Time2.Location = New System.Drawing.Point(75, 169)
 		Me.Cmb_Time2.Name = "Cmb_Time2"
 		Me.Cmb_Time2.Size = New System.Drawing.Size(180, 20)
 		Me.Cmb_Time2.TabIndex = 61
@@ -713,7 +742,7 @@ Partial Class PrintReport
 		'
 		Me.Cmb_SeasonWord.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_SeasonWord.FormattingEnabled = true
-		Me.Cmb_SeasonWord.Location = New System.Drawing.Point(75, 30)
+		Me.Cmb_SeasonWord.Location = New System.Drawing.Point(75, 70)
 		Me.Cmb_SeasonWord.Name = "Cmb_SeasonWord"
 		Me.Cmb_SeasonWord.Size = New System.Drawing.Size(180, 20)
 		Me.Cmb_SeasonWord.TabIndex = 59
@@ -722,7 +751,7 @@ Partial Class PrintReport
 		'
 		Me.Cmb_Time1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_Time1.FormattingEnabled = true
-		Me.Cmb_Time1.Location = New System.Drawing.Point(75, 50)
+		Me.Cmb_Time1.Location = New System.Drawing.Point(75, 90)
 		Me.Cmb_Time1.Name = "Cmb_Time1"
 		Me.Cmb_Time1.Size = New System.Drawing.Size(180, 20)
 		Me.Cmb_Time1.TabIndex = 58
@@ -731,14 +760,14 @@ Partial Class PrintReport
 		'
 		Me.Cmb_DeathWay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_DeathWay.FormattingEnabled = true
-		Me.Cmb_DeathWay.Location = New System.Drawing.Point(75, 109)
+		Me.Cmb_DeathWay.Location = New System.Drawing.Point(75, 149)
 		Me.Cmb_DeathWay.Name = "Cmb_DeathWay"
 		Me.Cmb_DeathWay.Size = New System.Drawing.Size(180, 20)
 		Me.Cmb_DeathWay.TabIndex = 57
 		'
 		'Txt_Name
 		'
-		Me.Txt_Name.Location = New System.Drawing.Point(75, 90)
+		Me.Txt_Name.Location = New System.Drawing.Point(75, 130)
 		Me.Txt_Name.Name = "Txt_Name"
 		Me.Txt_Name.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_Name.TabIndex = 55
@@ -747,14 +776,14 @@ Partial Class PrintReport
 		'
 		Me.Cmb_Title.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_Title.FormattingEnabled = true
-		Me.Cmb_Title.Location = New System.Drawing.Point(75, 70)
+		Me.Cmb_Title.Location = New System.Drawing.Point(75, 110)
 		Me.Cmb_Title.Name = "Cmb_Title"
 		Me.Cmb_Title.Size = New System.Drawing.Size(180, 20)
 		Me.Cmb_Title.TabIndex = 52
 		'
 		'Lbl_PS1
 		'
-		Me.Lbl_PS1.Location = New System.Drawing.Point(5, 385)
+		Me.Lbl_PS1.Location = New System.Drawing.Point(5, 466)
 		Me.Lbl_PS1.Name = "Lbl_PS1"
 		Me.Lbl_PS1.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_PS1.TabIndex = 41
@@ -762,7 +791,7 @@ Partial Class PrintReport
 		'
 		'Lbl_PS2
 		'
-		Me.Lbl_PS2.Location = New System.Drawing.Point(5, 405)
+		Me.Lbl_PS2.Location = New System.Drawing.Point(5, 486)
 		Me.Lbl_PS2.Name = "Lbl_PS2"
 		Me.Lbl_PS2.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_PS2.TabIndex = 40
@@ -770,7 +799,7 @@ Partial Class PrintReport
 		'
 		'Lbl_PS3
 		'
-		Me.Lbl_PS3.Location = New System.Drawing.Point(5, 424)
+		Me.Lbl_PS3.Location = New System.Drawing.Point(5, 505)
 		Me.Lbl_PS3.Name = "Lbl_PS3"
 		Me.Lbl_PS3.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_PS3.TabIndex = 39
@@ -778,7 +807,7 @@ Partial Class PrintReport
 		'
 		'Lbl_PS4
 		'
-		Me.Lbl_PS4.Location = New System.Drawing.Point(5, 443)
+		Me.Lbl_PS4.Location = New System.Drawing.Point(5, 524)
 		Me.Lbl_PS4.Name = "Lbl_PS4"
 		Me.Lbl_PS4.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_PS4.TabIndex = 38
@@ -786,7 +815,7 @@ Partial Class PrintReport
 		'
 		'Lbl_PS5
 		'
-		Me.Lbl_PS5.Location = New System.Drawing.Point(5, 462)
+		Me.Lbl_PS5.Location = New System.Drawing.Point(5, 543)
 		Me.Lbl_PS5.Name = "Lbl_PS5"
 		Me.Lbl_PS5.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_PS5.TabIndex = 37
@@ -794,7 +823,7 @@ Partial Class PrintReport
 		'
 		'Lbl_PS6
 		'
-		Me.Lbl_PS6.Location = New System.Drawing.Point(5, 481)
+		Me.Lbl_PS6.Location = New System.Drawing.Point(5, 562)
 		Me.Lbl_PS6.Name = "Lbl_PS6"
 		Me.Lbl_PS6.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_PS6.TabIndex = 36
@@ -802,7 +831,7 @@ Partial Class PrintReport
 		'
 		'Lbl_EndWord
 		'
-		Me.Lbl_EndWord.Location = New System.Drawing.Point(5, 212)
+		Me.Lbl_EndWord.Location = New System.Drawing.Point(5, 252)
 		Me.Lbl_EndWord.Name = "Lbl_EndWord"
 		Me.Lbl_EndWord.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_EndWord.TabIndex = 31
@@ -810,7 +839,7 @@ Partial Class PrintReport
 		'
 		'Lbl_CeremonyDate
 		'
-		Me.Lbl_CeremonyDate.Location = New System.Drawing.Point(5, 232)
+		Me.Lbl_CeremonyDate.Location = New System.Drawing.Point(5, 272)
 		Me.Lbl_CeremonyDate.Name = "Lbl_CeremonyDate"
 		Me.Lbl_CeremonyDate.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_CeremonyDate.TabIndex = 30
@@ -818,7 +847,7 @@ Partial Class PrintReport
 		'
 		'Lbl_Add1
 		'
-		Me.Lbl_Add1.Location = New System.Drawing.Point(5, 250)
+		Me.Lbl_Add1.Location = New System.Drawing.Point(5, 331)
 		Me.Lbl_Add1.Name = "Lbl_Add1"
 		Me.Lbl_Add1.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_Add1.TabIndex = 29
@@ -826,7 +855,7 @@ Partial Class PrintReport
 		'
 		'Lbl_Add2
 		'
-		Me.Lbl_Add2.Location = New System.Drawing.Point(5, 270)
+		Me.Lbl_Add2.Location = New System.Drawing.Point(5, 351)
 		Me.Lbl_Add2.Name = "Lbl_Add2"
 		Me.Lbl_Add2.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_Add2.TabIndex = 28
@@ -834,7 +863,7 @@ Partial Class PrintReport
 		'
 		'Lbl_HostType
 		'
-		Me.Lbl_HostType.Location = New System.Drawing.Point(5, 290)
+		Me.Lbl_HostType.Location = New System.Drawing.Point(5, 371)
 		Me.Lbl_HostType.Name = "Lbl_HostType"
 		Me.Lbl_HostType.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_HostType.TabIndex = 27
@@ -842,7 +871,7 @@ Partial Class PrintReport
 		'
 		'Lbl_HostName1
 		'
-		Me.Lbl_HostName1.Location = New System.Drawing.Point(5, 309)
+		Me.Lbl_HostName1.Location = New System.Drawing.Point(5, 390)
 		Me.Lbl_HostName1.Name = "Lbl_HostName1"
 		Me.Lbl_HostName1.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_HostName1.TabIndex = 26
@@ -850,7 +879,7 @@ Partial Class PrintReport
 		'
 		'Lbl_HostName2
 		'
-		Me.Lbl_HostName2.Location = New System.Drawing.Point(5, 328)
+		Me.Lbl_HostName2.Location = New System.Drawing.Point(5, 409)
 		Me.Lbl_HostName2.Name = "Lbl_HostName2"
 		Me.Lbl_HostName2.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_HostName2.TabIndex = 25
@@ -858,7 +887,7 @@ Partial Class PrintReport
 		'
 		'Lbl_HostName3
 		'
-		Me.Lbl_HostName3.Location = New System.Drawing.Point(5, 346)
+		Me.Lbl_HostName3.Location = New System.Drawing.Point(5, 427)
 		Me.Lbl_HostName3.Name = "Lbl_HostName3"
 		Me.Lbl_HostName3.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_HostName3.TabIndex = 24
@@ -866,7 +895,7 @@ Partial Class PrintReport
 		'
 		'Lbl_HostName4
 		'
-		Me.Lbl_HostName4.Location = New System.Drawing.Point(5, 366)
+		Me.Lbl_HostName4.Location = New System.Drawing.Point(5, 447)
 		Me.Lbl_HostName4.Name = "Lbl_HostName4"
 		Me.Lbl_HostName4.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_HostName4.TabIndex = 23
@@ -882,7 +911,7 @@ Partial Class PrintReport
 		'
 		'Lbl_SeasonWord
 		'
-		Me.Lbl_SeasonWord.Location = New System.Drawing.Point(5, 33)
+		Me.Lbl_SeasonWord.Location = New System.Drawing.Point(5, 73)
 		Me.Lbl_SeasonWord.Name = "Lbl_SeasonWord"
 		Me.Lbl_SeasonWord.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_SeasonWord.TabIndex = 21
@@ -890,7 +919,7 @@ Partial Class PrintReport
 		'
 		'Lbl_Time1
 		'
-		Me.Lbl_Time1.Location = New System.Drawing.Point(5, 53)
+		Me.Lbl_Time1.Location = New System.Drawing.Point(5, 93)
 		Me.Lbl_Time1.Name = "Lbl_Time1"
 		Me.Lbl_Time1.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_Time1.TabIndex = 20
@@ -898,7 +927,7 @@ Partial Class PrintReport
 		'
 		'Lbl_Title
 		'
-		Me.Lbl_Title.Location = New System.Drawing.Point(5, 74)
+		Me.Lbl_Title.Location = New System.Drawing.Point(5, 114)
 		Me.Lbl_Title.Name = "Lbl_Title"
 		Me.Lbl_Title.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_Title.TabIndex = 19
@@ -906,7 +935,7 @@ Partial Class PrintReport
 		'
 		'Lbl_Name
 		'
-		Me.Lbl_Name.Location = New System.Drawing.Point(5, 92)
+		Me.Lbl_Name.Location = New System.Drawing.Point(5, 132)
 		Me.Lbl_Name.Name = "Lbl_Name"
 		Me.Lbl_Name.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_Name.TabIndex = 18
@@ -914,7 +943,7 @@ Partial Class PrintReport
 		'
 		'Lbl_DeathWay
 		'
-		Me.Lbl_DeathWay.Location = New System.Drawing.Point(5, 112)
+		Me.Lbl_DeathWay.Location = New System.Drawing.Point(5, 152)
 		Me.Lbl_DeathWay.Name = "Lbl_DeathWay"
 		Me.Lbl_DeathWay.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_DeathWay.TabIndex = 17
@@ -922,7 +951,7 @@ Partial Class PrintReport
 		'
 		'Lbl_Time2
 		'
-		Me.Lbl_Time2.Location = New System.Drawing.Point(5, 131)
+		Me.Lbl_Time2.Location = New System.Drawing.Point(5, 171)
 		Me.Lbl_Time2.Name = "Lbl_Time2"
 		Me.Lbl_Time2.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_Time2.TabIndex = 16
@@ -930,7 +959,7 @@ Partial Class PrintReport
 		'
 		'Lbl_DeadName
 		'
-		Me.Lbl_DeadName.Location = New System.Drawing.Point(5, 151)
+		Me.Lbl_DeadName.Location = New System.Drawing.Point(5, 191)
 		Me.Lbl_DeadName.Name = "Lbl_DeadName"
 		Me.Lbl_DeadName.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_DeadName.TabIndex = 15
@@ -938,7 +967,7 @@ Partial Class PrintReport
 		'
 		'Lbl_Donation
 		'
-		Me.Lbl_Donation.Location = New System.Drawing.Point(5, 171)
+		Me.Lbl_Donation.Location = New System.Drawing.Point(5, 211)
 		Me.Lbl_Donation.Name = "Lbl_Donation"
 		Me.Lbl_Donation.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_Donation.TabIndex = 14
@@ -946,7 +975,7 @@ Partial Class PrintReport
 		'
 		'Lbl_Imibi
 		'
-		Me.Lbl_Imibi.Location = New System.Drawing.Point(5, 192)
+		Me.Lbl_Imibi.Location = New System.Drawing.Point(5, 232)
 		Me.Lbl_Imibi.Name = "Lbl_Imibi"
 		Me.Lbl_Imibi.Size = New System.Drawing.Size(81, 18)
 		Me.Lbl_Imibi.TabIndex = 13
@@ -957,42 +986,36 @@ Partial Class PrintReport
 		Me.panel1.Controls.Add(Me.Grb_Contents)
 		Me.panel1.Location = New System.Drawing.Point(4, 153)
 		Me.panel1.Name = "panel1"
-		Me.panel1.Size = New System.Drawing.Size(359, 510)
+		Me.panel1.Size = New System.Drawing.Size(359, 682)
 		Me.panel1.TabIndex = 3
 		'
-		'Pic_Main
+		'Pnl_Main
+		'
+		Me.Pnl_Main.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
+						Or System.Windows.Forms.AnchorStyles.Left)  _
+						Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+		Me.Pnl_Main.AutoScroll = true
+		Me.Pnl_Main.AutoScrollMargin = New System.Drawing.Size(5, 5)
+		Me.Pnl_Main.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+		Me.Pnl_Main.BackColor = System.Drawing.Color.White
+		Me.Pnl_Main.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+		Me.Pnl_Main.Controls.Add(Me.Pic_Main)
+		Me.Pnl_Main.Location = New System.Drawing.Point(369, 10)
+		Me.Pnl_Main.Name = "Pnl_Main"
+		Me.Pnl_Main.Size = New System.Drawing.Size(795, 825)
+		Me.Pnl_Main.TabIndex = 17
+		'
+		'Me.Pic_Main
 		'
 		Me.Pic_Main.BackColor = System.Drawing.Color.White
 		Me.Pic_Main.ErrorImage = Nothing
 		Me.Pic_Main.InitialImage = Nothing
-		Me.Pic_Main.Location = New System.Drawing.Point(3, 2)
-		Me.Pic_Main.Name = "Pic_Main"
-		Me.Pic_Main.Size = New System.Drawing.Size(768, 805)
+		Me.Pic_Main.Location = New System.Drawing.Point(0, 0)
+		Me.Pic_Main.Name = "Me.Pic_Main"
+		Me.Pic_Main.Size = New System.Drawing.Size(772, 805)
 		Me.Pic_Main.TabIndex = 16
 		Me.Pic_Main.TabStop = false
 		Me.Pic_Main.WaitOnLoad = true
-		'
-		'Pnl_Main
-		'
-		Me.Pnl_Main.AutoScroll = true
-		Me.Pnl_Main.AutoScrollMargin = New System.Drawing.Size(5, 5)
-		Me.Pnl_Main.BackColor = System.Drawing.Color.White
-		Me.Pnl_Main.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-		Me.Pnl_Main.Controls.Add(Me.Pic_Main)
-		Me.Pnl_Main.Location = New System.Drawing.Point(375, 10)
-		Me.Pnl_Main.Name = "Pnl_Main"
-		Me.Pnl_Main.Size = New System.Drawing.Size(790, 825)
-		Me.Pnl_Main.TabIndex = 17
-		'
-		'button2
-		'
-		Me.button2.Location = New System.Drawing.Point(260, 454)
-		Me.button2.Name = "button2"
-		Me.button2.Size = New System.Drawing.Size(75, 23)
-		Me.button2.TabIndex = 103
-		Me.button2.Text = "button2"
-		Me.button2.UseVisualStyleBackColor = true
-		AddHandler Me.button2.Click, AddressOf Me.Button2_Click
 		'
 		'PrintReport
 		'
@@ -1013,12 +1036,15 @@ Partial Class PrintReport
 		Me.Grb_Contents.ResumeLayout(false)
 		Me.Grb_Contents.PerformLayout
 		Me.panel1.ResumeLayout(false)
-		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).EndInit
 		Me.Pnl_Main.ResumeLayout(false)
+		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).EndInit
 		Me.ResumeLayout(false)
 	End Sub
-	Private button2 As System.Windows.Forms.Button
-	Private button1 As System.Windows.Forms.Button
+	Private Lbl_Namae As System.Windows.Forms.Label
+	Private LblNamae As System.Windows.Forms.Label
+	Friend Cmb_Namae As System.Windows.Forms.ComboBox
+	Friend Cmb_Hyodai As System.Windows.Forms.ComboBox
+	
 	Private Btn_Print As System.Windows.Forms.Button
 	Private Pnl_Main As System.Windows.Forms.Panel
 	Private Lbl_year As System.Windows.Forms.Label
@@ -1028,7 +1054,6 @@ Partial Class PrintReport
 	Friend Cmb_Year As System.Windows.Forms.ComboBox
 	Friend Cmb_Month As System.Windows.Forms.ComboBox
 	Friend Cmb_Day As System.Windows.Forms.ComboBox
-	Private Pic_Main As System.Windows.Forms.PictureBox
 	Friend Cmb_PointPS1 As System.Windows.Forms.ComboBox
 	Friend Cmb_PointHostName4 As System.Windows.Forms.ComboBox
 	Friend Cmb_PointHostName3 As System.Windows.Forms.ComboBox
@@ -1108,5 +1133,5 @@ Partial Class PrintReport
 	Private Grb_Contents As System.Windows.Forms.GroupBox
 	Private Grb_Common As System.Windows.Forms.GroupBox
 	Private panel1 As System.Windows.Forms.Panel
-	
+	Private Pic_Main As System.Windows.Forms.PictureBox
 End Class

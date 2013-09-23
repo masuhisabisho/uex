@@ -186,7 +186,7 @@ Public Class WordContainer
 			optWord("Txt_PS5") = .Txt_PS5.Text
 			optWord("Txt_PS6") = .Txt_PS6.Text
 			'一般
-			'optWord("Common_Point") = DefKeyWord("curFontSize")
+			optWord("Common_Point") = DefSet(1)
 			optWord("Cmb_Font") = .Cmb_Font.text									'END: SelectedValue, SelectedIndex = コレクションで設定した時 = Text
 			optWord("Cmb_Magnify") = .Cmb_Magnify.SelectedValue
 			optWord("Cmb_Thickness") = .Cmb_Thickness.SelectedValue

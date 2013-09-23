@@ -230,7 +230,6 @@ Public Class SelectSql
 ''' <param name="sizeID">用紙サイズID</param>
 ''' <param name="sytleID">文例ID</param>
 ''' <returns>ArrayListで描画用文字データを返す</returns>
-
 	Public Function GetSentence(sizeID As Integer, styleID As integer) As ArrayList 
 		Dim sqlText as String = ""
 		Dim resultTxt As New ArrayList

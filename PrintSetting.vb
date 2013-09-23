@@ -106,7 +106,7 @@ Public Partial Class PrintSetting
 			
 			For j As Integer = 0 To Wc.curWord(i).count -1 Step 1
 				e.Graphics.DrawString(Wc.curWord(i)(j)(0), _
-										New Font(Wc.optWord("Common_Font").ToString(), CInt(Wc.curWord(i)(j)(1))), _
+										New Font(Wc.optWord("Cmb_Font").ToString(), CInt(Wc.curWord(i)(j)(1))), _
 										New SolidBrush(Color.FromArgb(rgbRate, rgbRate, rgbRate)), _
 										CSng(Wc.curWord(i)(j)(3)) + addXPos, _
 										CSng(Wc.curWord(i)(j)(2)) + addYPos, _

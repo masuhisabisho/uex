@@ -27,7 +27,7 @@ Public Class ClearForm
                     Dim str As String = .Cmb_Font.Text
                     
                     '下記３つ現画面で廃止予定
-                    .Cmb_Magnify.SelectedValue = 1
+                    .Cmb_Magnify.SelectedValue = 50
                     .Cmb_Thickness.SelectedIndex = 	8					'TODO: デフォルトの読み込み
                     
                     '初期設定の値は下の通り

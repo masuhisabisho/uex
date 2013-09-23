@@ -9,19 +9,24 @@
 Public Class WordContainer
 	
 	Private Const colRate As Single = 255	
-	
 	Private curSetting As New Hashtable
 	Private defKeyWord As New Hashtable
-	Public curWord As New ArrayList()
-
-	Public optWord As New Hashtable()
+	Public curWord As New ArrayList
+	Public optWord As New Hashtable
 	
+	Private tempCurWord As New arraylist
+	
+'''■ColorRate	
+''' <summary>
+''' 
+''' </summary>
 	Public Readonly Property ColorRate() As Single
 		Get
 			Return colRate
 		End Get
 	End Property
-	'END:　この辺りまとまらないか？
+	
+'END:　この辺りまとまらないか？
 '''■DefSet (移行テスト中 -> OK 2013/8/3 mb）
 ''' <summary>現在表示している内容の初期値を保存・出力する（指定する。１項目のみ）</summary>
 ''' <param name="curWriteWay">selector = 0 縦( = 0)・横( = 0)書き</param>
@@ -56,6 +61,7 @@ Public Class WordContainer
 			    	Return defKeyWord("paperDirection").ToString()
 			End Select
 		End Get
+		
 		Set(ByVal val As String)
 			Select Case selector
 				Case 0
@@ -78,21 +84,15 @@ Public Class WordContainer
 			    	defKeyWord("paperDirection") = Val
 			End Select
 		End Set	
+	
 	End Property
 	
-'''■DefSetAll（移行テスト中 -> OK 2013/8/3 mb）
-''' <summary>現在表示している内容の初期値を保存・出力する（すべての項目）</summary>
-	Public Readonly Property DefSetAll() As Hashtable
-		Get
-			Return defKeyWord
-		End Get
-	End Property
-
 '''■CurrentSet
 ''' <summary>現在表示している内容の用紙ID・文例IDを保存出力する</summary>
 ''' <param name="curSize">selector = 0 現在の用紙ID</param>
 ''' <param name="curStyle">selector = 1 現在の文例ID</param>
 	Public Property CurrentSet(selector As Integer) As Integer
+		
 		Get
 			Select Case selector
 			    Case 0
@@ -101,6 +101,7 @@ Public Class WordContainer
 					Return CInt(curSetting("curStyle"))
 			End Select
 		End Get
+		
 		Set(ByVal val As Integer)
 			Select Case selector
 			    Case 0
@@ -109,9 +110,10 @@ Public Class WordContainer
 					curSetting("curStyle") = Val
 			End Select
 		End Set
+		
 	End Property
 
-''''■CurrentWord
+'''■CurrentWord
 ''' <summary>描画した文字情報を保管しておく
 ''' 1) 行
 ''' 2) 文字（それぞれの文字の情報を格納した配列を格納する配列）
@@ -123,12 +125,34 @@ Public Class WordContainer
 		curWord.Add(wordInLine)
 	End Sub
 	
-''''■OptionaWord
+'''■TempCurrentWord	
+''' <summary>拡大用のデータを一時的に保持する</summary>
+''' <param name="selector">Optional Integer 0 = 追加 1 = クリア</param>
+''' <returns>拡大用文字配列を格納、出力する</returns>
+	Public Property TempCurrentWord(Optional selector As integer = 0) As arraylist
+		
+		Get
+			return tempCurWord
+		End Get
+		
+		Set(ByVal wordInLine As arraylist)
+			Select Case selector
+				Case 0
+					tempCurWord.Add(wordInLine)
+				Case 1
+					tempCurWord.Clear()
+			End Select
+		End Set
+		
+	End Property
+	
+'''■OptionaWord
 ''' <summary>挿入文字を保管しておく</summary>
-''' <param name="DefKeyWord">Hashtable 文字</param>
+''' <param name="Pr">PrintReport.vb</param>
 ''' <returns>Void</returns>
-	Public sub OptionalWord(DefKeyWord As Hashtable, frm As PrintReport)
-		With frm
+'	Public sub OptionalWord(DefKeyWord As Hashtable, frm As PrintReport)
+	Public sub OptionalWord(Pr As PrintReport)
+		With Pr
 		'挿入等に使う
 		'Specific Part（HashTableに格納）
 			optWord("Cmb_SeasonWord")= .Cmb_SeasonWord.SelectedValue
@@ -143,9 +167,9 @@ Public Class WordContainer
 			optWord("Cmb_EndWord") = .Cmb_EndWord.SelectedValue
 			'日付
 			Dim SctSql As New SelectSql()
-			optWord("Cmb_Year") = SctSql.GetOneSql("SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = '" & frm.Cmb_Year.SelectedValue & "'")
-			optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = '" & frm.Cmb_Month.SelectedValue & "'")
-			optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = '" & frm.Cmb_Day.SelectedValue & "'")
+			optWord("Cmb_Year") = SctSql.GetOneSql("SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = '" & Pr.Cmb_Year.SelectedValue & "'")
+			optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = '" & Pr.Cmb_Month.SelectedValue & "'")
+			optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = '" & Pr.Cmb_Day.SelectedValue & "'")
 			SctSql = Nothing
 			'テキスト
 			optWord("Txt_Add1") = .Txt_Add1.Text
@@ -162,10 +186,11 @@ Public Class WordContainer
 			optWord("Txt_PS5") = .Txt_PS5.Text
 			optWord("Txt_PS6") = .Txt_PS6.Text
 			'一般
-			optWord("Common_Point") = DefKeyWord("curFontSize")
-			optWord("Common_Font") = .Cmb_Font.text									'END: SelectedValue, SelectedIndex = コレクションで設定した時, Textの違い
-			optWord("Thickness") = .Cmb_Thickness.SelectedValue
-			optWord("Thickness_Txt") = .Cmb_Thickness.Text							'印刷用
+			'optWord("Common_Point") = DefKeyWord("curFontSize")
+			optWord("Cmb_Font") = .Cmb_Font.text									'END: SelectedValue, SelectedIndex = コレクションで設定した時 = Text
+			optWord("Cmb_Magnify") = .Cmb_Magnify.SelectedValue
+			optWord("Cmb_Thickness") = .Cmb_Thickness.SelectedValue
+			optWord("Cmb_Thickness_Txt") = .Cmb_Thickness.Text							'印刷用
 			'フォントサイズ
 			optWord("Cmb_PointTitle") = .Cmb_PointTitle.Text
 			optWord("Cmb_PointName") = .Cmb_PointName.Text
@@ -190,3 +215,12 @@ Public Class WordContainer
 	End Sub
 	
 End Class
+
+''''■DefSetAll（移行テスト中 -> OK 2013/8/3 mb）
+'''' <summary>現在表示している内容の初期値を保存・出力する（すべての項目）</summary>
+'	Public Readonly Property DefSetAll() As Hashtable
+'		Get
+'			Return defKeyWord
+'		End Get
+'	End Property
+

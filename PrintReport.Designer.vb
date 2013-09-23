@@ -51,6 +51,7 @@ Partial Class PrintReport
 		Me.Cmb_Font = New System.Windows.Forms.ComboBox()
 		Me.Cmb_Size = New System.Windows.Forms.ComboBox()
 		Me.Grb_Contents = New System.Windows.Forms.GroupBox()
+		Me.button1 = New System.Windows.Forms.Button()
 		Me.Btn_Dtp = New System.Windows.Forms.Button()
 		Me.Lbl_Month = New System.Windows.Forms.Label()
 		Me.Lbl_Day = New System.Windows.Forms.Label()
@@ -123,6 +124,7 @@ Partial Class PrintReport
 		Me.panel1 = New System.Windows.Forms.Panel()
 		Me.Pic_Main = New System.Windows.Forms.PictureBox()
 		Me.Pnl_Main = New System.Windows.Forms.Panel()
+		Me.button2 = New System.Windows.Forms.Button()
 		Me.Grb_Common.SuspendLayout
 		Me.Grb_Contents.SuspendLayout
 		Me.panel1.SuspendLayout
@@ -279,6 +281,8 @@ Partial Class PrintReport
 		'
 		'Grb_Contents
 		'
+		Me.Grb_Contents.Controls.Add(Me.button2)
+		Me.Grb_Contents.Controls.Add(Me.button1)
 		Me.Grb_Contents.Controls.Add(Me.Btn_Dtp)
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Month)
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Day)
@@ -354,6 +358,16 @@ Partial Class PrintReport
 		Me.Grb_Contents.TabIndex = 2
 		Me.Grb_Contents.TabStop = false
 		Me.Grb_Contents.Text = "内容設定"
+		'
+		'button1
+		'
+		Me.button1.Location = New System.Drawing.Point(262, 415)
+		Me.button1.Name = "button1"
+		Me.button1.Size = New System.Drawing.Size(75, 23)
+		Me.button1.TabIndex = 102
+		Me.button1.Text = "button1"
+		Me.button1.UseVisualStyleBackColor = true
+		AddHandler Me.button1.Click, AddressOf Me.Button1_Click
 		'
 		'Btn_Dtp
 		'
@@ -970,6 +984,16 @@ Partial Class PrintReport
 		Me.Pnl_Main.Size = New System.Drawing.Size(790, 825)
 		Me.Pnl_Main.TabIndex = 17
 		'
+		'button2
+		'
+		Me.button2.Location = New System.Drawing.Point(260, 454)
+		Me.button2.Name = "button2"
+		Me.button2.Size = New System.Drawing.Size(75, 23)
+		Me.button2.TabIndex = 103
+		Me.button2.Text = "button2"
+		Me.button2.UseVisualStyleBackColor = true
+		AddHandler Me.button2.Click, AddressOf Me.Button2_Click
+		'
 		'PrintReport
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 12!)
@@ -993,6 +1017,8 @@ Partial Class PrintReport
 		Me.Pnl_Main.ResumeLayout(false)
 		Me.ResumeLayout(false)
 	End Sub
+	Private button2 As System.Windows.Forms.Button
+	Private button1 As System.Windows.Forms.Button
 	Private Btn_Print As System.Windows.Forms.Button
 	Private Pnl_Main As System.Windows.Forms.Panel
 	Private Lbl_year As System.Windows.Forms.Label

@@ -51,8 +51,9 @@ Partial Class PrintReport
 		Me.Cmb_Font = New System.Windows.Forms.ComboBox()
 		Me.Cmb_Size = New System.Windows.Forms.ComboBox()
 		Me.Grb_Contents = New System.Windows.Forms.GroupBox()
+		Me.Cmb_PointNamae = New System.Windows.Forms.ComboBox()
+		Me.Cmb_PointHyodai = New System.Windows.Forms.ComboBox()
 		Me.Cmb_Hyodai = New System.Windows.Forms.ComboBox()
-		Me.Cmb_Namae = New System.Windows.Forms.ComboBox()
 		Me.LblNamae = New System.Windows.Forms.Label()
 		Me.Lbl_Namae = New System.Windows.Forms.Label()
 		Me.Btn_Dtp = New System.Windows.Forms.Button()
@@ -124,12 +125,13 @@ Partial Class PrintReport
 		Me.Lbl_DeadName = New System.Windows.Forms.Label()
 		Me.Lbl_Donation = New System.Windows.Forms.Label()
 		Me.Lbl_Imibi = New System.Windows.Forms.Label()
-		Me.panel1 = New System.Windows.Forms.Panel()
+		Me.Pnl_Menu01 = New System.Windows.Forms.Panel()
 		Me.Pnl_Main = New System.Windows.Forms.Panel()
+		Me.Txt_Namae = New System.Windows.Forms.TextBox()
 		Me.Pic_Main = New System.Windows.Forms.PictureBox()
 		Me.Grb_Common.SuspendLayout
 		Me.Grb_Contents.SuspendLayout
-		Me.panel1.SuspendLayout
+		Me.Pnl_Menu01.SuspendLayout
 		Me.Pnl_Main.SuspendLayout
 		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).BeginInit
 		Me.SuspendLayout
@@ -283,8 +285,10 @@ Partial Class PrintReport
 		'
 		'Grb_Contents
 		'
+		Me.Grb_Contents.Controls.Add(Me.Txt_Namae)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointNamae)
+		Me.Grb_Contents.Controls.Add(Me.Cmb_PointHyodai)
 		Me.Grb_Contents.Controls.Add(Me.Cmb_Hyodai)
-		Me.Grb_Contents.Controls.Add(Me.Cmb_Namae)
 		Me.Grb_Contents.Controls.Add(Me.LblNamae)
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Namae)
 		Me.Grb_Contents.Controls.Add(Me.Btn_Dtp)
@@ -358,10 +362,30 @@ Partial Class PrintReport
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Imibi)
 		Me.Grb_Contents.Location = New System.Drawing.Point(6, 3)
 		Me.Grb_Contents.Name = "Grb_Contents"
-		Me.Grb_Contents.Size = New System.Drawing.Size(348, 661)
+		Me.Grb_Contents.Size = New System.Drawing.Size(348, 676)
 		Me.Grb_Contents.TabIndex = 2
 		Me.Grb_Contents.TabStop = false
 		Me.Grb_Contents.Text = "内容設定"
+		'
+		'Cmb_PointNamae
+		'
+		Me.Cmb_PointNamae.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.Cmb_PointNamae.FormattingEnabled = true
+		Me.Cmb_PointNamae.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
+		Me.Cmb_PointNamae.Location = New System.Drawing.Point(260, 50)
+		Me.Cmb_PointNamae.Name = "Cmb_PointNamae"
+		Me.Cmb_PointNamae.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointNamae.TabIndex = 107
+		'
+		'Cmb_PointHyodai
+		'
+		Me.Cmb_PointHyodai.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.Cmb_PointHyodai.FormattingEnabled = true
+		Me.Cmb_PointHyodai.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
+		Me.Cmb_PointHyodai.Location = New System.Drawing.Point(260, 31)
+		Me.Cmb_PointHyodai.Name = "Cmb_PointHyodai"
+		Me.Cmb_PointHyodai.Size = New System.Drawing.Size(55, 20)
+		Me.Cmb_PointHyodai.TabIndex = 106
 		'
 		'Cmb_Hyodai
 		'
@@ -371,15 +395,6 @@ Partial Class PrintReport
 		Me.Cmb_Hyodai.Name = "Cmb_Hyodai"
 		Me.Cmb_Hyodai.Size = New System.Drawing.Size(180, 20)
 		Me.Cmb_Hyodai.TabIndex = 105
-		'
-		'Cmb_Namae
-		'
-		Me.Cmb_Namae.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.Cmb_Namae.FormattingEnabled = true
-		Me.Cmb_Namae.Location = New System.Drawing.Point(75, 50)
-		Me.Cmb_Namae.Name = "Cmb_Namae"
-		Me.Cmb_Namae.Size = New System.Drawing.Size(180, 20)
-		Me.Cmb_Namae.TabIndex = 104
 		'
 		'LblNamae
 		'
@@ -981,13 +996,13 @@ Partial Class PrintReport
 		Me.Lbl_Imibi.TabIndex = 13
 		Me.Lbl_Imibi.Text = "忌日："
 		'
-		'panel1
+		'Pnl_Menu01
 		'
-		Me.panel1.Controls.Add(Me.Grb_Contents)
-		Me.panel1.Location = New System.Drawing.Point(4, 153)
-		Me.panel1.Name = "panel1"
-		Me.panel1.Size = New System.Drawing.Size(359, 682)
-		Me.panel1.TabIndex = 3
+		Me.Pnl_Menu01.Controls.Add(Me.Grb_Contents)
+		Me.Pnl_Menu01.Location = New System.Drawing.Point(4, 153)
+		Me.Pnl_Menu01.Name = "Pnl_Menu01"
+		Me.Pnl_Menu01.Size = New System.Drawing.Size(359, 682)
+		Me.Pnl_Menu01.TabIndex = 3
 		'
 		'Pnl_Main
 		'
@@ -1017,13 +1032,20 @@ Partial Class PrintReport
 		Me.Pic_Main.TabStop = false
 		Me.Pic_Main.WaitOnLoad = true
 		'
+		'Txt_Namae
+		'
+		Me.Txt_Namae.Location = New System.Drawing.Point(75, 50)
+		Me.Txt_Namae.Name = "Txt_Namae"
+		Me.Txt_Namae.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_Namae.TabIndex = 108
+		'
 		'PrintReport
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 12!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.ClientSize = New System.Drawing.Size(1176, 847)
 		Me.Controls.Add(Me.Pnl_Main)
-		Me.Controls.Add(Me.panel1)
+		Me.Controls.Add(Me.Pnl_Menu01)
 		Me.Controls.Add(Me.Grb_Common)
 		Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
 		Me.Name = "PrintReport"
@@ -1035,14 +1057,16 @@ Partial Class PrintReport
 		Me.Grb_Common.PerformLayout
 		Me.Grb_Contents.ResumeLayout(false)
 		Me.Grb_Contents.PerformLayout
-		Me.panel1.ResumeLayout(false)
+		Me.Pnl_Menu01.ResumeLayout(false)
 		Me.Pnl_Main.ResumeLayout(false)
 		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).EndInit
 		Me.ResumeLayout(false)
 	End Sub
+	Friend Txt_Namae As System.Windows.Forms.TextBox
+	Friend Cmb_PointHyodai As System.Windows.Forms.ComboBox
+	Friend Cmb_PointNamae As System.Windows.Forms.ComboBox
 	Private Lbl_Namae As System.Windows.Forms.Label
 	Private LblNamae As System.Windows.Forms.Label
-	Friend Cmb_Namae As System.Windows.Forms.ComboBox
 	Friend Cmb_Hyodai As System.Windows.Forms.ComboBox
 	
 	Private Btn_Print As System.Windows.Forms.Button
@@ -1132,6 +1156,6 @@ Partial Class PrintReport
 	Friend Cmb_Font As System.Windows.Forms.ComboBox
 	Private Grb_Contents As System.Windows.Forms.GroupBox
 	Private Grb_Common As System.Windows.Forms.GroupBox
-	Private panel1 As System.Windows.Forms.Panel
+	Private Pnl_Menu01 As System.Windows.Forms.Panel
 	Private Pic_Main As System.Windows.Forms.PictureBox
 End Class

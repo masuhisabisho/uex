@@ -8,43 +8,52 @@
 '
 Public Class ControlHandler
 	
+	Friend Sub ChangeCmb_Size(selector As Boolean, Pr As PrintReport)
+		Select Case selector
+			Case True
+				AddHandler Pr.Cmb_Size.SelectedIndexChanged,AddressOf Pr.Cmb_SizeIndexChanged
+			Case False
+				RemoveHandler Pr.Cmb_Size.TextChanged,AddressOf Pr.Cmb_SizeIndexChanged
+		End Select
+	End Sub
+	
 ''''■AllTCHandleShifter
 ''' <summary>TextChangedのハンドラーを有効無効にする</summary>
 ''' <param name="selector">Boolean Add = True  or Remove = False</param>
 ''' <param name="fmr">Form PrintReport.vb</param>
 ''' <returns>Void</returns>
-	Friend Sub AllTCHandleShifter(selector As Boolean, Frm As PrintReport)
+	Friend Sub AllTCHandleShifter(selector As Boolean, Pr As PrintReport)
 		Select Case selector	
 			Case True
-				AddHandler Frm.Txt_Name.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_DeadName.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_Add1.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_Add2.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_HostName1.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_HostName2.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_HostName3.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_HostName4.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_PS1.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_PS2.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_PS3.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_PS4.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_PS5.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				AddHandler Frm.Txt_PS6.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_Name.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_DeadName.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_Add1.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_Add2.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_HostName1.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_HostName2.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_HostName3.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_HostName4.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_PS1.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_PS2.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_PS3.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_PS4.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_PS5.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				AddHandler Pr.Txt_PS6.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
 		Case False	
-				RemoveHandler Frm.Txt_Name.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_DeadName.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_Add1.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_Add2.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_HostName1.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_HostName2.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_HostName3.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_HostName4.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_PS1.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_PS2.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_PS3.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_PS4.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_PS5.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
-				RemoveHandler Frm.Txt_PS6.TextChanged,AddressOf Frm.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_Name.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_DeadName.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_Add1.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_Add2.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_HostName1.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_HostName2.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_HostName3.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_HostName4.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_PS1.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_PS2.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_PS3.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_PS4.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_PS5.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
+				RemoveHandler Pr.Txt_PS6.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
 				
 		End Select
 	End Sub
@@ -53,73 +62,73 @@ Public Class ControlHandler
 ''' <summary>SelectIndexChangedのハンドラーを有効・無効にする</summary>
 '''<param name="selector">Boolean Add = True, Remove = False</param>
 ''' <returns>Void</returns>
-	Friend Sub AllSICHandleShifter(selector As Boolean, Frm As PrintReport)
+	Friend Sub AllSICHandleShifter(selector As Boolean, Pr As PrintReport)
 		Select Case selector
 			Case True
-				AddHandler Frm.Cmb_SeasonWord.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_Time1.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_Title.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_DeathWay.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_Time2.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_Donation.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_Imibi.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_EndWord.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_Year.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_Month.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_Day.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_HostType.SelectedIndexChanged,	AddressOf Frm.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_SeasonWord.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_Time1.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_Title.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_DeathWay.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_Time2.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_Donation.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_Imibi.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_EndWord.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_Year.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_Month.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_Day.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_HostType.SelectedIndexChanged,	AddressOf Pr.Cmb_SelectedIndexChanged
 
-				AddHandler Frm.Cmb_Font.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_PointTitle.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_PointName.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				AddHandler Frm.Cmb_PointDeadName.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				AddHandler Frm.Cmb_PointImibi.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				AddHandler Frm.Cmb_PointEndWord.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged
-				AddHandler Frm.Cmb_PointCeremonyDate.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				AddHandler Frm.Cmb_PointAdd1.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				AddHandler Frm.Cmb_PointHostType.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				AddHandler Frm.Cmb_PointHostName1.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				AddHandler Frm.Cmb_PointHostName2.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				AddHandler Frm.Cmb_PointHostName3.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				AddHandler Frm.Cmb_PointHostName4.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				AddHandler Frm.Cmb_PointPS1.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
+				AddHandler Pr.Cmb_Font.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_PointTitle.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_PointName.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				AddHandler Pr.Cmb_PointDeadName.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				AddHandler Pr.Cmb_PointImibi.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				AddHandler Pr.Cmb_PointEndWord.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_PointCeremonyDate.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				AddHandler Pr.Cmb_PointAdd1.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				AddHandler Pr.Cmb_PointHostType.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				AddHandler Pr.Cmb_PointHostName1.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				AddHandler Pr.Cmb_PointHostName2.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				AddHandler Pr.Cmb_PointHostName3.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				AddHandler Pr.Cmb_PointHostName4.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				AddHandler Pr.Cmb_PointPS1.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
 				
-				AddHandler Frm.Cmb_Thickness.SelectedIndexChanged, AddressOf Frm.Cmb_Thickness_SelectedIndexChanged
+				AddHandler Pr.Cmb_Thickness.SelectedIndexChanged, AddressOf Pr.Cmb_Thickness_SelectedIndexChanged
 				
-				AddHandler Frm.Cmb_Magnify.SelectedIndexChanged, AddressOf Frm.Cmb_Magnify_SelectedIndexChanged
+				AddHandler Pr.Cmb_Magnify.SelectedIndexChanged, AddressOf Pr.Cmb_Magnify_SelectedIndexChanged
 
 			Case False
-				RemoveHandler Frm.Cmb_SeasonWord.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				RemoveHandler Frm.Cmb_Time1.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				RemoveHandler Frm.Cmb_Title.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				RemoveHandler Frm.Cmb_DeathWay.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				RemoveHandler Frm.Cmb_Time2.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				RemoveHandler Frm.Cmb_Donation.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				RemoveHandler Frm.Cmb_Imibi.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				RemoveHandler Frm.Cmb_EndWord.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				RemoveHandler Frm.Cmb_Year.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				RemoveHandler Frm.Cmb_Month.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				RemoveHandler Frm.Cmb_Day.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				RemoveHandler Frm.Cmb_HostType.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_SeasonWord.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_Time1.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_Title.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_DeathWay.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_Time2.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_Donation.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_Imibi.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_EndWord.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_Year.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_Month.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_Day.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_HostType.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
 
-				RemoveHandler Frm.Cmb_Font.SelectedIndexChanged,AddressOf Frm.Cmb_SelectedIndexChanged
-				RemoveHandler Frm.Cmb_PointTitle.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointName.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointDeadName.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointImibi.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointEndWord.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointCeremonyDate.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointAdd1.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointHostType.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointHostName1.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointHostName2.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointHostName3.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointHostName4.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged 
-				RemoveHandler Frm.Cmb_PointPS1.SelectedIndexChanged, AddressOf Frm.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_Font.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_PointTitle.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointName.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointDeadName.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointImibi.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointEndWord.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointCeremonyDate.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointAdd1.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointHostType.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointHostName1.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointHostName2.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointHostName3.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointHostName4.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointPS1.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged
 				
-				RemoveHandler Frm.Cmb_Thickness.SelectedIndexChanged, AddressOf Frm.Cmb_Thickness_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_Thickness.SelectedIndexChanged, AddressOf Pr.Cmb_Thickness_SelectedIndexChanged
 				
-				RemoveHandler Frm.Cmb_Magnify.SelectedIndexChanged, AddressOf Frm.Cmb_Magnify_SelectedIndexChanged
+				RemoveHandler Pr.Cmb_Magnify.SelectedIndexChanged, AddressOf Pr.Cmb_Magnify_SelectedIndexChanged
 
 		End select
 	End Sub

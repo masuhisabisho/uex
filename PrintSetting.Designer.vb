@@ -103,6 +103,7 @@ Partial Class PrintSetting
 		'Nud_Ypos
 		'
 		Me.Nud_Ypos.DecimalPlaces = 1
+		Me.Nud_Ypos.Increment = New Decimal(New Integer() {1, 0, 0, 65536})
 		Me.Nud_Ypos.Location = New System.Drawing.Point(300, 103)
 		Me.Nud_Ypos.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
 		Me.Nud_Ypos.Minimum = New Decimal(New Integer() {20, 0, 0, -2147483648})
@@ -113,6 +114,7 @@ Partial Class PrintSetting
 		'Nud_Xpos
 		'
 		Me.Nud_Xpos.DecimalPlaces = 1
+		Me.Nud_Xpos.Increment = New Decimal(New Integer() {1, 0, 0, 65536})
 		Me.Nud_Xpos.Location = New System.Drawing.Point(140, 103)
 		Me.Nud_Xpos.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
 		Me.Nud_Xpos.Minimum = New Decimal(New Integer() {20, 0, 0, -2147483648})

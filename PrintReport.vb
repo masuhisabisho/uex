@@ -58,13 +58,14 @@ Public Partial Class PrintReport
 		Dim Ch As New ControlHandler()
 		Ch.AllTCHandleShifter(False, Me)
 		Ch.AllSICHandleShifter(False, Me)
+		Ch.ChangeCmb_Size(False, Me)
 
 '		'初期設定の読み込み保存
 		Dim SctSql As New SelectSql
 		Call SctSql.SetDefaultVal(0, Wc)
 		
 		'TODO: フォントを追加できるようにする
-		'フォント設定
+		'フォント（コンボ）設定
 		Dim fontList As New ArrayList
 		Dim installedFont As New System.Drawing.Text.InstalledFontCollection
 		Dim fontFamilies As FontFamily() = installedFont.Families
@@ -85,9 +86,9 @@ Public Partial Class PrintReport
 		
 		'コンボの値を設定
 		'TODO: それぞれの用紙に対するコンボの設定をどうするか？
-		Dim SetCmb As New SetCombo
-		Call SetCmb.SetComboContent(Me)
-		SetCmb = Nothing
+		Dim Scmb As New SetCombo
+		Call Scmb.SetComboContent(Me)
+		Scmb = Nothing
 		
 		'フォームをクリア
 		Dim ClrFrm As New ClearForm
@@ -95,41 +96,37 @@ Public Partial Class PrintReport
 		ClrFrm = Nothing
 		
 		'コンボ内の値を保存
-'		Wc.OptionalWord(Wc.DefSetAll, Me)											out 2013/9/22
-		Wc.OptionalWord(Me)
-
+		Wc.SetOptionalWord(0, Me)
 		
 		'現在の用紙サイズID
-		Wc.CurrentSet(0) = 0														'初めて開いた時は一番最初の分にする、設定できるようにするか？
-		Wc.currentset(1) = 0
+		Wc.CurrentSet("curSize") = 0														'初めて開いた時は一番最初の分にする、設定できるようにするか？
+		Wc.CurrentSet("curStyle") = 0
 		
 		'DBより文章データの取り込み
 		Dim mainTxt As New ArrayList
 		mainTxt = SctSql.GetSentence(0, 0)
-		
 		SctSql = Nothing
 
 		'描画用Bitmapを準備
 		With Me.Pic_Main
 			.Size = New Size(CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))				'END: New sizeはわかった、Bitmapの関連性
-			'.Image = New Bitmap(1800, 668)											'END: 可変にする　
-			.Image = New Bitmap(CInt(Wc.defset(2)), CInt(Wc.defset(4)))	
+			.Image = New Bitmap(CInt(Wc.defset(2)), CInt(Wc.defset(4)))				'END: 可変にする　
 		End With
 		
 		'DB内の文章を単語に分割する
 		Dim Cmn As New Common(Wc)
-		
 		Dim storageWord As New ArrayList
-		'storageWord = Cmn.WordPreparer(mainTxt, Wc.DefSet(1))
 		storageWord = Cmn.WordPreparer(mainTxt)
 		'文字を描画していく
 		Call Cmn.WordArranger(mainTxt, storageWord, Me)
+		Cmn = Nothing
 		
 		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
 		
 		'ハンドラーを付与する
 		Ch.AllTCHandleShifter(True, Me)
 		Ch.AllSICHandleShifter(True, Me)
+		Ch.ChangeCmb_Size(True, Me)
 		
 		Ch = Nothing
 	End Sub
@@ -138,8 +135,56 @@ Public Partial Class PrintReport
 
 #Region "イベント"
 
+	Friend Sub Cmb_SizeIndexChanged(sender As Object, e As EventArgs)
+		'TODO:用紙が変わった時のイベント
+		Dim ClrFrm As New ClearForm
+		Dim SctSql As New SelectSql
+		Dim Cmn As New Common(Wc)
+		Dim Ch As New ControlHandler
+		
+		Select Case Me.Cmb_Size.SelectedValue.ToString()
+			Case "0"
+				Exit sub
+			Case "1"
+				Ch.AllTCHandleShifter(False, Me)
+				Ch.AllSICHandleShifter(False, Me)
+				'初期値の読み込み
+				Call SctSql.SetDefaultVal(1, Wc)
+				'フォームをクリア
+				Call ClrFrm.ClearForm(1, Me)
+				'現在用紙・文例を保存
+				Wc.CurrentSet("curSize") = CInt(Me.Cmb_Size.SelectedValue)
+				Wc.CurrentSet("curStyle") = CInt(Me.Cmb_Style.SelectedValue)
+				'センテンスの読み込み
+				Dim mainTxt As New ArrayList
+				mainTxt = SctSql.GetSentence(CInt(Me.Cmb_Size.SelectedValue), 0)
+				'PicBoxの設定
+				Call ClearPicture(Me.Pic_Main, CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
+				'DB内の文章を単語に分割する
+				Dim storageWord As New ArrayList
+				storageWord = Cmn.WordPreparer(mainTxt)
+				'文字を描画していく
+				Call Cmn.WordArranger(mainTxt, storageWord, Me)
+				'濃度設定
+				Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
+				'ハンドラーを再度付与する
+				Ch.AllTCHandleShifter(True, Me)
+				Ch.AllSICHandleShifter(True, Me)
+			
+			Case Else
+				'ダミー
+				Exit Sub
+		End Select
+		
+		Clrfrm = Nothing
+		SctSql = Nothing
+		
+	End Sub
+	
+#Region "SelectIndexChanged"
+
 	'コンボ変更
-	Public Sub Cmb_SelectedIndexChanged(sender As Object, e As EventArgs)
+	Friend Sub Cmb_SelectedIndexChanged(sender As Object, e As EventArgs)
 		'END: 画像サイズの可変設定
 		'END: 文字情報新しく置き換える
 		'END: 文字の配置を決める
@@ -154,10 +199,10 @@ Public Partial Class PrintReport
 		
 		Dim SctSql As New SelectSql()
 		Dim sqlText As String = " SELECT tbl_txt_ystyle FROM tbl_txt "
-		             sqlText &= " WHERE tbl_txt_sizeid = " & Wc.CurrentSet(0) & " AND tbl_txt_styleid = " & Wc.CurrentSet(1) & " AND tbl_txt_order = "
+		             sqlText &= " WHERE tbl_txt_sizeid = " & Wc.CurrentSet("curSize") & " AND tbl_txt_styleid = " & Wc.CurrentSet("curStyle") & " AND tbl_txt_order = "
 		Dim yStyle As Integer
 		
-'		With Me.Pic_Main
+'		With Me.Me.Pic_Main
 '			If Not (.Image Is Nothing) Then												'END: 関数に置き換え
 '				.Image.Dispose()
 '				.Image = Nothing
@@ -321,8 +366,11 @@ Public Partial Class PrintReport
 		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
 	End Sub
 	
+# End Region
+	
+#Region "TextChanged"
 	'文字変更
-	Public Sub TextBoxChange_TextChanged(sender As Object, e As EventArgs)
+	Friend Sub TextBoxChange_TextChanged(sender As Object, e As EventArgs)
 		'END: Implement Txt_HostName1_TextChanged
 		'END: 最初の描画データを取り込み -> WordContainer.vb内に取り込み
 		'END: 保存してある文字データを変更して再度描画
@@ -330,7 +378,7 @@ Public Partial Class PrintReport
 		'TODO: 用紙サイズ・文例の変更
 		'END: 取り込みデータを元に変更画像を作成
 '		'END: ピクチャーの破棄・再設定
-'		With Me.Pic_Main								'END: 関数に置き換え
+'		With Me.Me.Pic_Main								'END: 関数に置き換え
 '			If Not (.Image Is Nothing) Then
 '				.Image.Dispose()
 '				.Image = Nothing
@@ -346,7 +394,7 @@ Public Partial Class PrintReport
 		
 		Dim SctSql As New SelectSql
 		Dim sqlText As String = " SELECT tbl_txt_ystyle FROM tbl_txt "
-		             sqlText &= " WHERE tbl_txt_sizeid = " & Wc.CurrentSet(0) & " AND tbl_txt_styleid = " & Wc.CurrentSet(1) & " AND tbl_txt_order = "
+		             sqlText &= " WHERE tbl_txt_sizeid = " & Wc.CurrentSet("curSize") & " AND tbl_txt_styleid = " & Wc.CurrentSet("curStyle") & " AND tbl_txt_order = "
 		Dim yStyle As Integer
 
 		Select Case True
@@ -451,10 +499,12 @@ Public Partial Class PrintReport
 		
 	End Sub
 	
+#End Region
 
+#Region "Other Events"
 	'印刷フォームを開く
 	Private Sub Btn_Print_Click(sender As Object, e As EventArgs)
-		'Dim Ps As New PrintSetting(Me.Me.Pic_Main.Image, Wc.DefSet(7), Wc.DefSet(8))
+		'Dim Ps As New PrintSetting(Me.Me.Me.Pic_Main.Image, Wc.DefSet(7), Wc.DefSet(8))
 		Dim Ps As New PrintSetting(Wc)
 		Ps.ShowDialog()
 		Ps.Dispose()
@@ -483,19 +533,20 @@ Public Partial Class PrintReport
 	'画像拡大
 	Public Sub Cmb_Magnify_SelectedIndexChanged(sender As Object, e As EventArgs)
 		'TODO: PictureBox　と BitMapのサイズを変える、描画位置も考える
-'		Call ClearPicture(Me.Me.Pic_Main, Cint(Wc.DefSet(2)), Cint(Wc.DefSet(4)))														'END: 変数に置き換える
+'		Call ClearPicture(Me.Me.Me.Pic_Main, Cint(Wc.DefSet(2)), Cint(Wc.DefSet(4)))														'END: 変数に置き換える
 '		Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 '		
 '		If CDbl(Me.Cmb_Thickness.SelectedValue) <> 0 Then
-'			Call ControlThickness(Me.Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))		'END: 変数に置き換える
+'			Call ControlThickness(Me.Me.Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))		'END: 変数に置き換える
 '		End If
 
 		Call ControlViewSize(Wc.curWord)
 
-		'Me.Me.Pic_Main.Image = Magnify(Me.Me.Pic_Main.Image, CDbl(Me.Cmb_Magnify.SelectedValue))
+		'Me.Me.Me.Pic_Main.Image = Magnify(Me.Me.Me.Pic_Main.Image, CDbl(Me.Cmb_Magnify.SelectedValue))
 		
 	End Sub
-
+#End Region
+	
 #End Region
 	
 #Region "文字描画"
@@ -691,22 +742,22 @@ Public Partial Class PrintReport
 			wordDetail(3) = storageWord(i)(3)
 			wordInLine.Add(wordDetail)
 			
-#If Debug Then
-				System.Diagnostics.Debug.Write(wordDetail(0))
-				System.Diagnostics.Debug.Write("<>")
-				System.Diagnostics.Debug.Write(wordDetail(1))
-				System.Diagnostics.Debug.Write("<>")
-				System.Diagnostics.Debug.Write(wordDetail(2))
-				System.Diagnostics.Debug.Write("<>")
-				System.Diagnostics.Debug.Write(wordDetail(3))
-				System.Diagnostics.Debug.Write(",")
-				System.Diagnostics.Debug.WriteLine(vbCrLf)
-#End if	
+'#If Debug Then
+'				System.Diagnostics.Debug.Write(wordDetail(0))
+'				System.Diagnostics.Debug.Write("<>")
+'				System.Diagnostics.Debug.Write(wordDetail(1))
+'				System.Diagnostics.Debug.Write("<>")
+'				System.Diagnostics.Debug.Write(wordDetail(2))
+'				System.Diagnostics.Debug.Write("<>")
+'				System.Diagnostics.Debug.Write(wordDetail(3))
+'				System.Diagnostics.Debug.Write(",")
+'				System.Diagnostics.Debug.WriteLine(vbCrLf)
+'#End if	
 			
 			wordDetail = {"", "", "", ""}
 			
 		Next i
-		Wc.CurrentWord(wordInLine)
+		Wc.curWord = wordInLine
 
 	End Sub
 	

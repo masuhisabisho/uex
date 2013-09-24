@@ -200,7 +200,7 @@ Public Class Common
 								wordDetail(2) = startYPos
 								wordDetail(3) = startXPos
 								wordInLine.Add(wordDetail)
-								Wc.CurrentWord(wordInLine)
+								Wc.curWord = wordInLine
 								wordDetail = {"", "", "", ""}
 								Continue For
 							End If
@@ -260,7 +260,7 @@ Public Class Common
 								wordDetail(2) = startYPos
 								wordDetail(3) = startXPos
 								wordInLine.Add(wordDetail)
-								Wc.CurrentWord(wordInLine)
+								Wc.curWord = wordInLine
 								wordDetail = {"", "", "", ""}
 								Continue For
 							End If 'END: 2013/7/9　下配置修正
@@ -353,7 +353,7 @@ Public Class Common
 								wordDetail(2) = startYPos
 								wordDetail(3) = startXPos
 								wordInLine.Add(wordDetail)
-								Wc.CurrentWord(wordInLine)
+								Wc.curWord = wordInLine
 								wordDetail = {"", "", "", ""}
 								Continue For
 							End If
@@ -393,7 +393,7 @@ Public Class Common
 	'再描画行の文字データを取得
 		Dim mainTxt As New Hashtable()
 		Dim SctSql As New SelectSql()
-		mainTxt = SctSql.GetTbl_TxtRow(Wc.CurrentSet(0), Wc.CurrentSet(1), lineNo)
+		mainTxt = SctSql.GetTbl_TxtRow(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"), lineNo)
 		SctSql = Nothing
 		
 		'フォントサイズが全て同じかどうか確認する
@@ -708,7 +708,7 @@ End sub
 		'END: y軸位置がイレギュラーでないか？
 		Dim SctSql As New SelectSql
 		Dim txtRow As New Hashtable 
-		txtRow = SctSql.GetTbl_TxtRow(Wc.CurrentSet(0), Wc.CurrentSet(1), lineNo)
+		txtRow = SctSql.GetTbl_TxtRow(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"), lineNo)
 				
 		Select Case changeType								'★★全体変更
 			Case 0
@@ -925,7 +925,7 @@ End sub
 							tempCurWord = Nothing
 					End If
 					Dim txtRow2 As New Hashtable 
-					txtRow2 = SctSql.GetTbl_TxtRow(Wc.CurrentSet(0), Wc.CurrentSet(1), i)
+					txtRow2 = SctSql.GetTbl_TxtRow(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"), i)
 					If i = lineNo Then
 						startNewXPos =lastWordXPos - (maxWordSize(1) + Csng(Wc.DefSet(5))) + CheckNewXPos(CSng(txtRow2("tbl_txt_newxpos")))
 					Else
@@ -987,7 +987,7 @@ End sub
 		Dim MaxWidth() As Single
 		Dim SctSql As New SelectSql
 		Dim txtRow As New ArrayList 
-		txtRow = SctSql.GetSentence(Wc.CurrentSet(0), Wc.CurrentSet(1))
+		txtRow = SctSql.GetSentence(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"))
 		SctSql = Nothing
 		
 		For i As Integer = lineNo + 1 To storageWord.Count - 1 Step 1

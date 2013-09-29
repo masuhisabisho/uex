@@ -466,7 +466,6 @@ Partial Class PrintReport
 		Me.Cmb_Month.Name = "Cmb_Month"
 		Me.Cmb_Month.Size = New System.Drawing.Size(145, 20)
 		Me.Cmb_Month.TabIndex = 96
-		AddHandler Me.Cmb_Month.SelectedIndexChanged, AddressOf Me.Cmb_Month_SelectedIndexChanged
 		'
 		'Cmb_Year
 		'

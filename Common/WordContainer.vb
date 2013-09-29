@@ -6,24 +6,57 @@
 ' 
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
+Imports System.Diagnostics.Debug
 Public Class WordContainer
 	
 	Private Const colRate As Single = 255
+	Private Const defFontIndex As Integer = 18
+	Private Const defThickness As Integer = 8
 	
 	Private curSetting As New Hashtable
 	Private defKeyWord As New Hashtable
 	private optionalWord As New Hashtable
 	Private tempCurWord As New arraylist
 	Private currentWord As New ArrayList
+	Private mainSentence As New ArrayList
+	Private envList As New Hashtable
 	
 '''■ColorRate	
-''' <summary>
-''' 
-''' </summary>
+''' <summary></summary>
 	Public Readonly Property ColorRate() As Single
 		Get
 			Return colRate
 		End Get
+	End Property
+	
+'''■DefaultFontIndex
+''' <summary></summary>
+	Public ReadOnly Property DefaultFontIndex() As Integer
+		Get
+			Return defFontIndex
+		End Get
+	End Property
+	
+'''■DefaultThickness
+''' <summary></summary>
+	Public ReadOnly Property DefaultThickness() As Integer
+		Get
+			Return defThickness
+		End Get
+	End Property
+	
+'''■mainTxt
+''' <summary></summary>
+	Public Property mainTxt() As ArrayList
+		Get
+			Return mainSentence
+		End get
+		
+		Set(value As ArrayList)
+			For i As Integer = 0 To value.Count -1 Step 1
+				mainSentence.Add(value(i))
+			Next i
+		End Set
 	End Property
 	
 'END:　この辺りまとまらないか？
@@ -59,29 +92,31 @@ Public Class WordContainer
 			    	Return defKeyWord("paperSize").ToString()
 			    Case 8
 			    	Return defKeyWord("paperDirection").ToString()
+			    Case Else
+			    	Return Nothing
 			End Select
 		End Get
 		
-		Set(ByVal val As String)
+		Set(ByVal value As String)
 			Select Case selector
 				Case 0
-					defKeyWord("curWriteWay") = Val
+					defKeyWord("curWriteWay") = value
 				Case 1
-					defKeyWord("curFontSize") = Val	
+					defKeyWord("curFontSize") = value	
 			    Case 2
-			    	defKeyWord("curTopXPos") = Val
+			    	defKeyWord("curTopXPos") = value
 			    Case 3
-			    	defKeyWord("curTopYPos") = Val
+			    	defKeyWord("curTopYPos") = value
 			    Case 4
-			    	defKeyWord("curBottomYPos") = Val
+			    	defKeyWord("curBottomYPos") = value
 			    Case 5
-			    	defKeyWord("curBasicPitch") = Val
+			    	defKeyWord("curBasicPitch") = value
 			    Case 6
-			    	defKeyWord("curWordPitch") = Val
+			    	defKeyWord("curWordPitch") = value
 			    Case 7
-			    	defKeyWord("paperSize") = Val
+			    	defKeyWord("paperSize") = value
 			    Case 8
-			    	defKeyWord("paperDirection") = Val
+			    	defKeyWord("paperDirection") = value
 			End Select
 		End Set	
 	
@@ -96,12 +131,12 @@ Public Class WordContainer
 			Return CInt(curSetting(hashKey))
 		End Get
 		
-		Set(ByVal val As Integer)
-			curSetting(hashKey) = Val
+		Set(ByVal value As Integer)
+			curSetting(hashKey) = value
 		End Set
 		
 	End Property
-
+	
 '''■curWord
 ''' <summary>描画した文字情報を保管しておく
 ''' 1) 行
@@ -115,8 +150,8 @@ Public Class WordContainer
 			Return currentWord
 		End Get
 		
-		Set(ByVal wordInLine As ArrayList)
-			currentWord.Add(wordInLine)
+		Set(ByVal value As ArrayList)
+			currentWord.Add(value)
 		End Set
 	End Property
 	
@@ -129,10 +164,10 @@ Public Class WordContainer
 			return tempCurWord
 		End Get
 		
-		Set(ByVal wordInLine As arraylist)
+		Set(ByVal value As arraylist)
 			Select Case selector
 				Case 0
-					tempCurWord.Add(wordInLine)
+					tempCurWord.Add(value)
 				Case 1
 					tempCurWord.Clear()
 			End Select
@@ -153,82 +188,95 @@ Public Class WordContainer
 		End Set
 	End Property
 	
-	Public sub SetOptionalWord(selector As Integer, Pr As PrintReport)
-		Select Case selector
-			Case 0
-				Dim SctSql As New SelectSql
-				With Pr
-					'挿入等に使う
-					'Specific Part（HashTableに格納）
-					optWord("Cmb_Hyodai") = .Cmb_Hyodai.SelectedValue.ToString()		'add 1 lines 2013/9/24
-					optWord("Txt_Namae") = .Txt_Namae.Text
-					optWord("Cmb_SeasonWord")= .Cmb_SeasonWord.SelectedValue.ToString()
-					optWord("Cmb_Time1") = .Cmb_Time1.SelectedValue.ToString()
-					optWord("Cmb_Title") = .Cmb_Title.SelectedValue.ToString()
-					optWord("Txt_Name") = .Txt_Name.Text
-					optWord("Cmb_DeathWay") = .Cmb_DeathWay.SelectedValue.ToString()
-					optWord("Cmb_Time2") = .Cmb_Time2.SelectedValue.ToString()
-					optWord("Txt_DeadName") = .Txt_DeadName.Text
-					optWord("Cmb_Donation") = .Cmb_Donation.SelectedValue.ToString()
-					optWord("Cmb_Imibi") = .Cmb_Imibi.SelectedValue.ToString()
-					optWord("Cmb_EndWord") = .Cmb_EndWord.SelectedValue.ToString()
-					'日付
-					optWord("Cmb_Year") = SctSql.GetOneSql("SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = '" & .Cmb_Year.SelectedValue.ToString() & "'")
-					optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = '" & .Cmb_Month.SelectedValue.ToString() & "'")
-					optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = '" & .Cmb_Day.SelectedValue.ToString() & "'")
-					SctSql = Nothing
-'					'テキスト
-					optWord("Txt_Add1") = .Txt_Add1.Text
-					optWord("Txt_Add2") = .Txt_Add2.Text
-					optWord("Cmb_HostType") = .Cmb_HostType.SelectedValue.ToString()
-					optWord("Txt_HostName1") = .Txt_HostName1.Text
-					optWord("Txt_HostName2") = .Txt_HostName2.Text
-					optWord("Txt_HostName3") = .Txt_HostName3.Text
-					optWord("Txt_HostName4") = .Txt_HostName4.Text
-					optWord("Txt_PS1") = .Txt_PS1.Text
-					optWord("Txt_PS2") = .Txt_PS2.Text
-					optWord("Txt_PS3") = .Txt_PS3.Text
-					optWord("Txt_PS4") = .Txt_PS4.Text
-					optWord("Txt_PS5") = .Txt_PS5.Text
-					optWord("Txt_PS6") = .Txt_PS6.Text
-					'一般
-					optWord("Common_Point") = DefSet(1)
-					optWord("Cmb_Font") = .Cmb_Font.text										'END: SelectedValue, SelectedIndex = コレクションで設定した時 = Text
-					optWord("Cmb_Magnify") = .Cmb_Magnify.SelectedValue.ToString()
-					optWord("Cmb_Thickness") = .Cmb_Thickness.SelectedValue.ToString()
-					optWord("Cmb_Thickness_Txt") = .Cmb_Thickness.Text							'印刷用
-					'フォントサイズ
-					optWord("Cmb_PointHyodai") = .Cmb_PointHyodai.Text							'add 2 lines 2013/9/24 
-					optWord("Cmb_PointNamae") = .Cmb_PointNamae.Text
-					
-					optWord("Cmb_PointTitle") = .Cmb_PointTitle.Text
-					optWord("Cmb_PointName") = .Cmb_PointName.Text
-					optWord("Cmb_PointDeadName") = .Cmb_PointDeadName.Text
-					optWord("Cmb_PointImibi") = .Cmb_PointImibi.Text
-					optWord("Cmb_PointEndWord") = .Cmb_PointEndWord.Text
-					optWord("Cmb_PointCeremonyDate") = .Cmb_PointCeremonyDate.Text
-					optWord("Cmb_PointAdd1") = .Cmb_PointAdd1.Text
-					optWord("Cmb_PointHostType") = .Cmb_PointHostType.Text
-					optWord("Cmb_PointHostName1") = .Cmb_PointHostName1.Text
-					optWord("Cmb_PointHostName2") = .Cmb_PointHostName2.Text	
-					optWord("Cmb_PointHostName3") = .Cmb_PointHostName3.Text
-					optWord("Cmb_PointHostName4") = .Cmb_PointHostName4.Text
-					optWord("Cmb_PointPS1") = .Cmb_PointPS1.Text
-					
-					'2013/8/20 出力内容再度確認
-					'For Each item As DictionaryEntry In optWord
-					'	System.Diagnostics.Debug.WriteLine(item.Key & "  = " & item.Value)
-					'Next
-					
-				End With
-			Case Else
-				Exit Sub 'ダミー
-		End Select
-	End Sub
+'''■EnviromentList
+''' <summary></summary>
+Public Property EnviromentList(hashkey As String) As String
+	Get
+		Return envList(hashkey).ToString()
+	End Get
+	
+	Set(value As String)
+		envList(hashKey) = value
+	End Set
+End Property
 	
 End Class
 
 # Region "Comment Out"
+
+'	Public sub SetOptionalWord(selector As Integer, Pr As PrintReport)
+'		Select Case selector
+'			Case 0
+'				Dim SctSql As New SelectSql
+'				With Pr
+'					'挿入等に使う
+'					'Specific Part（HashTableに格納）
+'					optWord("Cmb_Hyodai") = .Cmb_Hyodai.SelectedValue.ToString()		'add 1 lines 2013/9/24
+'					optWord("Txt_Namae") = .Txt_Namae.Text
+'					optWord("Cmb_SeasonWord")= .Cmb_SeasonWord.SelectedValue.ToString()
+'					optWord("Cmb_Time1") = .Cmb_Time1.SelectedValue.ToString()
+'					optWord("Cmb_Title") = .Cmb_Title.SelectedValue.ToString()
+'					optWord("Txt_Name") = .Txt_Name.Text
+'					optWord("Cmb_DeathWay") = .Cmb_DeathWay.SelectedValue.ToString()
+'					optWord("Cmb_Time2") = .Cmb_Time2.SelectedValue.ToString()
+'					optWord("Txt_DeadName") = .Txt_DeadName.Text
+'					optWord("Cmb_Donation") = .Cmb_Donation.SelectedValue.ToString()
+'					optWord("Cmb_Imibi") = .Cmb_Imibi.SelectedValue.ToString()
+'					optWord("Cmb_EndWord") = .Cmb_EndWord.SelectedValue.ToString()
+'					'日付
+'					optWord("Cmb_Year") = SctSql.GetOneSql("SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = '" & .Cmb_Year.SelectedValue.ToString() & "'")
+'					optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = '" & .Cmb_Month.SelectedValue.ToString() & "'")
+'					optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = '" & .Cmb_Day.SelectedValue.ToString() & "'")
+'					SctSql = Nothing
+''					'テキスト
+'					optWord("Txt_Add1") = .Txt_Add1.Text
+'					optWord("Txt_Add2") = .Txt_Add2.Text
+'					optWord("Cmb_HostType") = .Cmb_HostType.SelectedValue.ToString()
+'					optWord("Txt_HostName1") = .Txt_HostName1.Text
+'					optWord("Txt_HostName2") = .Txt_HostName2.Text
+'					optWord("Txt_HostName3") = .Txt_HostName3.Text
+'					optWord("Txt_HostName4") = .Txt_HostName4.Text
+'					optWord("Txt_PS1") = .Txt_PS1.Text
+'					optWord("Txt_PS2") = .Txt_PS2.Text
+'					optWord("Txt_PS3") = .Txt_PS3.Text
+'					optWord("Txt_PS4") = .Txt_PS4.Text
+'					optWord("Txt_PS5") = .Txt_PS5.Text
+'					optWord("Txt_PS6") = .Txt_PS6.Text
+'					'一般
+'					optWord("Common_Point") = DefSet(1)
+'					optWord("Cmb_Font") = .Cmb_Font.text										'END: SelectedValue, SelectedIndex = コレクションで設定した時 = Text
+'					optWord("Cmb_Magnify") = .Cmb_Magnify.SelectedValue.ToString()
+'					optWord("Cmb_Thickness") = .Cmb_Thickness.SelectedValue.ToString()
+'					optWord("Cmb_Thickness_Txt") = .Cmb_Thickness.Text							'印刷用
+'					'フォントサイズ
+'					optWord("Cmb_PointHyodai") = .Cmb_PointHyodai.Text							'add 2 lines 2013/9/24 
+'					optWord("Cmb_PointNamae") = .Cmb_PointNamae.Text
+'					
+'					optWord("Cmb_PointTitle") = .Cmb_PointTitle.Text
+'					optWord("Cmb_PointName") = .Cmb_PointName.Text
+'					optWord("Cmb_PointDeadName") = .Cmb_PointDeadName.Text
+'					optWord("Cmb_PointImibi") = .Cmb_PointImibi.Text
+'					optWord("Cmb_PointEndWord") = .Cmb_PointEndWord.Text
+'					optWord("Cmb_PointCeremonyDate") = .Cmb_PointCeremonyDate.Text
+'					optWord("Cmb_PointAdd1") = .Cmb_PointAdd1.Text
+'					optWord("Cmb_PointHostType") = .Cmb_PointHostType.Text
+'					optWord("Cmb_PointHostName1") = .Cmb_PointHostName1.Text
+'					optWord("Cmb_PointHostName2") = .Cmb_PointHostName2.Text	
+'					optWord("Cmb_PointHostName3") = .Cmb_PointHostName3.Text
+'					optWord("Cmb_PointHostName4") = .Cmb_PointHostName4.Text
+'					optWord("Cmb_PointPS1") = .Cmb_PointPS1.Text
+'					
+'					'2013/8/20 出力内容再度確認
+'					'For Each item As DictionaryEntry In optWord
+'					'	System.Diagnostics.Debug.WriteLine(item.Key & "  = " & item.Value)
+'					'Next
+'					
+'				End With
+'			Case Else
+'				Exit Sub 'ダミー
+'		End Select
+'	End Sub
+	
 
 'Public curWord As New ArrayList
 

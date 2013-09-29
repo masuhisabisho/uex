@@ -16,9 +16,10 @@ Public Partial Class HostRegister
 		'
 	End Sub
 	
+
+	
 	Sub HostRegisterLoad(sender As Object, e As EventArgs)
 		
 	End Sub
-	
 
 End Class

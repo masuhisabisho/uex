@@ -27,6 +27,7 @@ Public Partial Class MainForm
 	
 	Sub Btn_HostRegister_Click(sender As Object, e As EventArgs)
 		'TODO
+
 		
 	End Sub
 	

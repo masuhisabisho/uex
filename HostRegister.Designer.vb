@@ -55,40 +55,40 @@ Partial Class HostRegister
 		Me.Lbl_Comment = New System.Windows.Forms.Label()
 		Me.Dtp_DeathDate = New System.Windows.Forms.DateTimePicker()
 		Me.tableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-		Me.label1 = New System.Windows.Forms.Label()
-		Me.label2 = New System.Windows.Forms.Label()
-		Me.label3 = New System.Windows.Forms.Label()
-		Me.label4 = New System.Windows.Forms.Label()
-		Me.label5 = New System.Windows.Forms.Label()
-		Me.label6 = New System.Windows.Forms.Label()
-		Me.label7 = New System.Windows.Forms.Label()
-		Me.label8 = New System.Windows.Forms.Label()
-		Me.label9 = New System.Windows.Forms.Label()
-		Me.label10 = New System.Windows.Forms.Label()
-		Me.label11 = New System.Windows.Forms.Label()
-		Me.label12 = New System.Windows.Forms.Label()
-		Me.label13 = New System.Windows.Forms.Label()
-		Me.label14 = New System.Windows.Forms.Label()
-		Me.label15 = New System.Windows.Forms.Label()
-		Me.label16 = New System.Windows.Forms.Label()
-		Me.label17 = New System.Windows.Forms.Label()
-		Me.label18 = New System.Windows.Forms.Label()
-		Me.label19 = New System.Windows.Forms.Label()
-		Me.label20 = New System.Windows.Forms.Label()
-		Me.label21 = New System.Windows.Forms.Label()
-		Me.label22 = New System.Windows.Forms.Label()
-		Me.label23 = New System.Windows.Forms.Label()
-		Me.label24 = New System.Windows.Forms.Label()
-		Me.label25 = New System.Windows.Forms.Label()
-		Me.label26 = New System.Windows.Forms.Label()
-		Me.label27 = New System.Windows.Forms.Label()
-		Me.label28 = New System.Windows.Forms.Label()
-		Me.label29 = New System.Windows.Forms.Label()
-		Me.label30 = New System.Windows.Forms.Label()
-		Me.label31 = New System.Windows.Forms.Label()
-		Me.label32 = New System.Windows.Forms.Label()
-		Me.label33 = New System.Windows.Forms.Label()
 		Me.label34 = New System.Windows.Forms.Label()
+		Me.label33 = New System.Windows.Forms.Label()
+		Me.label32 = New System.Windows.Forms.Label()
+		Me.label31 = New System.Windows.Forms.Label()
+		Me.label30 = New System.Windows.Forms.Label()
+		Me.label29 = New System.Windows.Forms.Label()
+		Me.label28 = New System.Windows.Forms.Label()
+		Me.label27 = New System.Windows.Forms.Label()
+		Me.label26 = New System.Windows.Forms.Label()
+		Me.label25 = New System.Windows.Forms.Label()
+		Me.label24 = New System.Windows.Forms.Label()
+		Me.label23 = New System.Windows.Forms.Label()
+		Me.label22 = New System.Windows.Forms.Label()
+		Me.label21 = New System.Windows.Forms.Label()
+		Me.label20 = New System.Windows.Forms.Label()
+		Me.label19 = New System.Windows.Forms.Label()
+		Me.label18 = New System.Windows.Forms.Label()
+		Me.label17 = New System.Windows.Forms.Label()
+		Me.label16 = New System.Windows.Forms.Label()
+		Me.label15 = New System.Windows.Forms.Label()
+		Me.label14 = New System.Windows.Forms.Label()
+		Me.label2 = New System.Windows.Forms.Label()
+		Me.label13 = New System.Windows.Forms.Label()
+		Me.label12 = New System.Windows.Forms.Label()
+		Me.label11 = New System.Windows.Forms.Label()
+		Me.label10 = New System.Windows.Forms.Label()
+		Me.label9 = New System.Windows.Forms.Label()
+		Me.label8 = New System.Windows.Forms.Label()
+		Me.label7 = New System.Windows.Forms.Label()
+		Me.label6 = New System.Windows.Forms.Label()
+		Me.label5 = New System.Windows.Forms.Label()
+		Me.label4 = New System.Windows.Forms.Label()
+		Me.label1 = New System.Windows.Forms.Label()
+		Me.label3 = New System.Windows.Forms.Label()
 		Me.Btn_Print = New System.Windows.Forms.Button()
 		Me.Btn_Register = New System.Windows.Forms.Button()
 		Me.Btn_Close = New System.Windows.Forms.Button()
@@ -308,261 +308,13 @@ Partial Class HostRegister
 		Me.tableLayoutPanel1.Size = New System.Drawing.Size(217, 340)
 		Me.tableLayoutPanel1.TabIndex = 21
 		'
-		'label1
+		'label34
 		'
-		Me.label1.Location = New System.Drawing.Point(3, 0)
-		Me.label1.Name = "label1"
-		Me.label1.Size = New System.Drawing.Size(100, 20)
-		Me.label1.TabIndex = 0
-		Me.label1.Text = "法事名"
-		'
-		'label2
-		'
-		Me.label2.Location = New System.Drawing.Point(109, 0)
-		Me.label2.Name = "label2"
-		Me.label2.Size = New System.Drawing.Size(94, 20)
-		Me.label2.TabIndex = 1
-		Me.label2.Text = "日時"
-		'
-		'label3
-		'
-		Me.label3.Location = New System.Drawing.Point(3, 20)
-		Me.label3.Name = "label3"
-		Me.label3.Size = New System.Drawing.Size(94, 20)
-		Me.label3.TabIndex = 2
-		Me.label3.Text = "初七日"
-		'
-		'label4
-		'
-		Me.label4.Location = New System.Drawing.Point(109, 20)
-		Me.label4.Name = "label4"
-		Me.label4.Size = New System.Drawing.Size(94, 20)
-		Me.label4.TabIndex = 3
-		Me.label4.Text = "label4"
-		'
-		'label5
-		'
-		Me.label5.Location = New System.Drawing.Point(3, 40)
-		Me.label5.Name = "label5"
-		Me.label5.Size = New System.Drawing.Size(94, 20)
-		Me.label5.TabIndex = 4
-		Me.label5.Text = "二七日"
-		'
-		'label6
-		'
-		Me.label6.Location = New System.Drawing.Point(109, 40)
-		Me.label6.Name = "label6"
-		Me.label6.Size = New System.Drawing.Size(94, 20)
-		Me.label6.TabIndex = 5
-		Me.label6.Text = "label6"
-		'
-		'label7
-		'
-		Me.label7.Location = New System.Drawing.Point(3, 60)
-		Me.label7.Name = "label7"
-		Me.label7.Size = New System.Drawing.Size(94, 20)
-		Me.label7.TabIndex = 6
-		Me.label7.Text = "三七日"
-		'
-		'label8
-		'
-		Me.label8.Location = New System.Drawing.Point(109, 60)
-		Me.label8.Name = "label8"
-		Me.label8.Size = New System.Drawing.Size(94, 20)
-		Me.label8.TabIndex = 7
-		Me.label8.Text = "label8"
-		'
-		'label9
-		'
-		Me.label9.Location = New System.Drawing.Point(3, 80)
-		Me.label9.Name = "label9"
-		Me.label9.Size = New System.Drawing.Size(94, 20)
-		Me.label9.TabIndex = 8
-		Me.label9.Text = "四七日"
-		'
-		'label10
-		'
-		Me.label10.Location = New System.Drawing.Point(109, 80)
-		Me.label10.Name = "label10"
-		Me.label10.Size = New System.Drawing.Size(94, 20)
-		Me.label10.TabIndex = 9
-		Me.label10.Text = "label10"
-		'
-		'label11
-		'
-		Me.label11.Location = New System.Drawing.Point(3, 100)
-		Me.label11.Name = "label11"
-		Me.label11.Size = New System.Drawing.Size(94, 20)
-		Me.label11.TabIndex = 10
-		Me.label11.Text = "五七日"
-		'
-		'label12
-		'
-		Me.label12.Location = New System.Drawing.Point(109, 100)
-		Me.label12.Name = "label12"
-		Me.label12.Size = New System.Drawing.Size(94, 20)
-		Me.label12.TabIndex = 11
-		Me.label12.Text = "label12"
-		'
-		'label13
-		'
-		Me.label13.Location = New System.Drawing.Point(3, 120)
-		Me.label13.Name = "label13"
-		Me.label13.Size = New System.Drawing.Size(94, 20)
-		Me.label13.TabIndex = 12
-		Me.label13.Text = "六七日"
-		'
-		'label14
-		'
-		Me.label14.Location = New System.Drawing.Point(109, 120)
-		Me.label14.Name = "label14"
-		Me.label14.Size = New System.Drawing.Size(94, 20)
-		Me.label14.TabIndex = 13
-		Me.label14.Text = "label14"
-		'
-		'label15
-		'
-		Me.label15.Location = New System.Drawing.Point(3, 140)
-		Me.label15.Name = "label15"
-		Me.label15.Size = New System.Drawing.Size(94, 20)
-		Me.label15.TabIndex = 14
-		Me.label15.Text = "七七日"
-		'
-		'label16
-		'
-		Me.label16.Location = New System.Drawing.Point(109, 140)
-		Me.label16.Name = "label16"
-		Me.label16.Size = New System.Drawing.Size(94, 20)
-		Me.label16.TabIndex = 15
-		Me.label16.Text = "label16"
-		'
-		'label17
-		'
-		Me.label17.Location = New System.Drawing.Point(3, 160)
-		Me.label17.Name = "label17"
-		Me.label17.Size = New System.Drawing.Size(94, 20)
-		Me.label17.TabIndex = 16
-		Me.label17.Text = "祥月命日"
-		'
-		'label18
-		'
-		Me.label18.Location = New System.Drawing.Point(109, 160)
-		Me.label18.Name = "label18"
-		Me.label18.Size = New System.Drawing.Size(94, 20)
-		Me.label18.TabIndex = 17
-		Me.label18.Text = "label18"
-		'
-		'label19
-		'
-		Me.label19.Location = New System.Drawing.Point(3, 180)
-		Me.label19.Name = "label19"
-		Me.label19.Size = New System.Drawing.Size(94, 20)
-		Me.label19.TabIndex = 18
-		Me.label19.Text = "初盆"
-		'
-		'label20
-		'
-		Me.label20.Location = New System.Drawing.Point(109, 180)
-		Me.label20.Name = "label20"
-		Me.label20.Size = New System.Drawing.Size(94, 20)
-		Me.label20.TabIndex = 19
-		Me.label20.Text = "label20"
-		'
-		'label21
-		'
-		Me.label21.Location = New System.Drawing.Point(3, 200)
-		Me.label21.Name = "label21"
-		Me.label21.Size = New System.Drawing.Size(94, 20)
-		Me.label21.TabIndex = 20
-		Me.label21.Text = "百か日"
-		'
-		'label22
-		'
-		Me.label22.Location = New System.Drawing.Point(109, 200)
-		Me.label22.Name = "label22"
-		Me.label22.Size = New System.Drawing.Size(94, 20)
-		Me.label22.TabIndex = 21
-		Me.label22.Text = "label22"
-		'
-		'label23
-		'
-		Me.label23.Location = New System.Drawing.Point(3, 220)
-		Me.label23.Name = "label23"
-		Me.label23.Size = New System.Drawing.Size(94, 20)
-		Me.label23.TabIndex = 22
-		Me.label23.Text = "一周忌"
-		'
-		'label24
-		'
-		Me.label24.Location = New System.Drawing.Point(109, 220)
-		Me.label24.Name = "label24"
-		Me.label24.Size = New System.Drawing.Size(94, 20)
-		Me.label24.TabIndex = 23
-		Me.label24.Text = "label24"
-		'
-		'label25
-		'
-		Me.label25.Location = New System.Drawing.Point(3, 240)
-		Me.label25.Name = "label25"
-		Me.label25.Size = New System.Drawing.Size(94, 20)
-		Me.label25.TabIndex = 24
-		Me.label25.Text = "三回忌"
-		'
-		'label26
-		'
-		Me.label26.Location = New System.Drawing.Point(109, 240)
-		Me.label26.Name = "label26"
-		Me.label26.Size = New System.Drawing.Size(94, 20)
-		Me.label26.TabIndex = 25
-		Me.label26.Text = "label26"
-		'
-		'label27
-		'
-		Me.label27.Location = New System.Drawing.Point(3, 260)
-		Me.label27.Name = "label27"
-		Me.label27.Size = New System.Drawing.Size(94, 20)
-		Me.label27.TabIndex = 26
-		Me.label27.Text = "七回忌"
-		'
-		'label28
-		'
-		Me.label28.Location = New System.Drawing.Point(109, 260)
-		Me.label28.Name = "label28"
-		Me.label28.Size = New System.Drawing.Size(94, 20)
-		Me.label28.TabIndex = 27
-		Me.label28.Text = "label28"
-		'
-		'label29
-		'
-		Me.label29.Location = New System.Drawing.Point(3, 280)
-		Me.label29.Name = "label29"
-		Me.label29.Size = New System.Drawing.Size(94, 20)
-		Me.label29.TabIndex = 28
-		Me.label29.Text = "十三回忌"
-		'
-		'label30
-		'
-		Me.label30.Location = New System.Drawing.Point(109, 280)
-		Me.label30.Name = "label30"
-		Me.label30.Size = New System.Drawing.Size(94, 20)
-		Me.label30.TabIndex = 29
-		Me.label30.Text = "label30"
-		'
-		'label31
-		'
-		Me.label31.Location = New System.Drawing.Point(3, 300)
-		Me.label31.Name = "label31"
-		Me.label31.Size = New System.Drawing.Size(94, 20)
-		Me.label31.TabIndex = 30
-		Me.label31.Text = "十七回忌"
-		'
-		'label32
-		'
-		Me.label32.Location = New System.Drawing.Point(109, 300)
-		Me.label32.Name = "label32"
-		Me.label32.Size = New System.Drawing.Size(94, 20)
-		Me.label32.TabIndex = 31
-		Me.label32.Text = "label32"
+		Me.label34.Location = New System.Drawing.Point(109, 320)
+		Me.label34.Name = "label34"
+		Me.label34.Size = New System.Drawing.Size(94, 20)
+		Me.label34.TabIndex = 33
+		Me.label34.Text = "label34"
 		'
 		'label33
 		'
@@ -572,13 +324,261 @@ Partial Class HostRegister
 		Me.label33.TabIndex = 32
 		Me.label33.Text = "二十三回忌"
 		'
-		'label34
+		'label32
 		'
-		Me.label34.Location = New System.Drawing.Point(109, 320)
-		Me.label34.Name = "label34"
-		Me.label34.Size = New System.Drawing.Size(94, 20)
-		Me.label34.TabIndex = 33
-		Me.label34.Text = "label34"
+		Me.label32.Location = New System.Drawing.Point(109, 300)
+		Me.label32.Name = "label32"
+		Me.label32.Size = New System.Drawing.Size(94, 20)
+		Me.label32.TabIndex = 31
+		Me.label32.Text = "label32"
+		'
+		'label31
+		'
+		Me.label31.Location = New System.Drawing.Point(3, 300)
+		Me.label31.Name = "label31"
+		Me.label31.Size = New System.Drawing.Size(94, 20)
+		Me.label31.TabIndex = 30
+		Me.label31.Text = "十七回忌"
+		'
+		'label30
+		'
+		Me.label30.Location = New System.Drawing.Point(109, 280)
+		Me.label30.Name = "label30"
+		Me.label30.Size = New System.Drawing.Size(94, 20)
+		Me.label30.TabIndex = 29
+		Me.label30.Text = "label30"
+		'
+		'label29
+		'
+		Me.label29.Location = New System.Drawing.Point(3, 280)
+		Me.label29.Name = "label29"
+		Me.label29.Size = New System.Drawing.Size(94, 20)
+		Me.label29.TabIndex = 28
+		Me.label29.Text = "十三回忌"
+		'
+		'label28
+		'
+		Me.label28.Location = New System.Drawing.Point(109, 260)
+		Me.label28.Name = "label28"
+		Me.label28.Size = New System.Drawing.Size(94, 20)
+		Me.label28.TabIndex = 27
+		Me.label28.Text = "label28"
+		'
+		'label27
+		'
+		Me.label27.Location = New System.Drawing.Point(3, 260)
+		Me.label27.Name = "label27"
+		Me.label27.Size = New System.Drawing.Size(94, 20)
+		Me.label27.TabIndex = 26
+		Me.label27.Text = "七回忌"
+		'
+		'label26
+		'
+		Me.label26.Location = New System.Drawing.Point(109, 240)
+		Me.label26.Name = "label26"
+		Me.label26.Size = New System.Drawing.Size(94, 20)
+		Me.label26.TabIndex = 25
+		Me.label26.Text = "label26"
+		'
+		'label25
+		'
+		Me.label25.Location = New System.Drawing.Point(3, 240)
+		Me.label25.Name = "label25"
+		Me.label25.Size = New System.Drawing.Size(94, 20)
+		Me.label25.TabIndex = 24
+		Me.label25.Text = "三回忌"
+		'
+		'label24
+		'
+		Me.label24.Location = New System.Drawing.Point(109, 220)
+		Me.label24.Name = "label24"
+		Me.label24.Size = New System.Drawing.Size(94, 20)
+		Me.label24.TabIndex = 23
+		Me.label24.Text = "label24"
+		'
+		'label23
+		'
+		Me.label23.Location = New System.Drawing.Point(3, 220)
+		Me.label23.Name = "label23"
+		Me.label23.Size = New System.Drawing.Size(94, 20)
+		Me.label23.TabIndex = 22
+		Me.label23.Text = "一周忌"
+		'
+		'label22
+		'
+		Me.label22.Location = New System.Drawing.Point(109, 200)
+		Me.label22.Name = "label22"
+		Me.label22.Size = New System.Drawing.Size(94, 20)
+		Me.label22.TabIndex = 21
+		Me.label22.Text = "label22"
+		'
+		'label21
+		'
+		Me.label21.Location = New System.Drawing.Point(3, 200)
+		Me.label21.Name = "label21"
+		Me.label21.Size = New System.Drawing.Size(94, 20)
+		Me.label21.TabIndex = 20
+		Me.label21.Text = "百か日"
+		'
+		'label20
+		'
+		Me.label20.Location = New System.Drawing.Point(109, 180)
+		Me.label20.Name = "label20"
+		Me.label20.Size = New System.Drawing.Size(94, 20)
+		Me.label20.TabIndex = 19
+		Me.label20.Text = "label20"
+		'
+		'label19
+		'
+		Me.label19.Location = New System.Drawing.Point(3, 180)
+		Me.label19.Name = "label19"
+		Me.label19.Size = New System.Drawing.Size(94, 20)
+		Me.label19.TabIndex = 18
+		Me.label19.Text = "初盆"
+		'
+		'label18
+		'
+		Me.label18.Location = New System.Drawing.Point(109, 160)
+		Me.label18.Name = "label18"
+		Me.label18.Size = New System.Drawing.Size(94, 20)
+		Me.label18.TabIndex = 17
+		Me.label18.Text = "label18"
+		'
+		'label17
+		'
+		Me.label17.Location = New System.Drawing.Point(3, 160)
+		Me.label17.Name = "label17"
+		Me.label17.Size = New System.Drawing.Size(94, 20)
+		Me.label17.TabIndex = 16
+		Me.label17.Text = "祥月命日"
+		'
+		'label16
+		'
+		Me.label16.Location = New System.Drawing.Point(109, 140)
+		Me.label16.Name = "label16"
+		Me.label16.Size = New System.Drawing.Size(94, 20)
+		Me.label16.TabIndex = 15
+		Me.label16.Text = "label16"
+		'
+		'label15
+		'
+		Me.label15.Location = New System.Drawing.Point(3, 140)
+		Me.label15.Name = "label15"
+		Me.label15.Size = New System.Drawing.Size(94, 20)
+		Me.label15.TabIndex = 14
+		Me.label15.Text = "七七日"
+		'
+		'label14
+		'
+		Me.label14.Location = New System.Drawing.Point(109, 120)
+		Me.label14.Name = "label14"
+		Me.label14.Size = New System.Drawing.Size(94, 20)
+		Me.label14.TabIndex = 13
+		Me.label14.Text = "label14"
+		'
+		'label2
+		'
+		Me.label2.Location = New System.Drawing.Point(109, 0)
+		Me.label2.Name = "label2"
+		Me.label2.Size = New System.Drawing.Size(94, 20)
+		Me.label2.TabIndex = 1
+		Me.label2.Text = "日時"
+		'
+		'label13
+		'
+		Me.label13.Location = New System.Drawing.Point(3, 120)
+		Me.label13.Name = "label13"
+		Me.label13.Size = New System.Drawing.Size(94, 20)
+		Me.label13.TabIndex = 12
+		Me.label13.Text = "六七日"
+		'
+		'label12
+		'
+		Me.label12.Location = New System.Drawing.Point(109, 100)
+		Me.label12.Name = "label12"
+		Me.label12.Size = New System.Drawing.Size(94, 20)
+		Me.label12.TabIndex = 11
+		Me.label12.Text = "label12"
+		'
+		'label11
+		'
+		Me.label11.Location = New System.Drawing.Point(3, 100)
+		Me.label11.Name = "label11"
+		Me.label11.Size = New System.Drawing.Size(94, 20)
+		Me.label11.TabIndex = 10
+		Me.label11.Text = "五七日"
+		'
+		'label10
+		'
+		Me.label10.Location = New System.Drawing.Point(109, 80)
+		Me.label10.Name = "label10"
+		Me.label10.Size = New System.Drawing.Size(94, 20)
+		Me.label10.TabIndex = 9
+		Me.label10.Text = "label10"
+		'
+		'label9
+		'
+		Me.label9.Location = New System.Drawing.Point(3, 80)
+		Me.label9.Name = "label9"
+		Me.label9.Size = New System.Drawing.Size(94, 20)
+		Me.label9.TabIndex = 8
+		Me.label9.Text = "四七日"
+		'
+		'label8
+		'
+		Me.label8.Location = New System.Drawing.Point(109, 60)
+		Me.label8.Name = "label8"
+		Me.label8.Size = New System.Drawing.Size(94, 20)
+		Me.label8.TabIndex = 7
+		Me.label8.Text = "label8"
+		'
+		'label7
+		'
+		Me.label7.Location = New System.Drawing.Point(3, 60)
+		Me.label7.Name = "label7"
+		Me.label7.Size = New System.Drawing.Size(94, 20)
+		Me.label7.TabIndex = 6
+		Me.label7.Text = "三七日"
+		'
+		'label6
+		'
+		Me.label6.Location = New System.Drawing.Point(109, 40)
+		Me.label6.Name = "label6"
+		Me.label6.Size = New System.Drawing.Size(94, 20)
+		Me.label6.TabIndex = 5
+		Me.label6.Text = "label6"
+		'
+		'label5
+		'
+		Me.label5.Location = New System.Drawing.Point(3, 40)
+		Me.label5.Name = "label5"
+		Me.label5.Size = New System.Drawing.Size(94, 20)
+		Me.label5.TabIndex = 4
+		Me.label5.Text = "二七日"
+		'
+		'label4
+		'
+		Me.label4.Location = New System.Drawing.Point(109, 20)
+		Me.label4.Name = "label4"
+		Me.label4.Size = New System.Drawing.Size(94, 20)
+		Me.label4.TabIndex = 3
+		Me.label4.Text = "label4"
+		'
+		'label1
+		'
+		Me.label1.Location = New System.Drawing.Point(3, 0)
+		Me.label1.Name = "label1"
+		Me.label1.Size = New System.Drawing.Size(100, 20)
+		Me.label1.TabIndex = 0
+		Me.label1.Text = "法事名"
+		'
+		'label3
+		'
+		Me.label3.Location = New System.Drawing.Point(3, 20)
+		Me.label3.Name = "label3"
+		Me.label3.Size = New System.Drawing.Size(94, 20)
+		Me.label3.TabIndex = 2
+		Me.label3.Text = "初七日"
 		'
 		'Btn_Print
 		'

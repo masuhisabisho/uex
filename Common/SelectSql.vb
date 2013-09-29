@@ -235,7 +235,8 @@ Public Class SelectSql
 		Dim resultTxt As New ArrayList
 		
 		sqlText &= " SELECT "														'**参考　インチ = 0.0254m
-		sqlText &= "  tbl_txt_txt "													'メインの文章 　
+		sqlText &= "  tbl_txt_order "
+		sqlText &= " ,tbl_txt_txt "													'メインの文章 　
 		sqlText &= " ,tbl_txt_newypos "												'開始位置の変更		ある時 = 値・無い時 = 9999
 		sqlText &= " ,tbl_txt_ystyle "												'列スタイル 			上から並べる = 0・下から並べる  = 1・天地を合わせる = 2
 		sqlText &= " ,tbl_txt_inspos "												'挿入文字の有無		ある時 = 値(コンマで区切る）無い時 9999, 9999, 9999

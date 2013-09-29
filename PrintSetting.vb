@@ -23,14 +23,9 @@ Public Partial Class PrintSetting
 	'	The Me.InitializeComponent call is required for Windows Forms designer support.
 		Me.InitializeComponent()
 		Wc = wordCont  'add 2013/9/22
-		'イメージの取り込み
-		'img = imgData  out 2013/9/22
 		'用紙情報
-'		selectedPaper = paperSize
-'		selectedDirec = printDirection
 		selectedPaper = Wc.DefSet(7)
 		selectedDirec = Wc.DefSet(8)
-
 
 	End Sub
 	
@@ -104,7 +99,7 @@ Public Partial Class PrintSetting
 				Continue For
 			End If
 			
-			For j As Integer = 0 To Wc.curWord(i).count -1 Step 1
+			For j As Integer = 0 To CInt(DirectCast(Wc.curWord(i), Hashtable).count) -1 Step 1
 				e.Graphics.DrawString(Wc.curWord(i)(j)(0), _
 										New Font(Wc.optWord("Cmb_Font").ToString(), CInt(Wc.curWord(i)(j)(1))), _
 										New SolidBrush(Color.FromArgb(rgbRate, rgbRate, rgbRate)), _

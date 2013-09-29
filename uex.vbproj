@@ -31,8 +31,6 @@
     <DefineConstants>TRACE=1</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework" />
-    <Reference Include="nunit.framework" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -69,6 +67,7 @@
     <Compile Include="Common\SetCombo.vb" />
     <Compile Include="Common\SetEnvList.vb" />
     <Compile Include="Common\WordContainer.vb" />
+    <Compile Include="Common\WrongSizeString.vb" />
     <Compile Include="HostList.Designer.vb">
       <DependentUpon>HostList.vb</DependentUpon>
     </Compile>

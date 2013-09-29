@@ -55,7 +55,7 @@ Public Partial Class PrintSetting
 		Pd = Nothing
 		'用紙コンボの設定
 		Dim Sc As New SetCombo
-		Sc.SetCombo(me.Cmb_PaperSize, SetEnvList.envList("402"), "", "", False)
+		Sc.SetCombo(me.Cmb_PaperSize, Wc.ReadEnvList("402"), "", "", False)
 		Me.Cmb_PaperSize.SelectedValue = selectedPaper
 		'用紙設定方向ラベル
 		Me.Lbl_SelectedDirection.Text = selectedDirec

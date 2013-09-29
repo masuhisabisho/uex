@@ -11,7 +11,6 @@ Option Explicit
 Imports System.Diagnostics.Debug
 
 Public Partial Class PrintReport
-	
 	'TODO: 発注画面を組み込む
 	'TODO: 印刷設定を保持しておく
 	'TODO: CSVやEXCELを読み込めるようにする
@@ -21,37 +20,39 @@ Public Partial Class PrintReport
 	'VB 6（Visual Basic 6.0）でデータ型を明示しないプログラミングを行うときに必須だった機能である。
 	'VB6ならVariant型、VB.NETならObject型の変数に何でも入れて、そこに入ったオブジェクトのメソッドなどを呼び出すために使われる。
 	
-	Dim Wc As New WordContainer
+	'Dim Wc As New WordContainer
+	Dim Wc As WordContainer
 	Private Const zero As Integer = 0
 	
-	Public Sub New()
+	'Public Sub New()
+	Public Sub New(wcContainer As WordContainer)
 		' The Me.InitializeComponent call is required for Windows Forms designer support.
 		Me.InitializeComponent()
-		
+		Wc = wcContainer
 	End Sub
 
 #Region "文字描画仕様"
 
-		'文字描画仕様
-		'END: DB内の文字列を取り出し文字に分割、配列に格納して更に配列に格納
-		'END: 初期設定(縦か横か, x座標, y座標上,　y座標下, 基本の改行ピッチ）
-		
-		'開始位置（y座標）の変更 ->　あるかどうか？
-		'（文を下げたりする時）
-		'END: 列スタイル -> 1) 上から並べる	
-		'			       2) 下から並べる
-		'			       3) ピッチ整えて天地を合わせる -> ピッチに使える幅 = 最大幅 - フォントサイズ　これをピッチ数（フォント数-1）で割る
-		
-		'END: 挿入文字あるかどうか？ -> 1) 場所は？　　挿入される値を持つオブジェクト, それのポイント設定するオブジェクト, フォントサイズの確認
-		'						2) 次へ
-		'メインテキストを読み込む時に実装する
-		'行ピッチ変更（フォント変更） -> 1) あるならば最大のものにあわせる（基本のピッチに足す）
-		'			  				 2)　次へ
-		'END: 行ピッチの変更（改行） -> 1) 最後の分からのx座標は？
-		'（住所等　別の位置に変わる時）
-		
-		'END: NEW フォントはやはりメインセンテンスの分はDBにおいておいたほうがよい。仕様を変更する
-		'http://penguinlab.jp/blog/post/117
+	'文字描画仕様
+	'END: DB内の文字列を取り出し文字に分割、配列に格納して更に配列に格納
+	'END: 初期設定(縦か横か, x座標, y座標上,　y座標下, 基本の改行ピッチ）
+	
+	'開始位置（y座標）の変更 ->　あるかどうか？
+	'（文を下げたりする時）
+	'END: 列スタイル -> 1) 上から並べる	
+	'			       2) 下から並べる
+	'			       3) ピッチ整えて天地を合わせる -> ピッチに使える幅 = 最大幅 - フォントサイズ　これをピッチ数（フォント数-1）で割る
+	
+	'END: 挿入文字あるかどうか？ -> 1) 場所は？　　挿入される値を持つオブジェクト, それのポイント設定するオブジェクト, フォントサイズの確認
+	'						2) 次へ
+	'メインテキストを読み込む時に実装する
+	'行ピッチ変更（フォント変更） -> 1) あるならば最大のものにあわせる（基本のピッチに足す）
+	'			  				 2)　次へ
+	'END: 行ピッチの変更（改行） -> 1) 最後の分からのx座標は？
+	'（住所等　別の位置に変わる時）
+	
+	'END: NEW フォントはやはりメインセンテンスの分はDBにおいておいたほうがよい。仕様を変更する
+	'http://penguinlab.jp/blog/post/117
 		
 #End Region
 
@@ -96,7 +97,7 @@ Public Partial Class PrintReport
 		'コンボの値を設定
 		'TODO: それぞれの用紙に対するコンボの設定をどうするか？
 		Dim Scmb As New SetCombo
-		Call Scmb.SetComboContent(Me)
+		Call Scmb.SetComboContent(Wc, Me)
 		Scmb = Nothing
 		
 		'フォームをクリア
@@ -159,7 +160,11 @@ Public Partial Class PrintReport
 
 #End Region
 
+
+
 #Region "イベント"
+
+#Region "用紙サイズ変更"
 
 	Friend Sub Cmb_SizeIndexChanged(sender As Object, e As EventArgs)
 		'TODO:用紙が変わった時のイベント
@@ -168,15 +173,16 @@ Public Partial Class PrintReport
 		Dim Cmn As New Common(Wc)
 		Dim Ch As New ControlHandler
 		
+		'センテンス配列の初期化
+		Wc.curWord.Clear()
+		'ハンドラーの無効化
+		Ch.AllTCHandleShifter(False, Me)
+		Ch.AllSICHandleShifter(False, Me)
+		
 		Select Case Me.Cmb_Size.SelectedValue.ToString()
 			Case "0"
 				Exit sub
 			Case "1"			'3ツ折り挨拶状
-				'センテンス配列の初期化
-				Wc.curWord.Clear()
-				'ハンドラーの無効化
-				Ch.AllTCHandleShifter(False, Me)
-				Ch.AllSICHandleShifter(False, Me)
 				'初期値の読み込み
 				Call SctSql.SetDefaultVal(1, Wc)
 				'フォームをクリア
@@ -213,6 +219,8 @@ Public Partial Class PrintReport
 		
 	End Sub
 	
+#End Region
+	
 #Region "SelectIndexChanged"
 
 	'コンボ変更
@@ -228,6 +236,7 @@ Public Partial Class PrintReport
 		'END: 変更後の列ピッチがおかしい（おおきい）
 		
 		Dim Cmn As New Common(Wc)
+		
 		ClearPicture(Me.Pic_Main, Cint(Wc.DefSet(2)), Cint(Wc.DefSet(4)))
 
 		Select Case True
@@ -267,19 +276,19 @@ Public Partial Class PrintReport
 			Case sender Is	Me.Cmb_Year
 				Dim SctSql As New SelectSql
 				Wc.optWord("Cmb_Year") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = '" & Me.Cmb_Year.SelectedValue.ToString() & "'")
-				Call Cmn.WordReplacer(15, Me, CInt(Wc.mainTxt(15)("tbl_txt_ystyle")), CType(sender, ComboBox),)			'END: 日付関連 2013/7/21 mb
+				Call Cmn.WordReplacer(15, Me, CInt(DirectCast(Wc.mainTxt(15), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)			'END: 日付関連 2013/7/21 mb
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				Sctsql = Nothing
 			Case sender Is	Me.Cmb_Month
 				Dim SctSql As New SelectSql
 				Wc.optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = '" & Me.Cmb_Month.SelectedValue.ToString() & "'")
-				Call Cmn.WordReplacer(15, Me, CInt(Wc.mainTxt(15)("tbl_txt_ystyle")), CType(sender, ComboBox),)
+				Call Cmn.WordReplacer(15, Me, CInt(Directcast(Wc.mainTxt(15), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				Sctsql = Nothing
 			Case sender Is	Me.Cmb_Day
 				Dim SctSql As New SelectSql
 				Wc.optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = '" & Me.Cmb_Day.SelectedValue.ToString() & "'")
-				Call Cmn.WordReplacer(15, Me, CInt(Wc.mainTxt(15)("tbl_txt_ystyle")), CType(sender, ComboBox),)
+				Call Cmn.WordReplacer(15, Me, CInt(DirectCast(Wc.mainTxt(15), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				SctSql = Nothing
 '			Case sender Is	Me.Cmb_HostType
@@ -367,79 +376,68 @@ Public Partial Class PrintReport
 		'TODO: 用紙サイズ・文例の変更
 		'END: 取り込みデータを元に変更画像を作成
 '		'END: ピクチャーの破棄・再設定
-'		With Me.Me.Pic_Main								'END: 関数に置き換え
-'			If Not (.Image Is Nothing) Then
-'				.Image.Dispose()
-'				.Image = Nothing
-'				
-'				.Size = New Size(Wc.DefSet(2), Wc.DefSet(4))
-' 				.image = New Bitmap(Wc.DefSet(2), Wc.DefSet(4))
-'			End If
-'		End With
 
 		ClearPicture(Me.Pic_Main, CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
 
 		Dim Cmn As New Common (Wc)
 		
-'		Dim sqlText As String = " SELECT tbl_txt_ystyle FROM tbl_txt "
-'		             sqlText &= " WHERE tbl_txt_sizeid = " & Wc.CurrentSet("curSize") & " AND tbl_txt_styleid = " & Wc.CurrentSet("curStyle") & " AND tbl_txt_order = "
-'		Dim yStyle As Integer
-
 		Select Case True
-			
+			Case sender Is Me.Txt_Namae
+				Cmn.WordReplacer(0, me, CInt(DirectCast(Wc.mainTxt(0), Hashtable)("tbl_txt_ystyle")), ,CType(sender, TextBox))
+				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font"))
 			Case sender Is	Me.Txt_Name												'END:俗名 2013/8/4 mb
-				Cmn.WordReplacer(3, me, CInt(Wc.mainTxt(3)("tbl_txt_ystyle")), ,CType(sender, TextBox))
+				Cmn.WordReplacer(3, me, CInt(DirectCast(Wc.mainTxt(3), Hashtable)("tbl_txt_ystyle")), ,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font"))
 				
 			Case sender Is	Me.Txt_DeadName
 				'TODO: 設定する
 				
 			Case sender Is	Txt_Add1												'END: dbにフォントサイズ無いとエラーに
-				Call Cmn.WordReplacer(16, me, CInt(Wc.mainTxt(16)("tbl_txt_ystyle")),,CType(sender, TextBox))
+				Call Cmn.WordReplacer(16, me, CInt(DirectCast(Wc.mainTxt(16), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				
 			Case sender Is	Me.Txt_Add2
-				Call Cmn.WordReplacer(17, me, CInt(Wc.mainTxt(17)("tbl_txt_ystyle")),,CType(sender, TextBox))
+				Call Cmn.WordReplacer(17, me, CInt(DirectCast(Wc.mainTxt(17), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				
 			Case sender Is	Me.Txt_HostName1
-				Call Cmn.WordReplacer(18, me, CInt(Wc.mainTxt(18)("tbl_txt_ystyle")),,CType(sender, TextBox))
+				Call Cmn.WordReplacer(18, me, CInt(DirectCast(Wc.mainTxt(18), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				
 			Case sender Is	Me.Txt_HostName2
-				Call Cmn.WordReplacer(19, me, CInt(Wc.mainTxt(19)("tbl_txt_ystyle")),,CType(sender, TextBox))
+				Call Cmn.WordReplacer(19, me, CInt(DirectCast(Wc.mainTxt(19), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				
 			Case sender Is	Me.Txt_HostName3
-				Call Cmn.WordReplacer(20, me, CInt(Wc.mainTxt(20)("tbl_txt_ystyle")),,CType(sender, TextBox))
+				Call Cmn.WordReplacer(20, me, CInt(DirectCast(Wc.mainTxt(20), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				
 			Case sender Is	Me.Txt_HostName4
-				Call Cmn.WordReplacer(21, me, CInt(Wc.mainTxt(21)("tbl_txt_ystyle")),,CType(sender, TextBox))
+				Call Cmn.WordReplacer(21, me, CInt(DirectCast(Wc.mainTxt(21), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				
 			Case sender Is	Me.Txt_PS1
-				Call Cmn.WordReplacer(22, me, CInt(Wc.mainTxt(22)("tbl_txt_ystyle")),,CType(sender, TextBox))
+				Call Cmn.WordReplacer(22, me, CInt(DirectCast(Wc.mainTxt(22), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				
 			Case sender Is	Me.Txt_PS2
-				Call Cmn.WordReplacer(23, me, CInt(Wc.mainTxt(23)("tbl_txt_ystyle")),,CType(sender, TextBox))
+				Call Cmn.WordReplacer(23, me, CInt(DirectCast(Wc.mainTxt(23), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				
 			Case sender Is	Me.Txt_PS3
-				Call Cmn.WordReplacer(24, me, CInt(Wc.mainTxt(24)("tbl_txt_ystyle")),,CType(sender, TextBox))
+				Call Cmn.WordReplacer(24, me, CInt(DirectCast(Wc.mainTxt(24), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				
 			Case sender Is	Me.Txt_PS4
-				Call Cmn.WordReplacer(25, me, CInt(Wc.mainTxt(25)("tbl_txt_ystyle")),,CType(sender, TextBox))
+				Call Cmn.WordReplacer(25, me, CInt(DirectCast(Wc.mainTxt(25), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				
 			Case sender Is	Me.Txt_PS5
-				Call Cmn.WordReplacer(26, me, CInt(Wc.mainTxt(26)("tbl_txt_ystyle")),,CType(sender, TextBox))
+				Call Cmn.WordReplacer(26, me, CInt(DirectCast(Wc.mainTxt(26), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				
 			Case sender Is	Me.Txt_PS6
-				Call Cmn.WordReplacer(27, me, CInt(Wc.mainTxt(27)("tbl_txt_ystyle")),,CType(sender, TextBox))
+				Call Cmn.WordReplacer(27, me, CInt(DirectCast(Wc.mainTxt(27), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
 				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 				
 		End Select	
@@ -451,9 +449,33 @@ Public Partial Class PrintReport
 #End Region
 
 #Region "Other Events"
+
+	Private Sub PrintReport_FormClosed(sender As Object, e As FormClosedEventArgs)
+		'保持内容のクリア
+		Wc.CurrentSet("curSize") = 0
+		Wc.CurrentSet("curStyle") = 0
+
+		Wc.DefSet(0) = ""
+		Wc.DefSet(1) = ""
+		Wc.DefSet(2) = ""
+		Wc.DefSet(3) = ""
+		Wc.DefSet(4) = ""
+		Wc.DefSet(5) = ""
+		Wc.DefSet(6) = ""
+		Wc.DefSet(7) = ""
+		Wc.DefSet(8) = ""
+		
+		Wc.TempCurrentWord.Clear()
+
+		Wc.curWord.Clear()
+		
+		Wc.mainTxt.Clear()
+		
+	End Sub
+	
 	'印刷フォームを開く
 	Private Sub Btn_Print_Click(sender As Object, e As EventArgs)
-		'Dim Ps As New PrintSetting(Me.Me.Me.Pic_Main.Image, Wc.DefSet(7), Wc.DefSet(8))
+		'Dim Ps As New PrintSetting(Me.Pic_Main.Image, Wc.DefSet(7), Wc.DefSet(8))
 		Dim Ps As New PrintSetting(Wc)
 		Ps.ShowDialog()
 		Ps.Dispose()
@@ -531,10 +553,10 @@ Public Partial Class PrintReport
 			Dim wordInLine As New ArrayList
 			For i As Integer = 0 To item.Count - 1 Step 1
 				Dim wordDetail(3) As String
-				wordDetail(0) = DirectCast(item(i), ArrayList)(0).ToString()
-				wordDetail(1) = (CDbl(DirectCast(item(i), ArrayList)(1)) * rate).ToString()
-				wordDetail(2) = (CDbl(DirectCast(item(i), ArrayList)(2)) * rate).ToString()
-				wordDetail(3) = (CDbl(DirectCast(item(i), ArrayList)(3)) * rate).ToString()
+				wordDetail(0) = DirectCast(item(i), String())(0)
+				wordDetail(1) = (CDbl(DirectCast(item(i), String())(1)) * rate).ToString()
+				wordDetail(2) = (CDbl(DirectCast(item(i), String())(2)) * rate).ToString()
+				wordDetail(3) = (CDbl(DirectCast(item(i), String())(3)) * rate).ToString()
 				wordInLine.Add(wordDetail)
 				wordDetail = {"", "", "", ""}
 			Next i
@@ -617,20 +639,21 @@ Public Partial Class PrintReport
 			
 			For Each item As ArrayList In Wc.TempCurrentWord
 				For i As Integer = 0 To CInt(item.Count) -1 Step 1
-					If item(i)(0) Is Nothing Then  							'空白行はスキップする
+					'If DirectCast(item(i), ArrayList)(0) Is Nothing Then  							'空白行はスキップする
+					If DirectCast(item(i), String())(0) = "" Then
 						Continue For
 					End If
-				WriteLine(item(i)(0))
+
 					Dim g As System.Drawing.Graphics
 					g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
 					g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 					'New Font(font, item(i)(1),GraphicsUnit.Pixel), _ 
 				
-					g.DrawString(item(i)(0).Tostring(), _
-								New Font(font, CSng(item(i)(1))), _ 
+					g.DrawString(DirectCast(item(i), String())(0), _
+								New Font(font, CSng(DirectCast(item(i), String())(1))), _ 
 								Brushes.Black, _
-								CSng(item(i)(3)), _ 
-								CSng(item(i)(2)), _
+								CSng(DirectCast(item(i), String())(3)), _ 
+								CSng(DirectCast(item(i), String())(2)), _
 								New StringFormat(StringFormatFlags.DirectionVertical) _
 								)
 					g.Dispose()
@@ -641,7 +664,7 @@ Public Partial Class PrintReport
 
 			For Each item As ArrayList In storageWord
 				For i As Integer = 0 To CInt(item.Count) -1 Step 1
-					If item(i)(0) Is Nothing Then  							'空白行はスキップする
+					If DirectCast(item(i), String())(0) = "" Then  							'空白行はスキップする
 						Continue For
 					End If
 					Dim g As System.Drawing.Graphics
@@ -649,11 +672,11 @@ Public Partial Class PrintReport
 					g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 					'New Font(font, item(i)(1),GraphicsUnit.Pixel), _ 
 					
-						g.DrawString(item(i)(0).Tostring(), _
-								New Font(font, CSng(item(i)(1))), _ 
+					g.DrawString(DirectCast(item(i), String())(0), _
+								New Font(font, CSng(DirectCast(item(i), String())(1))), _ 
 								Brushes.Black, _
-								CSng(item(i)(3)), _ 
-								CSng(item(i)(2)), _
+								CSng(DirectCast(item(i), String())(3)), _ 
+								CSng(DirectCast(item(i), String())(2)), _
 								New StringFormat(StringFormatFlags.DirectionVertical) _
 								)
 					g.Dispose()
@@ -683,20 +706,20 @@ Public Partial Class PrintReport
 			
 			
 			g.DrawString(Directcast(storageWord(i), String())(0), _
-						New Font(font, CSng(storageWord(i)(1))) , _ 
+						New Font(font, CSng(DirectCast(storageWord(i), String())(1))) , _ 
 						Brushes.Black, _ 
-						CSng(storageWord(i)(3)), _ 
-						Csng(storageWord(i)(2)), _
+						CSng(DirectCast(storageWord(i), String())(3)), _ 
+						Csng(DirectCast(storageWord(i), String())(2)), _
 						New StringFormat(StringFormatFlags.DirectionVertical) _
 						)
 			
 			g.Dispose()
 			g = Nothing
 			
-			wordDetail(0) = storageWord(i)(0)						'出力位置を格納（絶対値）
-			wordDetail(1) = storageWord(i)(1)
-			wordDetail(2) = storageWord(i)(2)
-			wordDetail(3) = storageWord(i)(3)
+			wordDetail(0) = DirectCast(storageWord(i), String())(0)						'出力位置を格納（絶対値）
+			wordDetail(1) = DirectCast(storageWord(i), String())(1)
+			wordDetail(2) = DirectCast(storageWord(i), String())(2)
+			wordDetail(3) = DirectCast(storageWord(i), String())(3)
 			wordInLine.Add(wordDetail)
 			
 '#If Debug Then

@@ -45,6 +45,20 @@ Public Class WordContainer
 		End Get
 	End Property
 	
+'''■EnviromentList
+''' <summary></summary>
+	Public ReadOnly Property ReadEnvList(hashKey As String) As ArrayList
+		Get
+			Return DirectCast(envList(hashKey), ArrayList)
+		End Get
+	End Property
+
+	Public Writeonly Property SetEnvList(hashKey As String) As ArrayList
+		Set(value As ArrayList)
+			envList.Add(hashKey, value)
+		End Set
+	End Property
+		
 '''■mainTxt
 ''' <summary></summary>
 	Public Property mainTxt() As ArrayList
@@ -188,19 +202,7 @@ Public Class WordContainer
 		End Set
 	End Property
 	
-'''■EnviromentList
-''' <summary></summary>
-Public Property EnviromentList(hashkey As String) As String
-	Get
-		Return envList(hashkey).ToString()
-	End Get
-	
-	Set(value As String)
-		envList(hashKey) = value
-	End Set
-End Property
-	
-End Class
+	End Class
 
 # Region "Comment Out"
 

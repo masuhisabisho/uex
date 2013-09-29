@@ -8,7 +8,13 @@
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
 Public Class SetEnvList
-	Public shared envList As New Hashtable
+	'Public shared envList As New Hashtable
+	
+	Dim Wc As WordContainer
+	
+	Public Sub new(wcContainer As WordContainer)
+		Wc = wcContainer
+	End Sub
 	
 ''''■SetEnvSql
 ''' <summary>Set enviroment data on memories</summary>
@@ -35,7 +41,8 @@ Public Class SetEnvList
 				End If
 				
 				If tempID <> sqlReader("tbl_env_grid").ToString() Then
-					envList.Add(String.Format("{0:000}", Val(tempID)), envListArl)
+					'envList.Add(String.Format("{0:000}", Val(tempID)), envListArl)
+					Wc.SetEnvList(String.Format("{0:000}", Val(tempID))) = envListArl
 					tempID = sqlReader("tbl_env_grid").ToString()
 					envListArl = New ArrayList
 				End If
@@ -44,7 +51,8 @@ Public Class SetEnvList
 				
 			End While
 			
-			envList.Add(String.Format("{0:000}", Val(tempID)), envListArl)		'Storage the last list
+			'envList.Add(String.Format("{0:000}", Val(tempID)), envListArl)		'Storage the last list
+			Wc.SetEnvList(String.Format("{0:000}", Val(tempID))) = envListArl
 			
 			sqlCommand.Dispose()
 			sqlReader.Close()

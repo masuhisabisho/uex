@@ -15,8 +15,9 @@ Public Class SetCombo
 ''' <param name="defaultVal">String Default value of combo value</param>
 ''' <param name="isVisibleNull">Set nothing on combo as the first value</param>
 ''' <returns>Void</returns>
+	'Public Sub SetCombo(targetCmb As ComboBox, envListHt As ArrayList, defaultStr As String, defaultVal As String, isVisibleNull As Boolean)
+	
 	Public Sub SetCombo(targetCmb As ComboBox, envListHt As ArrayList, defaultStr As String, defaultVal As String, isVisibleNull As Boolean)
-		
 		Dim setArray As New ArrayList
 		
 		For Each dicEntry As DictionaryEntry In envListHt
@@ -66,28 +67,47 @@ Public Class SetCombo
 ''' <summary>コンボのリストを作成</summary>
 ''' <param name="Pr">PrintReport.vb</param>
 ''' <returns>Void</returns>
-	Public Sub SetComboContent(Pr As PrintReport)
-			With Pr
-				SetCombo(.Cmb_Size, SetEnvList.envList("002"), "奉書挨拶状", "0", False)
-				SetCombo(.Cmb_Magnify, SetEnvList.envList("400"), "100", "100", False)
-				SetCombo(.Cmb_Thickness, SetEnvList.envList("401"), "100", "0", False)
-				SetCombo(.Cmb_Style, SetEnvList.envList("010"), "", "", False)
-				'add 1 lines 2013/9/22
-				SetCombo(.Cmb_Hyodai, SetEnvList.envList("203"), "", "", False)
-				SetCombo(.Cmb_SeasonWord, SetEnvList.envList("100"), "", "", False)
-				SetCombo(.Cmb_Time1, SetEnvList.envList("101"), "", "", False)
-				SetCombo(.Cmb_Title, SetEnvList.envList("200"), "", "", False)
-				SetCombo(.Cmb_DeathWay, SetEnvList.envList("201"), "", "", False)
-				SetCombo(.Cmb_Time2, SetEnvList.envList("106"), "", "", False)
-				SetCombo(.Cmb_Donation, SetEnvList.envList("300"), "", "", False)
-				SetCombo(.Cmb_Imibi, SetEnvList.envList("102"), "", "", False)
-				SetCombo(.Cmb_EndWord, SetEnvList.envList("202"), "", "", False)
-				SetCombo(.Cmb_Year, SetEnvList.envList("105"), "", "", False)
-				SetCombo(.Cmb_Month, SetEnvList.envList("103"), "", "", False)
-				SetCombo(.Cmb_Day, SetEnvList.envList("104"), "", "", True)
-				SetCombo(.Cmb_HostType, SetEnvList.envList("301"), "", "", True)
-				'TODO: 新しいコンボの値を記述
-			End With
+	Public Sub SetComboContent(Wc As WordContainer, Pr As PrintReport)
+		With Pr
+'			SetCombo(.Cmb_Size, SetEnvList.envList("002"), "奉書挨拶状", "0", False)
+'			SetCombo(.Cmb_Magnify, SetEnvList.envList("400"), "100", "100", False)
+'			SetCombo(.Cmb_Thickness, SetEnvList.envList("401"), "100", "0", False)
+'			SetCombo(.Cmb_Style, SetEnvList.envList("010"), "", "", False)
+'			'add 1 lines 2013/9/22
+'			SetCombo(.Cmb_Hyodai, SetEnvList.envList("203"), "", "", False)
+'			SetCombo(.Cmb_SeasonWord, SetEnvList.envList("100"), "", "", False)
+'			SetCombo(.Cmb_Time1, SetEnvList.envList("101"), "", "", False)
+'			SetCombo(.Cmb_Title, SetEnvList.envList("200"), "", "", False)
+'			SetCombo(.Cmb_DeathWay, SetEnvList.envList("201"), "", "", False)
+'			SetCombo(.Cmb_Time2, SetEnvList.envList("106"), "", "", False)
+'			SetCombo(.Cmb_Donation, SetEnvList.envList("300"), "", "", False)
+'			SetCombo(.Cmb_Imibi, SetEnvList.envList("102"), "", "", False)
+'			SetCombo(.Cmb_EndWord, SetEnvList.envList("202"), "", "", False)
+'			SetCombo(.Cmb_Year, SetEnvList.envList("105"), "", "", False)
+'			SetCombo(.Cmb_Month, SetEnvList.envList("103"), "", "", False)
+'			SetCombo(.Cmb_Day, SetEnvList.envList("104"), "", "", True)
+'			SetCombo(.Cmb_HostType, SetEnvList.envList("301"), "", "", True)
+
+			'2013/9/29 WordContainerへカプセル化
+			SetCombo(.Cmb_Size, Wc.ReadEnvList("002"), "奉書挨拶状", "0", False)
+			SetCombo(.Cmb_Magnify, Wc.ReadEnvList("400"), "100", "100", False)
+			SetCombo(.Cmb_Thickness, Wc.ReadEnvList("401"), "100", "0", False)
+			SetCombo(.Cmb_Style, Wc.ReadEnvList("010"), "", "", False)
+			SetCombo(.Cmb_Hyodai, Wc.ReadEnvList("203"), "", "", False)
+			SetCombo(.Cmb_SeasonWord, Wc.ReadEnvList("100"), "", "", False)
+			SetCombo(.Cmb_Time1, Wc.ReadEnvList("101"), "", "", False)
+			SetCombo(.Cmb_Title, Wc.ReadEnvList("200"), "", "", False)
+			SetCombo(.Cmb_DeathWay, Wc.ReadEnvList("201"), "", "", False)
+			SetCombo(.Cmb_Time2, Wc.ReadEnvList("106"), "", "", False)
+			SetCombo(.Cmb_Donation, Wc.ReadEnvList("300"), "", "", False)
+			SetCombo(.Cmb_Imibi, Wc.ReadEnvList("102"), "", "", False)
+			SetCombo(.Cmb_EndWord, Wc.ReadEnvList("202"), "", "", False)
+			SetCombo(.Cmb_Year, Wc.ReadEnvList("105"), "", "", False)
+			SetCombo(.Cmb_Month, Wc.ReadEnvList("103"), "", "", False)
+			SetCombo(.Cmb_Day, Wc.ReadEnvList("104"), "", "", True)
+			SetCombo(.Cmb_HostType, Wc.ReadEnvList("301"), "", "", True)
+			'TODO: 新しいコンボの値を記述
+		End With
 	End Sub
 
 	

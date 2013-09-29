@@ -51,6 +51,7 @@ Partial Class PrintReport
 		Me.Cmb_Font = New System.Windows.Forms.ComboBox()
 		Me.Cmb_Size = New System.Windows.Forms.ComboBox()
 		Me.Grb_Contents = New System.Windows.Forms.GroupBox()
+		Me.Txt_Namae = New System.Windows.Forms.TextBox()
 		Me.Cmb_PointNamae = New System.Windows.Forms.ComboBox()
 		Me.Cmb_PointHyodai = New System.Windows.Forms.ComboBox()
 		Me.Cmb_Hyodai = New System.Windows.Forms.ComboBox()
@@ -127,13 +128,12 @@ Partial Class PrintReport
 		Me.Lbl_Imibi = New System.Windows.Forms.Label()
 		Me.Pnl_Menu01 = New System.Windows.Forms.Panel()
 		Me.Pnl_Main = New System.Windows.Forms.Panel()
-		Me.Txt_Namae = New System.Windows.Forms.TextBox()
-		Me.Pic_Main = New System.Windows.Forms.PictureBox()
+		Pic_Main = New System.Windows.Forms.PictureBox()
 		Me.Grb_Common.SuspendLayout
 		Me.Grb_Contents.SuspendLayout
 		Me.Pnl_Menu01.SuspendLayout
 		Me.Pnl_Main.SuspendLayout
-		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).BeginInit
+		CType(Pic_Main,System.ComponentModel.ISupportInitialize).BeginInit
 		Me.SuspendLayout
 		'
 		'Grb_Common
@@ -180,6 +180,7 @@ Partial Class PrintReport
 		'
 		'Cmb_Thickness
 		'
+		Me.Cmb_Thickness.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_Thickness.FormattingEnabled = true
 		Me.Cmb_Thickness.Location = New System.Drawing.Point(193, 117)
 		Me.Cmb_Thickness.Name = "Cmb_Thickness"
@@ -212,6 +213,7 @@ Partial Class PrintReport
 		'
 		'Cmb_Magnify
 		'
+		Me.Cmb_Magnify.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_Magnify.FormattingEnabled = true
 		Me.Cmb_Magnify.Location = New System.Drawing.Point(78, 117)
 		Me.Cmb_Magnify.Name = "Cmb_Magnify"
@@ -277,6 +279,7 @@ Partial Class PrintReport
 		'
 		'Cmb_Size
 		'
+		Me.Cmb_Size.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_Size.FormattingEnabled = true
 		Me.Cmb_Size.Location = New System.Drawing.Point(78, 14)
 		Me.Cmb_Size.Name = "Cmb_Size"
@@ -367,6 +370,13 @@ Partial Class PrintReport
 		Me.Grb_Contents.TabStop = false
 		Me.Grb_Contents.Text = "内容設定"
 		'
+		'Txt_Namae
+		'
+		Me.Txt_Namae.Location = New System.Drawing.Point(75, 50)
+		Me.Txt_Namae.Name = "Txt_Namae"
+		Me.Txt_Namae.Size = New System.Drawing.Size(180, 19)
+		Me.Txt_Namae.TabIndex = 108
+		'
 		'Cmb_PointNamae
 		'
 		Me.Cmb_PointNamae.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
@@ -451,6 +461,7 @@ Partial Class PrintReport
 		'
 		'Cmb_Day
 		'
+		Me.Cmb_Day.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_Day.FormattingEnabled = true
 		Me.Cmb_Day.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
 		Me.Cmb_Day.Location = New System.Drawing.Point(109, 309)
@@ -460,6 +471,7 @@ Partial Class PrintReport
 		'
 		'Cmb_Month
 		'
+		Me.Cmb_Month.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_Month.FormattingEnabled = true
 		Me.Cmb_Month.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
 		Me.Cmb_Month.Location = New System.Drawing.Point(109, 288)
@@ -469,6 +481,7 @@ Partial Class PrintReport
 		'
 		'Cmb_Year
 		'
+		Me.Cmb_Year.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.Cmb_Year.FormattingEnabled = true
 		Me.Cmb_Year.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"})
 		Me.Cmb_Year.Location = New System.Drawing.Point(109, 268)
@@ -1013,30 +1026,23 @@ Partial Class PrintReport
 		Me.Pnl_Main.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
 		Me.Pnl_Main.BackColor = System.Drawing.Color.White
 		Me.Pnl_Main.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-		Me.Pnl_Main.Controls.Add(Me.Pic_Main)
+		Me.Pnl_Main.Controls.Add(Pic_Main)
 		Me.Pnl_Main.Location = New System.Drawing.Point(369, 10)
 		Me.Pnl_Main.Name = "Pnl_Main"
 		Me.Pnl_Main.Size = New System.Drawing.Size(795, 825)
 		Me.Pnl_Main.TabIndex = 17
 		'
-		'Me.Pic_Main
+		'Pic_Main
 		'
-		Me.Pic_Main.BackColor = System.Drawing.Color.White
-		Me.Pic_Main.ErrorImage = Nothing
-		Me.Pic_Main.InitialImage = Nothing
-		Me.Pic_Main.Location = New System.Drawing.Point(0, 0)
-		Me.Pic_Main.Name = "Me.Pic_Main"
-		Me.Pic_Main.Size = New System.Drawing.Size(772, 805)
-		Me.Pic_Main.TabIndex = 16
-		Me.Pic_Main.TabStop = false
-		Me.Pic_Main.WaitOnLoad = true
-		'
-		'Txt_Namae
-		'
-		Me.Txt_Namae.Location = New System.Drawing.Point(75, 50)
-		Me.Txt_Namae.Name = "Txt_Namae"
-		Me.Txt_Namae.Size = New System.Drawing.Size(180, 19)
-		Me.Txt_Namae.TabIndex = 108
+		Pic_Main.BackColor = System.Drawing.Color.White
+		Pic_Main.ErrorImage = Nothing
+		Pic_Main.InitialImage = Nothing
+		Pic_Main.Location = New System.Drawing.Point(0, 0)
+		Pic_Main.Name = "Pic_Main"
+		Pic_Main.Size = New System.Drawing.Size(772, 805)
+		Pic_Main.TabIndex = 16
+		Pic_Main.TabStop = false
+		Pic_Main.WaitOnLoad = true
 		'
 		'PrintReport
 		'
@@ -1051,6 +1057,7 @@ Partial Class PrintReport
 		Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
 		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Print"
+		AddHandler FormClosed, AddressOf Me.PrintReport_FormClosed
 		AddHandler Load, AddressOf Me.Print_Load
 		Me.Grb_Common.ResumeLayout(false)
 		Me.Grb_Common.PerformLayout
@@ -1058,7 +1065,7 @@ Partial Class PrintReport
 		Me.Grb_Contents.PerformLayout
 		Me.Pnl_Menu01.ResumeLayout(false)
 		Me.Pnl_Main.ResumeLayout(false)
-		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).EndInit
+		CType(Pic_Main,System.ComponentModel.ISupportInitialize).EndInit
 		Me.ResumeLayout(false)
 	End Sub
 	Friend Txt_Namae As System.Windows.Forms.TextBox
@@ -1156,5 +1163,7 @@ Partial Class PrintReport
 	Private Grb_Contents As System.Windows.Forms.GroupBox
 	Private Grb_Common As System.Windows.Forms.GroupBox
 	Private Pnl_Menu01 As System.Windows.Forms.Panel
+	'Private Pic_Main As System.Windows.Forms.PictureBox
 	Private Pic_Main As System.Windows.Forms.PictureBox
+	
 End Class

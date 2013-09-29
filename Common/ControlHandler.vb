@@ -25,6 +25,7 @@ Public Class ControlHandler
 	Friend Sub AllTCHandleShifter(selector As Boolean, Pr As PrintReport)
 		Select Case selector	
 			Case True
+				AddHandler Pr.Txt_Namae.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
 				AddHandler Pr.Txt_Name.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
 				AddHandler Pr.Txt_DeadName.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
 				AddHandler Pr.Txt_Add1.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
@@ -39,7 +40,8 @@ Public Class ControlHandler
 				AddHandler Pr.Txt_PS4.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
 				AddHandler Pr.Txt_PS5.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
 				AddHandler Pr.Txt_PS6.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
-		Case False	
+			Case False
+				RemoveHandler Pr.Txt_Namae.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
 				RemoveHandler Pr.Txt_Name.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
 				RemoveHandler Pr.Txt_DeadName.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
 				RemoveHandler Pr.Txt_Add1.TextChanged,AddressOf Pr.TextBoxChange_TextChanged

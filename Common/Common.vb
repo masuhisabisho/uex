@@ -38,7 +38,7 @@ Public Class Common
 			Dim insPos() As String = {"", "", ""}									'挿入文字位置パラメータを格納する配列 
 			Dim insFlg As Boolean = False											'挿入文字フラグ
 			
-			If mainTxt(i)("tbl_txt_inspos") IsNot "" Then							'END: 挿入文字があるか確認する	
+			If mainTxt(i)("tbl_txt_inspos") <> "" Then							'END: 挿入文字があるか確認する	
 				insPos = CStr(mainTxt(i)("tbl_txt_inspos")).Split(","c)				'文字数 = 0、フォントサイズ = 1, 挿入行番号 = 2, 挿入位置 = 3 文字（任意の数）= 4～ を獲得する ↓
 				insWord = CheckInsWord(mainTxt(i)("tbl_txt_inspos"), _
 										mainTxt(i)("tbl_txt_targetword"), _
@@ -163,30 +163,30 @@ Public Class Common
 			Dim insColCnt As Integer = 0
 			
 			For i As Integer = 0  To lineCounter Step 1
-				Dim selector As Integer = CInt(mainTxt(i)("tbl_txt_ystyle"))
+				Dim selector As Integer = CInt(Directcast(mainTxt(i), Hashtable)("tbl_txt_ystyle"))
 				Select Case selector
 					Case 0	'上																'END: 上の場合の文字ピッチを計算
-						If FontSizeDifChecker(storageWord(i)) = True Then					'★★全て同じフォントサイズの時★★
-							startYPos= CheckNewYPos((mainTxt(i)("tbl_txt_newypos")))
+						If FontSizeDifChecker(DirectCast(storageWord(i), ArrayList)) = True Then					'★★全て同じフォントサイズの時★★
+							startYPos= CheckNewYPos(CSng(DirectCast(mainTxt(i), Hashtable)("tbl_txt_newypos")))
 																							'文字ピッチの取得
 							Dim properPit As Single = PitchCal(startYPos, _
 																CSng(Wc.DefSet(4)), _
-																storageWord(i), _
+																DirectCast(storageWord(i), ArrayList), _
 																Wc.optWord("Cmb_Font"), _
 																0, _
 																Pr _
 																)
 							
-							Dim newXPos As Single = CheckNewXPos(CSng(mainTxt(i)("tbl_txt_newxpos")))
+							Dim newXPos As Single = CheckNewXPos(CSng(Directcast(mainTxt(i), Hashtable)("tbl_txt_newxpos")))
 							If newXPos <> 0 Then
 								startXPos = startXPos + newXPos
 							End If
-							If storageWord(i)(0)(0) <> "" Then							'文字あり
-								Dim fontSize() As Single = GetMaxWord(Wc.optWord("Cmb_Font"),storageWord(i), Pr)
+							If DirectCast(DirectCast(storageWord(i),ArrayList)(0), String())(0) <> "" Then							'文字あり
+								Dim fontSize() As Single = GetMaxWord(Wc.optWord("Cmb_Font"), DirectCast(storageWord(i), ArrayList), Pr)
 								startXPos = startXPos - (CSng(Wc.DefSet(5)) + fontSize(1))	'END: 文字サイズ＋ピッチへ 2013/7/2
 
-								For j As Integer = 0 To CInt(storageWord(i).Count) - 1 step 1
-									storageWord(i)(j)(2) = startYPos
+								For j As Integer = 0 To CInt(DirectCast(storageWord(i), ArrayList).Count) - 1 step 1
+									DirectCast(DirectCast(storageWord(i), ArrayList)(j), String())(2) = startYPos.ToString()
 									storageWord(i)(j)(3) = startXPos
 									startYPos = startYPos + (fontSize(0) + properPit)
 								Next j
@@ -207,66 +207,11 @@ Public Class Common
 							End If
 							
 							Call Pr.CreateWord(storageWord(i), Wc.optWord("Cmb_Font"))
-						Else															'END: ★★フォントサイズが違う時★★ 2013/7/2
-
-
-'******************************未使用↓******************************
-'							Dim maxWidth As Single										'END: イレギュラーサイズ時の描画方法を考える
-'							Dim irrXYPos As Array										'END: y軸位置の変更を組み込む
-'							
-'							newStartYPos = CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
-'							If newStartYPos <> 0 Then
-'								startYPos = newStartYPos
-'							End If
-'							startYPos= CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
-'
-'							irrXYPos =  SetIrregXYPos(CInt(mainTxt(i)("tbl_txt_ystyle")), _
-'													wordStorager(i), _
-'													Wc.optWord("Cmb_Font"), _
-'													startYPos, _
-'													CSng(Wc.DefSet(4)), _
-'													CSng(Wc.DefSet(5)), _
-'													startXPos, _
-'													maxWidth, _
-'													Pr
-'													)
-'							Call Pr.CreateWordDiff(wordStorager(i), Wc.optWord("Cmb_Font"), irrXYPos)
-'							startXPos = startXPos - maxWidth
-'******************************未使用↑******************************
+						Else	
+							'END: ★★フォントサイズが違う時★★ 2013/7/2
+							'現状使用するパターンがない -> あるとエラーに
 #If debug Then
-							MessageBox.Show("フォントサイズ違い")
-							Dim outputStr As String = ""
-							Dim z As Integer = 0
-							
-							Do Until z = storageWord.Count
-								Dim q As Integer = 0
-								outputStr &= z & "行目" & vbCrLf
-								Do Until q = storageWord(z).Count
-									outputStr &= storageWord(z)(q)(0) & "★"
-									outputStr &= storageWord(z)(q)(1) & "★"
-									outputStr &= storageWord(z)(q)(2) & "★"
-									outputStr &= storageWord(z)(q)(3) & vbCrLf
-									q += 1
-								Loop
-								outputStr &= vbCrLf
-								z += 1
-							Loop
-							Dim sw As System.IO.StreamWriter = Nothing
-							Try
-								sw = New System.IO.StreamWriter("C:\Users\madman190382\Desktop\FontSizeDiffLog.txt", _
-																False,
-																System.Text.Encoding.GetEncoding("UTF-8")
-																)
-								sw.WriteLine(outputStr)
-							Catch e As Exception
-								MessageBox.Show("フォントサイズ違いログの保存に失敗しました")
-							Finally
-								If sw IsNot Nothing Then
-									sw.Close()
-									sw.Dispose()
-								End If
-							End Try
-								
+							Call CheckErrSentence(storageWord)
 #End If
 						End If
 					Case 1	'下
@@ -310,84 +255,27 @@ Public Class Common
 																)
 							'2013/9/1 GetMaxWordでy軸も最大値を取るようにしたのでそれを使う
 							Dim addHeight As Single = fontSize(0) * CSng(storageWord(i).Count)
-							startYPos = Csng(Wc.DefSet(4)) - (addHeight + (properPit * (CSng(storageWord(i).Count) - 1)))
+							startYPos = CSng(Wc.DefSet(4)) - addHeight
+							If storageWord.Count <> 1 Then
+								startYPos = startYPos + (properPit * (CSng(storageWord(i).Count) - 1))
+							End If
 							
 							If startYPos <= CSng(Wc.DefSet(3)) Then						'2013/8/25 add 3 lines mb
 								startYPos = CSng(Wc.DefSet(3))
 							End If
 							Call YPosCal(storageWord(i), Wc.optWord("Cmb_Font"), startYPos, properPit, Pr)
 							Call Pr.CreateWord(storageWord(i), Wc.optWord("Cmb_Font"))
-						Else															'★★フォントサイズが違う時★★
+						Else
+							'★★フォントサイズが違う時★★
+							'現状使用するパターンがない -> あるとエラーに
 #If debug Then
-							MessageBox.Show("フォントサイズ違い")
-							Dim outputStr As String = ""
-							Dim z As Integer = 0
-							
-							Do Until z = storageWord.Count
-								Dim q As Integer = 0
-								outputStr &= z & "行目" & vbCrLf
-								Do Until q = storageWord(z).Count
-									outputStr &= Wc.curWord(z)(q)(0) & "★"
-									outputStr &=Wc.curWord(z)(q)(1) & "★"
-									outputStr &=Wc.curWord(z)(q)(2) & "★"
-									outputStr &=Wc.curWord(z)(q)(3) & vbCrLf
-									q += 1
-								Loop
-								outputStr &= vbCrLf
-								q = 0
-								z += 1
-							Loop
-							Dim sw As System.IO.StreamWriter = Nothing
-							Try
-								sw = New System.IO.StreamWriter("C:\Users\madman190382\Desktop\FontSizeDiffLog.txt", _
-																False,
-																System.Text.Encoding.GetEncoding("UTF8")
-																)
-								sw.WriteLine(outputStr)
-							Catch e As Exception
-								MessageBox.Show("フォントサイズ違いログの保存に失敗しました")
-							Finally
-								If sw IsNot Nothing Then
-									sw.Close()
-									sw.Dispose()
-								End If
-							End Try
-								
+							Call CheckErrSentence(storageWord)
 #End If
-
-'******************************未使用↓******************************
-'							Dim maxWidth As Single	
-'							Dim irrXYPos As Array
-'							
-'							newStartYPos = CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
-'							If newStartYPos <> 0 Then
-'								startYPos = newStartYPos
-'							End If
-'							
-'							startYPos= CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
-'							
-'							irrXYPos =  SetIrregXYPos(CInt(mainTxt(i)("tbl_txt_ystyle")), _
-'													wordStorager(i), _
-'													Wc.optWord("Cmb_Font"), _
-'													startYPos, _
-'													CSng(Wc.DefSet(4)), _
-'													CSng(Wc.DefSet(5)), _
-'													startXPos, _
-'													maxWidth, _
-'													Pr
-'													)
-'							Call Pr.CreateWordDiff(wordStorager(i), Wc.optWord("Cmb_Font"), irrXYPos)
-'							
-'							startXPos = startXPos - maxWidth
-'******************************未使用↑******************************
 						End If
-						
-						
 					Case 2	'天地
 						'END: 天地の場合の文字ピッチを計算
 						'END: pointDiffCheckerをつける
 						If FontSizeDifChecker(storageWord(i)) = True Then							'★★全て同じフォントサイズの時★★
-'							End If
 							startYPos= CheckNewYPos(CSng(mainTxt(i)("tbl_txt_newypos")))
 							Dim properPit As Single = PitchCal(startYPos, _
 																CSng(Wc.DefSet(4)), _
@@ -429,7 +317,86 @@ Public Class Common
 							Call Pr.CreateWord(storageWord(i), Wc.optWord("Cmb_Font"))
 						Else															'フォントサイズが異なる
 							'TODO: ★★フォントサイズが違う時★★
-						end If	
+							'現状使用するパターンがない -> あるとエラーに
+#If debug Then
+							Call CheckErrSentence(storageWord)
+#End If
+						End If	
+					Case 3		'ツーセンテンス上下
+						If FontSizeDifChecker(DirectCast(storageWord(i), ArrayList)) = True Then							'★★全て同じフォントサイズの時★★#If Debug then
+#If Debug then
+						Try
+#End If
+							Dim fontSize() As Single = GetMaxWord(Wc.optWord("Cmb_Font"), storageWord(i), Pr)
+							Dim targetObj() As String = CStr(DirectCast(Wc.mainTxt(i), Hashtable)("tbl_txt_targetword")).Split(",")
+							Dim totalWordLength As Single = 0
+	
+							startYPos = CheckNewYPos(CSng(DirectCast(Wc.mainTxt(i), Hashtable)("tbl_txt_newypos")))
+							startXPos = startXPos - (CSng(Wc.DefSet(5)) + fontSize(1)) + CheckNewXPos(CSng(Directcast(mainTxt(i), Hashtable)("tbl_txt_newxpos")))
+							
+							Dim properPit As Single = PitchCal(startYPos, _
+																CSng(Wc.DefSet(4)), _
+																storageWord(i), _
+																Wc.optWord("Cmb_Font"), _
+																0, _
+																Pr _
+																)
+
+							For j As Integer = 0 To Cstr(Wc.optWord(targetObj(0))).Length - 1 Step 1
+								storageWord(i)(j)(2) = startYPos
+								storageWord(i)(j)(3) = startXPos
+								startYPos = startYPos + fontSize(0) + properPit
+								totalWordLength = totalWordLength + fontSize(0)
+								WriteLine(storageWord(i)(j)(0))
+								WriteLine(storageWord(i)(j)(1))
+								WriteLine(storageWord(i)(j)(2))
+								WriteLine(storageWord(i)(j)(3))
+							Next j
+							
+							'TODO: 下の文字位置設定
+							If Wc.optWord(targetObj(1)) <> "" Then
+								properPit = PitchCal(startYPos, _
+														Wc.DefSet(4), _
+														DirectCast(storageWord(i), ArrayList), _
+														Wc.optWord("Cmb_Font"), _
+														1, _
+														Pr _
+													)
+								startYPos = CSng(Wc.DefSet(4)) _
+											- (fontSize(0) * CSng(DirectCast(storageWord(i), ArrayList).Count)) _
+											+ (properPit * (CSng(DirectCast(storageWord(i), ArrayList).Count)) - 1)
+							
+								If startYPos <= totalWordLength Then
+									startYPos = totalWordLength
+									properPit = 0
+									properPit = PitchCal(startYPos, _
+															Wc.DefSet(4), _
+															storageWord(i), _
+															Wc.optWord("Cmb_Font"), _
+															2, _
+															Pr _
+														)
+								End If
+								
+								For j As Integer = CStr(Wc.optWord(targetObj(0))).Length To _
+									(Cstr(Wc.optWord(targetObj(0))).Length + Cstr(Wc.optWord(targetObj(1))).Length) -1 Step 1
+									storageWord(i)(j)(2) = startYPos
+									startYPos = startYPos + fontSize(0) + properPit
+								Next j
+								
+							End If
+							Call Pr.CreateWord(storageWord(i), Wc.optWord("Cmb_Font"))
+#If Debug then
+							Catch ex As Exception
+							End Try
+#End If
+						Else															'フォントサイズが異なる
+							'TODO: ★★フォントサイズが違う時★★
+							'現状使用するパターンがない -> あるとエラーに
+#If debug Then
+							Call CheckErrSentence(storageWord)
+#End If
+						End If	
 					End Select
 
 					startYPos = 0
@@ -442,6 +409,44 @@ Public Class Common
 
 	End Sub
 	
+'開発用文字配列出力関数
+	Private Sub	CheckErrSentence(storageWord As ArrayList)
+		MessageBox.Show("フォントサイズ違い")
+		Dim outputStr As String = ""
+		Dim z As Integer = 0
+		
+		Do Until z = storageWord.Count
+			Dim q As Integer = 0
+			outputStr &= z & "行目" & vbCrLf
+			Do Until q = storageWord(z).Count
+				outputStr &= storageWord(z)(q)(0) & "★"
+				outputStr &= storageWord(z)(q)(1) & "★"
+				outputStr &= storageWord(z)(q)(2) & "★"
+				outputStr &= storageWord(z)(q)(3) & vbCrLf
+				q += 1
+			Loop
+			outputStr &= vbCrLf
+			q = 0
+			z += 1
+		Loop
+		Dim sw As System.IO.StreamWriter = Nothing
+		Try
+			sw = New System.IO.StreamWriter("C:\Users\madman190382\Desktop\FontSizeDiffLog.txt", _
+				False,
+				System.Text.Encoding.GetEncoding("UTF8")
+				)
+			sw.WriteLine(outputStr)
+		Catch e As Exception
+			MessageBox.Show("フォントサイズ違いログの保存に失敗しました")
+		Finally
+			If sw IsNot Nothing Then
+				sw.Close()
+				sw.Dispose()
+			End If
+		End Try
+
+	End Sub
+
 'データを置き換える
 ''' ■WordReplacer
 ''' <summary>コンボ変更に対して文字挿入、y軸位置、x軸位置を決める</summary>
@@ -461,16 +466,17 @@ Public Class Common
 '		Ar.Insert(2, "aho")
 '		Ar.RemoveRange(2, 2)
 
-	'再描画行の文字データを取得
-		Dim mainTxt As New Hashtable()
-		Dim SctSql As New SelectSql()
-		mainTxt = SctSql.GetTbl_TxtRow(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"), lineNo)
-		SctSql = Nothing
+		'再描画行の文字データを取得
+'		Dim mainTxt As New Hashtable
+'		以下３行out 2013/9/29
+'		Dim SctSql As New SelectSql()
+'		mainTxt = SctSql.GetTbl_TxtRow(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"), lineNo)
+'		SctSql = Nothing
 		
 		'フォントサイズが全て同じかどうか確認する
 		Dim fontSizeDif As Boolean
-		If Wc.curWord(lineNo)(0)(0) <> "" Then
-			fontSizeDif = FontSizeDifChecker(Wc.curWord(lineNo))
+		If DirectCast(DirectCast(Wc.curWord(lineNo), ArrayList)(0), String())(0) <> "" Then
+			fontSizeDif = FontSizeDifChecker(DirectCast(Wc.curWord(lineNo), ArrayList))
 		Else
 			fontSizeDif = True
 		End If
@@ -486,24 +492,24 @@ Public Class Common
 			If newTargetTxt IsNot Nothing Then
 				Wc.optWord(newTargetTxt.Name) = newTargetTxt.Text
 			End if
-			'★ArrayListの値を移しておく
-			Dim tempCurWord As New Hashtable
-			tempCurWord("fontSize") = Wc.curWord(lineNo)(0)(1)					'フォントサイズ
-			tempCurWord("xPos") = Wc.curWord(lineNo)(0)(3)						'x軸位置
+			'ArrayListの値を移しておく
+			Dim tempWord As New Hashtable
+			tempWord("fontSize") = Wc.curWord(lineNo)(0)(1)					'フォントサイズ
+			tempWord("xPos") = Wc.curWord(lineNo)(0)(3)						'x軸位置
 			'curWordの任意の行のデータを削除しておく
 			Wc.curWord(lineNo).Clear
-			'★挿入位置を取得
+			'挿入位置を取得
 			Dim insPos() As String
-			insPos = CStr(mainTxt("tbl_txt_inspos")).Split(","c)
+			insPos = CStr(Wc.mainTxt(lineNo)("tbl_txt_inspos")).Split(","c)
 			'挿入文字配列を取得
 			Dim insWord As array
-			insWord = CheckInsWord(mainTxt("tbl_txt_inspos"), _
-    	                           mainTxt("tbl_txt_targetword"), _
-    	                           mainTxt("tbl_txt_targetpoint"), _
+			insWord = CheckInsWord(Wc.mainTxt(lineNo)("tbl_txt_inspos"), _
+    	                           Wc.mainTxt(lineNo)("tbl_txt_targetword"), _
+    	                           Wc.mainTxt(lineNo)("tbl_txt_targetpoint"), _
     	                           lineNo _
     	                           )
 			
-			Dim loopCounter As Integer = CInt(CStr(mainTxt("tbl_txt_txt")).Length)
+			Dim loopCounter As Integer = CInt(CStr(Wc.mainTxt(lineNo)("tbl_txt_txt")).Length)
 			'挿入文字の字数をループカウンター（不変文字数）に加算する
 			For i As Integer = 0 To 2 Step 1
 				If CInt(insPos(i)) <> 9999 Then
@@ -520,8 +526,8 @@ Public Class Common
 				If IsArray(insWord(k)) = True AndAlso CInt(insWord(k)(1)) = i Then
 					For j As Integer = 2 To CInt(insWord(k).Length - 1) Step 1
 						wordDetail(0) = insWord(k)(j)
-						wordDetail(1) = tempCurWord("fontSize")
-						wordDetail(3) = tempCurWord("xPos")					'フォントサイズが同じ為、文字が増えてもx軸位置は不変 -> そのまま使用する
+						wordDetail(1) = tempWord("fontSize")
+						wordDetail(3) = tempWord("xPos")					'フォントサイズが同じ為、文字が増えてもx軸位置は不変 -> そのまま使用する
 						wordInLine.Add(wordDetail)
 						wordDetail = {"", "", "", ""}						'宣言を移動（スコープを増やす）・フォーマット（他４箇所同じ）
 						i = i + 1
@@ -529,9 +535,9 @@ Public Class Common
 					i = i - 1
 					k = k + 1
 				Else
-					wordDetail(0) = CStr(mainTxt("tbl_txt_txt")).Substring(l, 1)
-					wordDetail(1) = tempCurWord("fontSize")
-					wordDetail(3) = tempCurWord("xPos")
+					wordDetail(0) = CStr(Wc.mainTxt(lineNo)("tbl_txt_txt")).Substring(l, 1)
+					wordDetail(1) = tempWord("fontSize")
+					wordDetail(3) = tempWord("xPos")
 					wordInLine.add(wordDetail)
 					wordDetail = {"", "", "", ""}
 					l = l + 1
@@ -539,8 +545,8 @@ Public Class Common
 			Next i
 			If loopCounter = 0 Then		'文字無し対策　2013/9/8 add 7 lines mb
 				wordDetail(0) = ""
-				wordDetail(1) = tempCurWord("fontSize")
-				wordDetail(3) = tempCurWord("xPos")					'フォントサイズが同じ為、文字が増えてもx軸位置は不変 -> そのまま使用する
+				wordDetail(1) = tempWord("fontSize")
+				wordDetail(3) = tempWord("xPos")					'フォントサイズが同じ為、文字が増えてもx軸位置は不変 -> そのまま使用する
 				wordInLine.Add(wordDetail)
 				wordDetail = {"", "", "", ""}						'宣言を移動（スコープを増やす）・フォーマット（他４箇所同じ）
 			End If
@@ -554,7 +560,7 @@ Public Class Common
 
 			Select Case yStyle
 				Case 0, 2
-					startYPos = CheckNewYPos(CSng(mainTxt("tbl_txt_newypos")))
+					startYPos = CheckNewYPos(CSng(Wc.mainTxt(lineNo)("tbl_txt_newypos")))
 					properPit = PitchCal(startYPos, _
 										Wc.DefSet(4), _
 										wordInLine, _
@@ -574,8 +580,76 @@ Public Class Common
 					
 					If startYPos <= CSng(Wc.DefSet(3)) Then
 						startYPos = CSng(Wc.DefSet(3))
+						properPit = 0
+						properPit = PitchCal(startYPos, _
+												Wc.DefSet(4), _
+												wordInLine, _
+												Wc.optWord("Cmb_Font"), _
+												yStyle, _
+												Pr _
+												)
 					End If
+				Case 3 '2013/9/29 追加　ツーセンテンス上下 (フォントサイズ同じ場合）
+					'END: ツーセンテンス上下処理の実装
+					'END: 上の文字位置
+					startYPos = CheckNewYPos(CSng(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_newypos")))
+					Dim targetObj() As string = DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_targetword").ToString().Split(","c)
+					
+					If Wc.optWord(targetObj(0)) <> "" Then
+						For i As Integer = 0 To Cstr(Wc.optWord(targetObj(0))).Length - 1 Step 1
+							wordInLine(i)(2) = startYPos
+							startYPos = startYPos + maxWord(0) + Csng(Wc.DefSet(6))								'上文字はピッチ調整をしない
+						Next i
+					End If
+					'END: 下の文字位置設定
+					If Wc.optWord(targetObj(1)) <> "" Then
+						'下文字のみのArrayListを判定用に作る
+						Dim tempWordDetal(1) As String
+						Dim tempWordInLine As New ArrayList
+						For i As Integer = 0 To Wc.optWord(targetObj(1)).Length - 1 Step 1
+							tempWordDetal(0) = Wc.optWord(targetObj(1)).Substring(i, 1)
+							tempWordDetal(1) = tempWord("fontSize")
+							tempWordInLine.Add(tempWordDetal)
+							tempWordDetal = {"", ""}
+						Next i
+						properPit = PitchCal(startYPos, _
+												Wc.DefSet(4), _
+												tempWordInLine, _
+												Wc.optWord("Cmb_Font"), _
+												1, _
+												Pr _
+												)
+						Dim wordLength = CSng(Wc.DefSet(4)) - ((maxWord(0) * CSng(CStr(Wc.optWord(targetObj(1))).Length)))
+						If CStr(Wc.optWord(targetObj(1))).Length > 1 Then
+							wordLength = wordLength - (properPit * (CSng(CStr(Wc.optWord(targetObj(1))).Length)) - 1)
+						End If
+						
+						If wordLength <= startYPos Then
+							properPit = 0
+							properPit = PitchCal(startYPos, _
+													Wc.DefSet(4), _
+													tempwordInLine, _
+													Wc.optWord("Cmb_Font"), _
+													2, _
+													Pr _
+													)
+							tempWordInLine = Nothing
+							For i As Integer = CStr(Wc.optWord(targetObj(0))).Length To (CStr(Wc.optWord(targetObj(0))).Length + CStr(Wc.optWord(targetObj(1))).Length) -1 Step 1
+								wordInLine(i)(2) = startYPos
+								startYPos = startYPos + maxWord(0) + properPit
+							Next i
 
+						Else
+							startYPos = Wc.DefSet(4) - maxWord(0)
+							For i As Integer = (CStr(Wc.optWord(targetObj(0))).Length + CStr(Wc.optWord(targetObj(1))).Length) -1 To CStr(Wc.optWord(targetObj(0))).Length Step -1
+								wordInLine(i)(2) = startYPos
+								startYPos = startYPos - (maxWord(0) + properPit)
+							Next i
+						End If
+					End If
+					
+					Wc.curWord(lineNo) = wordInLine
+					Exit Sub
 			End Select
 			
 			For i As Integer = 0 To loopCounter - 1 Step 1
@@ -608,20 +682,21 @@ Public Class Common
 			'END: 文字数０から文字有りに変化する時を考える(場所をどのように判断するのか？フォントサイズは？)
 			'CheckInsWordで全ての処理が可能でした2013/9/15
 			'END: イレギュラーサイズにした時移行の行でイレギュラーがあるとx軸位置がおかしくなる
+			
 			'ArrayListを削除
 			Wc.curWord(lineNo).Clear
 			'挿入位置を取得
 			Dim insPos() As String
-			insPos = CStr(mainTxt("tbl_txt_inspos")).Split(","c)
+			insPos = CStr(Wc.mainTxt(lineNo)("tbl_txt_inspos")).Split(","c)
 			'挿入文字配列を取得
 			Dim insWord As array
-			insWord = CheckInsWord(mainTxt("tbl_txt_inspos"), _
-    	                           mainTxt("tbl_txt_targetword"), _
-    	                           mainTxt("tbl_txt_targetpoint"), _
+			insWord = CheckInsWord(Wc.mainTxt(lineNo)("tbl_txt_inspos"), _
+    	                           Wc.mainTxt(lineNo)("tbl_txt_targetword"), _
+    	                           Wc.mainTxt(lineNo)("tbl_txt_targetpoint"), _
     	                           lineNo _
     	                           )
 			
-			Dim loopCounter As Integer = CInt(CStr(mainTxt("tbl_txt_txt")).Length)
+			Dim loopCounter As Integer = CInt(CStr(Wc.mainTxt(lineNo)("tbl_txt_txt")).Length)
 			'挿入文字の字数をループカウンター（不変文字数）に加算する
 			For i As Integer = 0 To 2 Step 1
 				If CInt(insPos(i)) <> 9999 Then
@@ -646,7 +721,7 @@ Public Class Common
 					i = i - 1
 					k = k + 1
 				Else
-					wordDetail(0) = CStr(mainTxt("tbl_txt_txt")).Substring(l, 1)
+					wordDetail(0) = CStr(Wc.mainTxt(lineNo)("tbl_txt_txt")).Substring(l, 1)
 					wordDetail(1) = Wc.DefSet(1)
 					wordInLine.add(wordDetail)
 					wordDetail = {"", "", "", ""}
@@ -656,7 +731,7 @@ Public Class Common
 
 			Wc.curWord(lineNo) = wordInLine
 
-			Dim startYPos As Single = CheckNewYPos(mainTxt("tbl_txt_newypos"))
+			Dim startYPos As Single = CheckNewYPos(Wc.mainTxt(lineNo)("tbl_txt_newypos"))
 				
 			Dim lastWordXPos As Single
 				
@@ -667,7 +742,7 @@ Public Class Common
 			Else
 				lastWordXPos = 0
 			End If
-			
+			'TODO:ツーセンテンス上下の時を考える
 			Dim maxWord As Single = SetIrregXYPos(lineNo, _
 													yStyle, _
 													Wc.curWord(lineNo), _
@@ -744,7 +819,7 @@ End sub
         Return returnAr
 
 	End Function
-'TODO:引数からcurWordを外す（不具合あり）
+	
 'フォントサイズを変更する
 '''■ChangeFontSize
 ''' <summary>フォントサイズを変更して新しい位置を求める</summary>
@@ -763,8 +838,8 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 		Dim startYPos As Single
 		'END: y軸位置がイレギュラーでないか？
 		Dim SctSql As New SelectSql
-		Dim txtRow As New Hashtable 
-		txtRow = SctSql.GetTbl_TxtRow(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"), lineNo)
+'		Dim txtRow As New Hashtable 
+'		txtRow = SctSql.GetTbl_TxtRow(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"), lineNo)
 				
 		Select Case changeType								'★★全体変更
 			Case 0
@@ -773,9 +848,8 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 
 				If lineNo <> 0 Then
 					Dim wordNum As Integer
-					Dim tempLastWordXPos() As Single = GetMaxWord(Wc.optWord("Cmb_Font"), Wc.curWord(lineNo - 1), Pr, wordNum)  'Wc.curWord(lineNo - 1)(0)(3)
-					lastWordXPos = CSng(Wc.curWord(lineNo - 1)(wordNum)(3))
-
+					Dim tempLastWordXPos() As Single = GetMaxWord(Wc.optWord("Cmb_Font"), DirectCast(Wc.curWord(lineNo - 1), ArrayList), Pr, wordNum)  'Wc.curWord(lineNo - 1)(0)(3)
+					lastWordXPos = CSng(DirectCast(Directcast(Wc.curWord(lineNo - 1),ArrayList)(wordNum), String())(3))
 				Else
 					lastWordXPos = 0
 				End If
@@ -803,24 +877,24 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 				End If
 				
 				'END: 新しいx軸位置の確定
-				Dim startNewXPos As Single 
-				startNewXPos =lastWordXPos - (maxWordSize(1) + Csng(Wc.DefSet(5)))
+				Dim startNewXPos As Single
+				startNewXPos =lastWordXPos - (maxWordSize(1) + Csng(Wc.DefSet(5))) + CheckNewXPos(CSng(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_newxpos")))
 				'END: 配列にx軸位置を突っ込む
 				For i As Integer = 0 To Wc.curWord(lineNo).Count - 1 Step 1
 					Wc.curWord(lineNo)(i)(3) = startNewXPos
 				Next i
 			
-				startYPos = CheckNewYPos(txtRow("tbl_txt_newypos"))
+				startYPos = CheckNewYPos(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_newypos"))
 				
 				Dim properPit As Single = PitchCal(startYPos, _
 													CSng(Wc.DefSet(4)), _
 													Wc.curWord(lineNo), _
 													Wc.optWord("Cmb_Font"), _
-													CInt(txtRow("tbl_txt_ystyle")), _
+													CInt(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_ystyle")), _
 													Pr _
 													)
 				'END: y軸位置を決めていく
-				Select Case txtRow("tbl_txt_ystyle")
+				Select Case DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_ystyle")
 					Case "0", "2"
 						Call YPosCal(Wc.curWord(lineNo), Wc.optWord("Cmb_Font"), startYPos, properPit, Pr)
 					Case "1"
@@ -837,16 +911,16 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 			Case 1												'★★部分変更
 				'挿入位置を取得
 				Dim insPos() As String
-				insPos = CStr(txtRow("tbl_txt_inspos")).Split(","c)
+				insPos = CStr(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_inspos")).Split(","c)
 				'挿入文字配列を取得
 				Dim insWord As array
-				insWord = CheckInsWord(txtRow("tbl_txt_inspos"), _
-    	        	                   txtRow("tbl_txt_targetword"), _
-    	        	                   txtRow("tbl_txt_targetpoint"), _
+				insWord = CheckInsWord(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_inspos"), _
+    	        	                   DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_targetword"), _
+    	        	                   DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_targetpoint"), _
     	        	                   lineNo _
     	        	                   )
 			
-				Dim loopCounter As Integer = CInt(CStr(txtRow("tbl_txt_txt")).Length)
+				Dim loopCounter As Integer = CInt(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_txt").Length)
 				'挿入文字の字数をループカウンター（不変文字数）に加算する
 				For i As Integer = 0 To 2 Step 1
 					If CInt(insPos(i)) <> 9999 Then
@@ -871,7 +945,7 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 						i = i - 1
 						k = k + 1
 					Else
-						wordDetail(0) = CStr(txtRow("tbl_txt_txt")).Substring(l, 1)
+						wordDetail(0) = CStr(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_txt")).Substring(l, 1)
 						wordDetail(1) = Wc.DefSet(1)
 						wordInLine.add(wordDetail)
 						wordDetail = {"", "", "", ""}
@@ -891,7 +965,7 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 				Wc.curWord(lineNo) = wordInLine
 				
 				'CHK: イレギュラー位置の決定
-				startYPos = CheckNewYPos(txtRow("tbl_txt_newypos"))
+				startYPos = CheckNewYPos(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_newypos"))
 				
 				Dim lastWordXPos As Single
 				
@@ -905,7 +979,7 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 				'END: イレギュラーでない処理
 				If FontSizeDifChecker(Wc.curWord(lineNo)) = True Then
 					Dim maxWordSize() As Single = GetMaxWord(Wc.optWord("Cmb_Font"), Wc.curWord(lineNo), Pr)
-					Dim startNewXPos As Single = lastWordXPos - (maxWordSize(1) + Csng(Wc.DefSet(5)))
+					Dim startNewXPos As Single = lastWordXPos - (maxWordSize(1) + Csng(Wc.DefSet(5))) + CheckNewXPos(CSng(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_newxpos")))
 					'x軸位置を突っ込む
 					For i As Integer = 0 To Wc.curWord(lineNo).Count - 1 Step 1
 						Wc.curWord(lineNo)(i)(3) = startNewXPos
@@ -917,11 +991,11 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 														CSng(Wc.DefSet(4)), _
 														Wc.curWord(lineNo), _
 														Wc.optWord("Cmb_Font"), _
-														CInt(txtRow("tbl_txt_ystyle")), _
+														CInt(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_ystyle")), _
 														Pr _
 														)
 					'y軸位置を決めていく
-					Select Case txtRow("tbl_txt_ystyle")
+					Select Case DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_ystyle")
 						Case "0", "2"
 							Call YPosCal(Wc.curWord(lineNo), Wc.optWord("Cmb_Font"), startYPos, properPit, Pr)
 						Case "1"
@@ -936,7 +1010,7 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 					Call ShiftXPos(lineNo,  startNewXPos, Pr)
 				Else
 					Dim maxWord As Single = SetIrregXYPos(lineNo, _
-															txtRow("tbl_txt_ystyle"), _
+															DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_ystyle"), _
 															Wc.curWord(lineNo), _
 															Wc.optWord("Cmb_Font"), _ 
 															startYPos, _
@@ -944,7 +1018,7 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 															Pr)
 					Call ShiftXPos(lineNo,  maxWord, Pr)
 				End If
-			Case 2
+			Case 2											'★★マルチ変更
 				'END lastWordXPos 要再考
 				Dim lastWordXPos As Single
 				Dim startNewXPos As Single
@@ -977,29 +1051,29 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 							tempWordInLine = Nothing
 							tempCurWord = Nothing
 					End If
-					Dim txtRow2 As New Hashtable 
-					txtRow2 = SctSql.GetTbl_TxtRow(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"), i)
+					'Dim txtRow2 As New Hashtable 
+					'txtRow2 = SctSql.GetTbl_TxtRow(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"), i)
 					If i = lineNo Then
-						startNewXPos =lastWordXPos - (maxWordSize(1) + Csng(Wc.DefSet(5))) + CheckNewXPos(CSng(txtRow2("tbl_txt_newxpos")))
+						startNewXPos =lastWordXPos - (maxWordSize(1) + Csng(Wc.DefSet(5))) + CheckNewXPos(CSng(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_newxpos")))
 					Else
-						startNewXPos = startNewXPos - (maxWordSize(1) + Csng(Wc.DefSet(5))) + CheckNewXPos(CSng(txtRow2("tbl_txt_newxpos")))
+						startNewXPos = startNewXPos - (maxWordSize(1) + Csng(Wc.DefSet(5))) + CheckNewXPos(CSng(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_newxpos")))
 					End If
 					'x軸位置を突っ込む
 					For j As Integer = 0 To Wc.curWord(i).Count - 1 Step 1
 						Wc.curWord(i)(j)(3) = startNewXPos
 					Next j
 				
-					startYPos= CheckNewYPos(CSng(txtRow("tbl_txt_newypos")))
+					startYPos= CheckNewYPos(CSng(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_newypos")))
 
 					Dim properPit As Single = PitchCal(startYPos, _
 														CSng(Wc.DefSet(4)), _
 														Wc.curWord(i), _
 														Wc.optWord("Cmb_Font"), _
-														CInt(txtRow("tbl_txt_ystyle")), _
+														CInt(DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_ystyle")), _
 														Pr _
 														)
 					'y軸位置を決めていく
-					Select Case txtRow("tbl_txt_ystyle")
+					Select Case DirectCast(Wc.mainTxt(lineNo), Hashtable)("tbl_txt_ystyle")
 						Case "0", "2"
 							Call YPosCal(Wc.curWord(i), Wc.optWord("Cmb_Font"), startYPos, properPit, Pr)
 						Case "1"
@@ -1019,7 +1093,7 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 		End Select
 		
 		SctSql = Nothing
-		txtRow = Nothing
+		'txtRow = Nothing
 
 	End Sub
 	
@@ -1389,7 +1463,7 @@ Public Function CheckLineLength(storageWord As ArrayList, font As String, Pr As 
 ''' <param name="storageWord">ArrayList 文字情報配列</param>
 ''' <param name= "Pr">PrintReport.vb</param>
 ''' <param name="wordNum">Optional ByRef Integer 最大幅の字がある文字番号</param>			'2013/9/1 add mb
-''' <returns>1行内にある文字の最大幅を返す</returns> 
+''' <returns>1行内にある文字の最大幅を返す y = 0 x = 1</returns> 
 	Public function GetMaxWord(font As String, storageWord As arraylist, Pr As PrintReport, Optional ByRef wordNum As Integer = 0) As Single()
 		'y軸の最大値は今のところ必要ないので未実装 2013/7/27 mb -> 2013/9/1 y軸も使いたいのでテストする
 		Dim wordSize() As Single = {0s, 0s}	

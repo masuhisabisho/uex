@@ -156,9 +156,10 @@ Public Class ClearForm
     				'初期設定の値は下の通り
     				'Specific part
     				.Cmb_Style.SelectedValue = 0
-    				
     				.Cmb_Hyodai.SelectedValue = "忌明志"
+    				.Cmb_Hyodai.Enabled = True
     				.Txt_Namae.Text = ""
+    				.Txt_Namae.Enabled = True 
     				.Cmb_SeasonWord.SelectedValue = "厳寒の候"
     				.Cmb_Time1.SelectedValue = "先般"
     				.Cmb_Title.SelectedValue = " 亡父 "

@@ -8,17 +8,16 @@
 '
 Imports System.Diagnostics.Debug		'開発用
 
-
 Public Class Common
 	'END: また文字無しにした時にエラーが出るのが再発している
-	'Private defSet As New Hashtable
 	Private Wc As WordContainer
+	Private Const objCnt As Integer = 3		'挿入Objの最大数
 	
 	Public sub new (wordCont As WordContainer)
-		'defSet = wordCont.DefSetAll.Clone
 		Wc = wordCont
 	End Sub
-
+	
+	
 #Region "Word"
 '2013/8/4　に　文字・フォント・y軸位置・x軸位置 スタイルに変更
 ''''■WordPreparer
@@ -347,10 +346,6 @@ Public Class Common
 								storageWord(i)(j)(3) = startXPos
 								startYPos = startYPos + fontSize(0) + properPit
 								totalWordLength = totalWordLength + fontSize(0)
-								WriteLine(storageWord(i)(j)(0))
-								WriteLine(storageWord(i)(j)(1))
-								WriteLine(storageWord(i)(j)(2))
-								WriteLine(storageWord(i)(j)(3))
 							Next j
 							
 							'TODO: 下の文字位置設定
@@ -786,7 +781,7 @@ End sub
         splitTargetWord = targetWord.Split(",")										'分割された挿入文字
         splitTargetPoint = targetPoint.Split(",")									'それぞれのフォントサイズ
         
-        For i As Integer = 0 To 2 Step 1											'現状1行に3挿入までにする
+        For i As Integer = 0 To objCnt Step 1											'現状1行に3挿入までにする
         	If splitInsPos(i) <> "9999" Then
         		Dim storageWord As String = Wc.optWord(splitTargetWord(i))
         		Dim wordPoint As String = Wc.optWord(splitTargetPoint(i))
@@ -1101,7 +1096,6 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 
 #Region "Position"
 
-'TODO: 上と下を同時に位置設定する関数
 
 '''■ShiftXpos
 ''' <summary>フォントサイズを変更した時の残りの行のx軸位置を増えた分だけずらす</summary>
@@ -1111,27 +1105,27 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 ''' <returns>Void Wc.curWordに計算値を当て込んでいく</returns>
 	Public Sub ShiftXPos(ByVal lineNo As Integer, ByVal startNewXPos As Single, Pr As PrintReport)
 		Dim MaxWidth() As Single
-		Dim SctSql As New SelectSql
-		Dim txtRow As New ArrayList 
-		txtRow = SctSql.GetSentence(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"))
-		SctSql = Nothing
+'		Dim SctSql As New SelectSql
+'		Dim txtRow As New ArrayList 
+'		txtRow = SctSql.GetSentence(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"))
+'		SctSql = Nothing
 		
 		For i As Integer = lineNo + 1 To Wc.curWord.Count - 1 Step 1
 			If Wc.curWord(i)(0)(0) <> "" Then						'END: イレギュラー行に対応する
 				If FontSizeDifChecker(Wc.curWord(i)) = False Then
 					
 					Dim maxWord As Single = SetIrregXYPos(i, _
-															txtRow(i)("tbl_txt_ystyle"), _
+															Wc.mainTxt(i)("tbl_txt_ystyle"), _
 															Wc.curWord(i), _
 															Wc.optWord("Cmb_Font"), _ 
-															CheckNewYPos(CSng((txtRow(i)("tbl_txt_newypos")))), _
+															CheckNewYPos(CSng((Wc.mainTxt(i)("tbl_txt_newypos")))), _
 															startNewXPos, _
 															Pr
 														 )
-					startNewXPos = maxWord + CheckNewXPos(CSng(txtRow(i)("tbl_txt_newxpos")))
+					startNewXPos = maxWord + CheckNewXPos(CSng(Wc.mainTxt(i)("tbl_txt_newxpos")))
 				Else
 					MaxWidth = GetMaxWord(Wc.optWord("Cmb_Font"), Wc.curWord(i), Pr)
-					startNewXPos = startNewXPos - (MaxWidth(1) + Wc.DefSet(5)) + CheckNewXPos(CSng(txtRow(i)("tbl_txt_newxpos")))
+					startNewXPos = startNewXPos - (MaxWidth(1) + Wc.DefSet(5)) + CheckNewXPos(CSng(Wc.mainTxt(i)("tbl_txt_newxpos")))
 			
 					For j As Integer = 0 To Wc.curWord(i).Count - 1 Step 1
 						Wc.curWord(i)(j)(3) = startNewXPos
@@ -1149,7 +1143,7 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 				tempWordDetail = Nothing
 				tempWordInLine = Nothing
 				tempCurWord = Nothing
-				startNewXPos = startNewXPos - (MaxWidth(1) + Wc.DefSet(5)) + CheckNewXPos(CSng(txtRow(i)("tbl_txt_newxpos")))
+				startNewXPos = startNewXPos - (MaxWidth(1) + Wc.DefSet(5)) + CheckNewXPos(CSng(Wc.mainTxt(i)("tbl_txt_newxpos")))
 				Wc.curWord(i)(0)(3) = startNewXPos
 				
 			End If

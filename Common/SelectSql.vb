@@ -260,45 +260,95 @@ Public Class SelectSql
 ''' <summary>初期設定値を設定する</summary>
 ''' <param name="sizeID">tbl_defsetのID</param>
 ''' <returns>WordContainer.vbに値を保存する</returns>	'2013/8/3 Function　-> Subへ全てまとめて処理するように変更 mb
-	Public Sub SetDefaultVal(sizeID As Integer, Wc As WordContainer)
+	Public Sub SetDefaultVal(sizeID As Integer, styleID As Integer, Wc As WordContainer)
+		
+		'現在の用紙サイズID															'2013/10/6 PrintReportより移動
+		Wc.CurrentSet("curSize") = sizeID
+		Wc.CurrentSet("curStyle") = styleID
 		
 		Dim sqlText As String= ""
-		Dim defset As String = ""
-		Dim resultDefset() As String 
+		Dim getList As New Hashtable
 		
-		sqlText =  " SELECT "														'初期設定
-		sqlText &= " tbl_defset"													'(0) 縦 = 0・横 = 1, (1) ポイント (2) x座標（幅), 
-		sqlText &= " FROM tbl_defset"												'(3) y座標上,　(4) y座標下, (5) 基本の改行ピッチ
-		sqlText &= " WHERE tbl_defset_id = " & sizeID								'MEMO: tbl_defset_idは上と連動させる
+		Dim splitList0() As String
+		Dim splitList1() As String
+		Dim splitList2() As String
+		Dim splitList3() As String
+		Dim splitList4() As String
 		
-		defset = GetOneSql(sqlText)
-		resultDefset = defSet.Split(","c)
+		Dim getListAr1 As New ArrayList
+		Dim getListAr2 As New ArrayList
+		Dim getListAr3 As New ArrayList
+		Dim getListAr4 As New ArrayList
 		
-		For i As Integer = 0 To resultDefset.Length -1 Step 1
-			Wc.DefSet(i) = resultDefset(i)
+		sqlText =  "  SELECT "
+		sqlText &= "  tbl_defset.tbl_defset AS defset "
+		sqlText &= " ,tbl_curset.tbl_curset_line as line "
+		sqlText &= " ,tbl_curset.tbl_curset_str as str "
+		sqlText &= " ,tbl_curset.tbl_curset_point as point "
+		sqlText &= " ,tbl_curset.tbl_curset_enabled as ebl"
+		sqlText &= "  FROM tbl_defset "
+		sqlText &= "  LEFT JOIN tbl_curset ON "
+		sqlText &= "  tbl_defset.tbl_defset_id = tbl_curset.tbl_curset_defset_id "
+		sqlText &= "  WHERE tbl_defset.tbl_defset_id = " & sizeID
+		sqlText &= "  AND tbl_curset.tbl_curset_defset_id = " & sizeID
+		sqlText &= "  AND tbl_curset.tbl_curset_id = " & styleID
+		getList = GetOneLineSql(sqlText)
+		
+		'用紙の初期設定
+		splitList0 = getList("defset").ToString().Split(","c)
+		For i As Integer = 0 To splitList0.Length -1 Step 1
+			Wc.DefSet(i) = splitList0(i)
 		Next i
+		
+		'可変文字列の行番号
+		splitList1 = getList("line").ToString().Split(","c)
+		For i As Integer = 0 To splitList1.Length - 1 Step 1
+			getListAr1.Add(splitList1(i))
+		Next i
+		Wc.ComboTextPos = getListAr1
+		
+		'可変文字列の初期値
+		splitList2 = getList("str").ToString().Split(","c)
+		For i As Integer = 0 To splitList2.Length - 1 Step 1
+			getListAr2.Add(splitList2(i))
+		Next i
+		Wc.ComboTextStr = getListAr2
+		
+		'フォントサイズの初期値
+		splitList3 = getList("point").ToString().Split(","c)
+		For i As Integer = 0 To splitList3.Length - 1 Step 1
+			getListAr3.Add(CInt(splitList3(i)))
+		Next i
+		Wc.ComboTextPoint = getListAr3
+		
+		'コンボ・テキストボックス可視性の初期値
+		splitList4 = getList("ebl").ToString().Split(","c)
+		For i As Integer = 0 To splitList4.Length - 1 Step 1
+			getListAr4.Add(CInt(splitList4(i)))
+		Next i
+		Wc.ComboTextPoint = getListAr4
 		
 	End Sub
 	
-'''■ GetTbl_TxtRow
-''' <summary>tbl_txtの任意の1行の全ての値を返す</summary>
-''' <param name="sizeID">Integer 用紙サイズID</param>
-''' <param name="sytleID">Integer 文例ID</param>
-''' <param name="orderNo">Integer 行番号</param>
-''' <returns>Tbl_txtの任意の1行の全ての値をHashtableで返す</returns>
-	Public Function GetTbl_TxtRow(sizeID As Integer, styleID As integer, orderNo As Integer) As Hashtable
-		Dim sqlText as String = ""
-		Dim resultTxt As New Hashtable
-		
-		sqlText &= " SELECT * FROM tbl_txt "
-		sqlText &= " WHERE tbl_txt_sizeid = " & sizeID
-		sqlText &= " AND tbl_txt_styleid = " & styleID
-		sqlText &= " AND tbl_txt_order = " & orderNo
-		
-		resultTxt = GetOneLineSql(sqlText)
-		
-		Return resultTxt
-	End Function
+''''■ GetTbl_TxtRow
+'''' <summary>tbl_txtの任意の1行の全ての値を返す</summary>
+'''' <param name="sizeID">Integer 用紙サイズID</param>
+'''' <param name="sytleID">Integer 文例ID</param>
+'''' <param name="orderNo">Integer 行番号</param>
+'''' <returns>Tbl_txtの任意の1行の全ての値をHashtableで返す</returns>
+'	Public Function GetTbl_TxtRow(sizeID As Integer, styleID As integer, orderNo As Integer) As Hashtable
+'		Dim sqlText as String = ""
+'		Dim resultTxt As New Hashtable
+'		
+'		sqlText &= " SELECT * FROM tbl_txt "
+'		sqlText &= " WHERE tbl_txt_sizeid = " & sizeID
+'		sqlText &= " AND tbl_txt_styleid = " & styleID
+'		sqlText &= " AND tbl_txt_order = " & orderNo
+'		
+'		resultTxt = GetOneLineSql(sqlText)
+'		
+'		Return resultTxt
+'	End Function
 	#End Region	
 	
 End Class

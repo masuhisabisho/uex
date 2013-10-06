@@ -28,25 +28,20 @@ Public Class ClearForm
     				.Cmb_Magnify.SelectedValue = 50
     				.Cmb_Thickness.SelectedIndex = 	Wc.DefaultThickness
     				
-    				'初期設定の値は下の通り
-    				'Specific part
+
+    				'TODO: 1)初期値, Enabled -> 変数に置き換える
     				.Cmb_Style.SelectedValue = 0
-    				
+    				'初期設定
     				.Cmb_Hyodai.SelectedValue = "忌明志"						'add 2 lines 2013/9/22
-    				.Cmb_Hyodai.Enabled = False
     				.Txt_Namae.Text = ""
-    				.Txt_Namae.Enabled = False
     				.Cmb_SeasonWord.SelectedValue = "厳寒の候"
     				.Cmb_Time1.SelectedValue = "先般"
     				.Cmb_Title.SelectedValue = " 亡父 "
     				.Txt_Name.Text = "儀"
     				.Cmb_DeathWay.SelectedValue = "死去"
     				.Cmb_Time2.SelectedValue = "本日"
-    				.Cmb_Time2.Enabled = False
     				.Txt_DeadName.Text = ""
-    				.Txt_DeadName.Enabled = False
     				.Cmb_Donation.SelectedValue = "御花料"
-    				.Cmb_Donation.Enabled = False
     				.Cmb_Imibi.SelectedValue = "忌明の法要"
     				.Cmb_EndWord.SelectedValue = "敬具"
     				.Cmb_Year.SelectedValue = currentDt(0)
@@ -55,7 +50,6 @@ Public Class ClearForm
     				.Txt_Add1.Text = ""
     				.Txt_Add2.Text = ""
     				.Cmb_HostType.SelectedValue = "施主"
-    				.Cmb_HostType.Enabled = False
     				.Txt_HostName1.Text = ""
     				.txt_HostName2.Text = ""
     				.Txt_HostName3.Text = ""
@@ -66,30 +60,68 @@ Public Class ClearForm
     				.Txt_PS4.Text = "御受納下さいます様お願い申し上げます"
     				.Txt_PS5.Text = ""
     				.Txt_PS6.Text = ""
-    				
-    				'Font Size
+    				'使用可・不可設定
+    				.Cmb_Hyodai.Enabled = False
+    				.Txt_Namae.Enabled = False
+    				.Cmb_SeasonWord.Enabled = False
+    				.Cmb_Time1.Enabled = False
+    				.Cmb_Title.Enabled = False
+    				.Txt_Name.Enabled = False
+    				.Cmb_DeathWay.Enabled = False
+    				.Cmb_Time2.Enabled = False
+    				.Txt_DeadName.Enabled = False
+    				.Cmb_Donation.Enabled = False
+    				.Cmb_Imibi.Enabled = False
+    				.Cmb_EndWord.Enabled = False
+    				.Cmb_Year.Enabled = False
+    				.Cmb_Month.Enabled = False
+    				.Cmb_Day.Enabled = False
+    				.Txt_Add1.Enabled = False
+    				.Txt_Add2.Enabled = False
+    				.Cmb_HostType.Enabled = False
+    				.Txt_HostName1.Enabled = False
+    				.txt_HostName2.Enabled = False
+    				.Txt_HostName3.Enabled = False
+    				.Txt_HostName4.Enabled = False
+    				.Txt_PS1.Enabled = False 
+    				.Txt_PS2.Enabled = False
+    				.Txt_PS3.Enabled = False
+    				.Txt_PS4.Enabled = False
+    				.Txt_PS5.Enabled = False
+    				.Txt_PS6.Enabled = False
+    				'フォントサイズ
     				.Cmb_PointHyodai.SelectedIndex = 0
-    				.Cmb_PointHyodai.Enabled = False
     				.Cmb_PointNamae.SelectedIndex = 0
-    				.Cmb_PointNamae.Enabled = False
     				.Cmb_PointTitle.SelectedIndex = 34
     				.Cmb_PointName.SelectedIndex = 34
     				.Cmb_PointDeadName.SelectedIndex = 0
-    				.Cmb_PointDeadName.Enabled = False
     				.Cmb_PointImibi.SelectedIndex = 34
     				.Cmb_PointEndWord.SelectedIndex = 34
     				.Cmb_PointCeremonyDate.SelectedIndex = 22
     				.Cmb_PointAdd1.SelectedIndex = 19
     				.Cmb_PointHostType.SelectedIndex = 0
-    				.Cmb_PointHostType.Enabled = False
     				.Cmb_PointHostName1.SelectedIndex = 34
     				.Cmb_PointHostName2.SelectedIndex = 34
     				.Cmb_PointHostName3.SelectedIndex = 34
     				.Cmb_PointHostName4.SelectedIndex = 34
     				.Cmb_PointPS1.SelectedIndex = 17
-    				
-    				'挿入等に使う
-    				'Specific Part（HashTableに格納）
+    				'使用可・不可設定
+    				.Cmb_PointHyodai.Enabled = False
+    				.Cmb_PointNamae.Enabled = False
+    				.Cmb_PointTitle.Enabled = False
+    				.Cmb_PointName.Enabled = False
+    				.Cmb_PointDeadName.Enabled = False
+    				.Cmb_PointImibi.Enabled = False
+    				.Cmb_PointEndWord.Enabled = False
+    				.Cmb_PointCeremonyDate.Enabled = False
+    				.Cmb_PointAdd1.Enabled = False
+    				.Cmb_PointHostType.Enabled = False
+    				.Cmb_PointHostName1.Enabled = False
+    				.Cmb_PointHostName2.Enabled = False
+    				.Cmb_PointHostName3.Enabled = False
+    				.Cmb_PointHostName4.Enabled = False
+    				.Cmb_PointPS1.Enabled = False
+    				'挿入文字
     				Wc.optWord("Cmb_Hyodai") = .Cmb_Hyodai.SelectedValue.ToString()		'add 1 lines 2013/9/24
     				Wc.optWord("Txt_Namae") = .Txt_Namae.Text
     				Wc.optWord("Cmb_SeasonWord")= .Cmb_SeasonWord.SelectedValue.ToString()
@@ -107,7 +139,6 @@ Public Class ClearForm
     				Wc.optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = '" & .Cmb_Month.SelectedValue.ToString() & "'")
     				Wc.optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = '" & .Cmb_Day.SelectedValue.ToString() & "'")
     				SctSql = Nothing
-    				'					'テキスト
     				Wc.optWord("Txt_Add1") = .Txt_Add1.Text
     				Wc.optWord("Txt_Add2") = .Txt_Add2.Text
     				Wc.optWord("Cmb_HostType") = .Cmb_HostType.SelectedValue.ToString()
@@ -130,7 +161,6 @@ Public Class ClearForm
     				'フォントサイズ
     				Wc.optWord("Cmb_PointHyodai") = .Cmb_PointHyodai.Text							'add 2 lines 2013/9/24 
     				Wc.optWord("Cmb_PointNamae") = .Cmb_PointNamae.Text
-    				
     				Wc.optWord("Cmb_PointTitle") = .Cmb_PointTitle.Text
     				Wc.optWord("Cmb_PointName") = .Cmb_PointName.Text
     				Wc.optWord("Cmb_PointDeadName") = .Cmb_PointDeadName.Text
@@ -144,7 +174,7 @@ Public Class ClearForm
     				Wc.optWord("Cmb_PointHostName3") = .Cmb_PointHostName3.Text
     				Wc.optWord("Cmb_PointHostName4") = .Cmb_PointHostName4.Text
     				Wc.optWord("Cmb_PointPS1") = .Cmb_PointPS1.Text
-    			End with
+    			End With
     		Case 1      '奉書挨拶状
     			With Pr
     				'CHK: 配列に基本設定を入れておく -> それをセレクトで選択して読む
@@ -263,6 +293,7 @@ Public Class ClearForm
     				Wc.optWord("Cmb_PointHostName3") = .Cmb_PointHostName3.Text
     				Wc.optWord("Cmb_PointHostName4") = .Cmb_PointHostName4.Text
     				Wc.optWord("Cmb_PointPS1") = .Cmb_PointPS1.Text
+
     			End With
     	End Select
 	End Sub

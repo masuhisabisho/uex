@@ -72,7 +72,7 @@ Public Partial Class PrintReport
 
 '		'初期設定の読み込み保存
 		Dim SctSql As New SelectSql
-		Call SctSql.SetDefaultVal(0, Wc)
+		Call SctSql.SetDefaultVal(0, 0, Wc)
 		
 		'TODO: フォントを追加できるようにする
 		'フォント（コンボ）設定
@@ -105,9 +105,9 @@ Public Partial Class PrintReport
 		Call ClrFrm.ClearForm(0, Me, Wc)
 		ClrFrm = Nothing
 		
-		'現在の用紙サイズID
-		Wc.CurrentSet("curSize") = 0														'初めて開いた時は一番最初の分にする、設定できるようにするか？
-		Wc.CurrentSet("curStyle") = 0
+'		'現在の用紙サイズID
+'		Wc.CurrentSet("curSize") = 0	移動 2013/10/6
+'		Wc.CurrentSet("curStyle") = 0	移動 2013/10/6
 		
 		'DBより文章データの取り込み
 		Wc.mainTxt = SctSql.GetSentence(0, 0)
@@ -160,8 +160,6 @@ Public Partial Class PrintReport
 
 #End Region
 
-
-
 #Region "イベント"
 
 #Region "用紙サイズ変更"
@@ -184,7 +182,7 @@ Public Partial Class PrintReport
 				Exit sub
 			Case "1"			'3ツ折り挨拶状
 				'初期値の読み込み
-				Call SctSql.SetDefaultVal(1, Wc)
+				Call SctSql.SetDefaultVal(1, 0, Wc)
 				'フォームをクリア
 				Call ClrFrm.ClearForm(1, Me, Wc)
 				'現在用紙・文例を保存
@@ -237,128 +235,141 @@ Public Partial Class PrintReport
 		
 		Dim Cmn As New Common(Wc)
 		
+		If sender Is Me.Cmb_Font Then
+			Wc.optWord("Cmb_Font") = Me.Cmb_Font.Text											'END: フォント 2013/7/21 mb 
+			Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+		End If
+		
 		ClearPicture(Me.Pic_Main, Cint(Wc.DefSet(2)), Cint(Wc.DefSet(4)))
-
-		Select Case True
-			'文字列
-			Case sender Is Me.Cmb_Font
-				Wc.optWord("Cmb_Font") = Me.Cmb_Font.Text							'END: フォント 2013/7/21 mb 
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-
-			Case sender Is	Me.Cmb_SeasonWord											'END: 季語 2013/7/20 mb
-				Call Cmn.WordReplacer(0, me, CInt(DirectCast(Wc.mainTxt(0), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-			Case sender Is	Me.Cmb_Time1												'END: 時期1 2013/7/20 mb
-				Call Cmn.WordReplacer(3, Me, CInt(DirectCast(Wc.mainTxt(3), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
-				Call RecreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+		Select Case Wc.CurrentSet("curSize")
+			Case 0, 1, 2, 3, 4, 5	'用紙サイズ
+				Select Case True
+						'文字列
+						'TODO: 変数で一気に処理したい
+					Case sender Is	Me.Cmb_SeasonWord											'END: 季語 2013/7/20 mb
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(2)), me, CInt(DirectCast(Wc.mainTxt(0), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Cmb_Time1												'END: 時期1 2013/7/20 mb
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(3)), Me, CInt(DirectCast(Wc.mainTxt(3), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
+						Call RecreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Cmb_Title												'END: 続柄　2013/7/20 mb
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(4)), Me, CInt(DirectCast(Wc.mainTxt(3), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox), )
+						Call RecreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Cmb_DeathWay												'END: 死亡告知 2013/7/20 mb
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(6)), Me, CInt(DirectCast(Wc.mainTxt(4), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+						'			Case sender Is	Me.Cmb_Time2												'TODO: 未使用（開発途中のため） 2013/9/16
+						'				Wc.optWord("Cmb_Time2") = Me.Cmb_Time2.SelectedValue
+						
+						'			Case sender Is	Me.Cmb_Donation
+						'				Wc.optWord("Cmb_Donation") = Me.Cmb_Donation.SelectedValue
+						
+					Case sender Is	Me.Cmb_Imibi
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(10)), me, CInt(DirectCast(Wc.mainTxt(8), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())		'END: 忌日 2013/7/21 mb
+						
+					Case sender Is	Me.Cmb_EndWord
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(11)), me, CInt(DirectCast(Wc.mainTxt(14), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),) 		'END: 結語 2013/7/21 mb
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Cmb_Year
+						Dim SctSql As New SelectSql
+						Wc.optWord("Cmb_Year") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = '" & Me.Cmb_Year.SelectedValue.ToString() & "'")
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(12)), Me, CInt(DirectCast(Wc.mainTxt(15), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)			'END: 日付関連 2013/7/21 mb
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						Sctsql = Nothing
+						
+					Case sender Is	Me.Cmb_Month
+						Dim SctSql As New SelectSql
+						Wc.optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = '" & Me.Cmb_Month.SelectedValue.ToString() & "'")
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(13)), Me, CInt(Directcast(Wc.mainTxt(15), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						Sctsql = Nothing
+						
+					Case sender Is	Me.Cmb_Day
+						Dim SctSql As New SelectSql
+						Wc.optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = '" & Me.Cmb_Day.SelectedValue.ToString() & "'")
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(14)), Me, CInt(DirectCast(Wc.mainTxt(15), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						SctSql = Nothing
+						
+						'			Case sender Is	Me.Cmb_HostType
+						'				Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue				'TODO: フォントサイズの変更（開発途中で未使用のため）
+						
+						'フォントサイズ（数字）	
+					Case sender Is Me.Cmb_PointTitle
+						Wc.optWord("Cmb_PointTitle") = Me.Cmb_PointTitle.SelectedIndex.ToString()
+						Call Cmn.ChangeFontSize(1, CInt(Wc.ComboTextPos(28)), Cmb_PointTitle, Me, )
+						'Call Cmn.ChangeFontSize(1, a, 3, Cmb_PointTitle, Me, )
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is Me.Cmb_PointName
+						Wc.optWord("Cmb_PointName") = Me.Cmb_PointName.SelectedIndex.ToString()
+						Call Cmn.ChangeFontSize(1, CInt(Wc.ComboTextPos(31)), Cmb_PointName, Me, )
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+						'			Case sender Is Me.Cmb_PointDeadName											'TODO: 戒名のフォントサイズの変更（開発途中で未使用のため）
+						'				Wc.optWord("Cmb_PointDeadName") = Me.Cmb_PointDeadName.SelectedValue
+						'				Call Cmn.ChangeFontSize(0, Wc.curWord,3 , Cmb_PointName, Me, Cmb_Name,)
+						'				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is Me.Cmb_PointImibi
+						Wc.optWord("Cmb_PointImibi") = Me.Cmb_PointImibi.SelectedIndex.ToString()
+						Call Cmn.ChangeFontSize(1, CInt(Wc.ComboTextPos(33)), Cmb_PointImibi, Me, )
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is Me.Cmb_PointEndWord
+						Wc.optWord("Cmb_PointEndWord") = Me.Cmb_PointEndWord.SelectedIndex.ToString()
+						Call Cmn.ChangeFontSize(0, CInt(Wc.ComboTextPos(34)), Cmb_PointEndWord, Me, )
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is Me.Cmb_PointCeremonyDate
+						Wc.optWord("Cmb_PointCeremonyDate") = Me.Cmb_PointCeremonyDate.SelectedIndex.ToString()
+						Call Cmn.ChangeFontSize(0, CInt(Wc.ComboTextPos(35)), Cmb_PointCeremonyDate, Me,)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is Me.Cmb_PointAdd1
+						Wc.optWord("Cmb_PointAdd1") = Me.Cmb_PointAdd1.SelectedIndex.ToString()
+						Call Cmn.ChangeFontSize(2, CInt(Wc.ComboTextPos(36)), Cmb_PointAdd1, Me, 2)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+						'			Case sender Is Me.Cmb_PointHostType				
+						'				Wc.optWord("Cmb_PointHostType") = Me.Cmb_PointHostType.SelectedIndex.ToString()			'開発途中につき未使用
+						'				Call Cmn.ChangeFontSize(0, CInt(Wc.ComboTextPos(37)), Cmb_PointHostType, Me, )
+						'				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is Me.Cmb_PointHostName1
+						Wc.optWord("Cmb_PointHostName1") = Me.Cmb_PointHostName1.SelectedIndex.ToString()
+						Call Cmn.ChangeFontSize(0, CInt(Wc.ComboTextPos(38)), Cmb_PointHostName1, Me,)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is Me.Cmb_PointHostName2
+						Wc.optWord("Cmb_PointHostName2") = Me.Cmb_PointHostName2.SelectedIndex.ToString()
+						Call Cmn.ChangeFontSize(0, CInt(Wc.ComboTextPos(39)), Cmb_PointHostName2, Me,)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is Me.Cmb_PointHostName3
+						Wc.optWord("Cmb_PointHostName3") = Me.Cmb_PointHostName3.SelectedIndex.ToString()
+						Call Cmn.ChangeFontSize(0, CInt(Wc.ComboTextPos(40)), Cmb_PointHostName3, Me,)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is Me.Cmb_PointHostName4
+						Wc.optWord("Cmb_PointHostName4") = Me.Cmb_PointHostName4.SelectedIndex.ToString()
+						Call Cmn.ChangeFontSize(0, CInt(Wc.ComboTextPos(41)), Cmb_PointHostName4, Me,)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is Me.Cmb_PointPS1
+						Wc.optWord("Cmb_PointPS1") = Me.Cmb_PointPS1.SelectedIndex.ToString()
+						Call Cmn.ChangeFontSize(2, CInt(Wc.ComboTextPos(42)), Cmb_PointPS1, Me,6)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+				End Select
+			Case Else	'TODO: 未設定分の追加
 				
-			Case sender Is	Me.Cmb_Title												'END: 続柄　2013/7/20 mb
-				Call Cmn.WordReplacer(3, Me, CInt(DirectCast(Wc.mainTxt(3), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox), )
-				Call RecreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Cmb_DeathWay												'END: 死亡告知 2013/7/20 mb
-				Call Cmn.WordReplacer(4, Me, CInt(DirectCast(Wc.mainTxt(4), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-'			Case sender Is	Me.Cmb_Time2												'TODO: 未使用（開発途中のため） 2013/9/16
-'				Wc.optWord("Cmb_Time2") = Me.Cmb_Time2.SelectedValue
-'			Case sender Is	Me.Cmb_Donation
-'				Wc.optWord("Cmb_Donation") = Me.Cmb_Donation.SelectedValue
-
-			Case sender Is	Me.Cmb_Imibi
-				Call Cmn.WordReplacer(8, me, CInt(DirectCast(Wc.mainTxt(8), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())		'END: 忌日 2013/7/21 mb
-				
-			Case sender Is	Me.Cmb_EndWord
-				Call Cmn.WordReplacer(14, me, CInt(DirectCast(Wc.mainTxt(14), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),) 		'END: 結語 2013/7/21 mb
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Cmb_Year
-				Dim SctSql As New SelectSql
-				Wc.optWord("Cmb_Year") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS y FROM tbl_wareki WHERE tbl_wareki_grid = 0 AND tbl_wareki_compatible = '" & Me.Cmb_Year.SelectedValue.ToString() & "'")
-				Call Cmn.WordReplacer(15, Me, CInt(DirectCast(Wc.mainTxt(15), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)			'END: 日付関連 2013/7/21 mb
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				Sctsql = Nothing
-			Case sender Is	Me.Cmb_Month
-				Dim SctSql As New SelectSql
-				Wc.optWord("Cmb_Month") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS m FROM tbl_wareki WHERE tbl_wareki_grid = 1 AND tbl_wareki_compatible = '" & Me.Cmb_Month.SelectedValue.ToString() & "'")
-				Call Cmn.WordReplacer(15, Me, CInt(Directcast(Wc.mainTxt(15), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				Sctsql = Nothing
-			Case sender Is	Me.Cmb_Day
-				Dim SctSql As New SelectSql
-				Wc.optWord("Cmb_Day") = SctSql.GetOneSql(" SELECT tbl_wareki_value AS d FROM tbl_wareki WHERE tbl_wareki_grid = 2 AND tbl_wareki_compatible = '" & Me.Cmb_Day.SelectedValue.ToString() & "'")
-				Call Cmn.WordReplacer(15, Me, CInt(DirectCast(Wc.mainTxt(15), Hashtable)("tbl_txt_ystyle")), CType(sender, ComboBox),)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				SctSql = Nothing
-'			Case sender Is	Me.Cmb_HostType
-'				Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue				'TODO: フォントサイズの変更（開発途中で未使用のため）
-								
-			'フォントサイズ（数字）	
-			Case sender Is Me.Cmb_PointTitle
-				Wc.optWord("Cmb_PointTitle") = Me.Cmb_PointTitle.SelectedIndex.ToString()
-				Call Cmn.ChangeFontSize(1, 3, Cmb_PointTitle, Me, )
-				'Call Cmn.ChangeFontSize(1, a, 3, Cmb_PointTitle, Me, )
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-			Case sender Is Me.Cmb_PointName
-				Wc.optWord("Cmb_PointName") = Me.Cmb_PointName.SelectedIndex.ToString()
-				Call Cmn.ChangeFontSize(1,  3, Cmb_PointName, Me, )
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-'			Case sender Is Me.Cmb_PointDeadName											'TODO: 戒名のフォントサイズの変更（開発途中で未使用のため）
-'				Wc.optWord("Cmb_PointDeadName") = Me.Cmb_PointDeadName.SelectedValue
-'				Call Cmn.ChangeFontSize(0, Wc.curWord,3 , Cmb_PointName, Me, Cmb_Name,)
-'				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is Me.Cmb_PointImibi
-				Wc.optWord("Cmb_PointImibi") = Me.Cmb_PointImibi.SelectedIndex.ToString()
-				Call Cmn.ChangeFontSize(1, 8, Cmb_PointImibi, Me, )
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is Me.Cmb_PointEndWord
-				Wc.optWord("Cmb_PointEndWord") = Me.Cmb_PointEndWord.SelectedIndex.ToString()
-				Call Cmn.ChangeFontSize(0, 14, Cmb_PointEndWord, Me, )
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is Me.Cmb_PointCeremonyDate
-				Wc.optWord("Cmb_PointCeremonyDate") = Me.Cmb_PointCeremonyDate.SelectedIndex.ToString()
-				Call Cmn.ChangeFontSize(0, 15, Cmb_PointCeremonyDate, Me,)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is Me.Cmb_PointAdd1
-				Wc.optWord("Cmb_PointAdd1") = Me.Cmb_PointAdd1.SelectedIndex.ToString()
-				Call Cmn.ChangeFontSize(2, 16, Cmb_PointAdd1, Me, 2)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is Me.Cmb_PointHostType				
-				Wc.optWord("Cmb_PointHostType") = Me.Cmb_PointHostType.SelectedIndex.ToString()
-				Call Cmn.ChangeFontSize(0, 17, Cmb_PointHostType, Me, )
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is Me.Cmb_PointHostName1
-				Wc.optWord("Cmb_PointHostName1") = Me.Cmb_PointHostName1.SelectedIndex.ToString()
-				Call Cmn.ChangeFontSize(0, 18, Cmb_PointHostName1, Me,)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is Me.Cmb_PointHostName2
-				Wc.optWord("Cmb_PointHostName2") = Me.Cmb_PointHostName2.SelectedIndex.ToString()
-				Call Cmn.ChangeFontSize(0, 19, Cmb_PointHostName2, Me,)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is Me.Cmb_PointHostName3
-				Wc.optWord("Cmb_PointHostName3") = Me.Cmb_PointHostName3.SelectedIndex.ToString()
-				Call Cmn.ChangeFontSize(0, 20, Cmb_PointHostName3, Me,)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is Me.Cmb_PointHostName4
-	 			Wc.optWord("Cmb_PointHostName4") = Me.Cmb_PointHostName4.SelectedIndex.ToString()
-				Call Cmn.ChangeFontSize(0, 21, Cmb_PointHostName4, Me,)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is Me.Cmb_PointPS1
-	 			Wc.optWord("Cmb_PointPS1") = Me.Cmb_PointPS1.SelectedIndex.ToString()
-				Call Cmn.ChangeFontSize(2, 22, Cmb_PointPS1, Me,6)
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 		End Select
 		'END: ControlThickness()を入れる(濃淡を維持する為)
 		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
@@ -380,67 +391,71 @@ Public Partial Class PrintReport
 		ClearPicture(Me.Pic_Main, CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
 
 		Dim Cmn As New Common (Wc)
-		
-		Select Case True
-			Case sender Is Me.Txt_Namae
-				Cmn.WordReplacer(0, me, CInt(DirectCast(Wc.mainTxt(0), Hashtable)("tbl_txt_ystyle")), ,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font"))
-			Case sender Is	Me.Txt_Name												'END:俗名 2013/8/4 mb
-				Cmn.WordReplacer(3, me, CInt(DirectCast(Wc.mainTxt(3), Hashtable)("tbl_txt_ystyle")), ,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font"))
-				
-			Case sender Is	Me.Txt_DeadName
-				'TODO: 設定する
-				
-			Case sender Is	Txt_Add1												'END: dbにフォントサイズ無いとエラーに
-				Call Cmn.WordReplacer(16, me, CInt(DirectCast(Wc.mainTxt(16), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Txt_Add2
-				Call Cmn.WordReplacer(17, me, CInt(DirectCast(Wc.mainTxt(17), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Txt_HostName1
-				Call Cmn.WordReplacer(18, me, CInt(DirectCast(Wc.mainTxt(18), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Txt_HostName2
-				Call Cmn.WordReplacer(19, me, CInt(DirectCast(Wc.mainTxt(19), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Txt_HostName3
-				Call Cmn.WordReplacer(20, me, CInt(DirectCast(Wc.mainTxt(20), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Txt_HostName4
-				Call Cmn.WordReplacer(21, me, CInt(DirectCast(Wc.mainTxt(21), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Txt_PS1
-				Call Cmn.WordReplacer(22, me, CInt(DirectCast(Wc.mainTxt(22), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Txt_PS2
-				Call Cmn.WordReplacer(23, me, CInt(DirectCast(Wc.mainTxt(23), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Txt_PS3
-				Call Cmn.WordReplacer(24, me, CInt(DirectCast(Wc.mainTxt(24), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Txt_PS4
-				Call Cmn.WordReplacer(25, me, CInt(DirectCast(Wc.mainTxt(25), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Txt_PS5
-				Call Cmn.WordReplacer(26, me, CInt(DirectCast(Wc.mainTxt(26), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-			Case sender Is	Me.Txt_PS6
-				Call Cmn.WordReplacer(27, me, CInt(DirectCast(Wc.mainTxt(27), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
-				Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
-				
-		End Select	
+		Select Case Wc.CurrentSet("curSize")
+			Case 0, 1, 2, 3, 4, 5
+				Select Case True
+					Case sender Is Me.Txt_Namae
+						Cmn.WordReplacer(CInt(Wc.ComboTextPos(1)), me, CInt(DirectCast(Wc.mainTxt(0), Hashtable)("tbl_txt_ystyle")), ,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font"))
+						
+					Case sender Is	Me.Txt_Name												'END:俗名 2013/8/4 mb
+						Cmn.WordReplacer(CInt(Wc.ComboTextPos(5)), me, CInt(DirectCast(Wc.mainTxt(3), Hashtable)("tbl_txt_ystyle")), ,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font"))
+						
+					Case sender Is	Me.Txt_DeadName
+						'TODO: 設定する
+						
+					Case sender Is	Txt_Add1												'END: dbにフォントサイズ無いとエラーに
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(15)), me, CInt(DirectCast(Wc.mainTxt(16), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Txt_Add2
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(16)), me, CInt(DirectCast(Wc.mainTxt(17), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Txt_HostName1
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(18)), me, CInt(DirectCast(Wc.mainTxt(18), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Txt_HostName2
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(19)), me, CInt(DirectCast(Wc.mainTxt(19), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Txt_HostName3
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(20)), me, CInt(DirectCast(Wc.mainTxt(20), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Txt_HostName4
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(21)), me, CInt(DirectCast(Wc.mainTxt(21), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Txt_PS1
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(22)), me, CInt(DirectCast(Wc.mainTxt(22), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Txt_PS2
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(23)), me, CInt(DirectCast(Wc.mainTxt(23), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Txt_PS3
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(24)), me, CInt(DirectCast(Wc.mainTxt(24), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Txt_PS4
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(25)), me, CInt(DirectCast(Wc.mainTxt(25), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Txt_PS5
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(26)), me, CInt(DirectCast(Wc.mainTxt(26), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is	Me.Txt_PS6
+						Call Cmn.WordReplacer(CInt(Wc.ComboTextPos(27)), me, CInt(DirectCast(Wc.mainTxt(27), Hashtable)("tbl_txt_ystyle")),,CType(sender, TextBox))
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+				End Select
+			Case Else 'TODO:未設定追加する
+		End Select
 		'END: ControlThickness()を入れる
 		Call ControlThickness(Me.Pic_Main, CInt(Me.Cmb_Thickness.SelectedValue), CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
 		
@@ -452,24 +467,34 @@ Public Partial Class PrintReport
 
 	Private Sub PrintReport_FormClosed(sender As Object, e As FormClosedEventArgs)
 		'保持内容のクリア
-		Wc.CurrentSet("curSize") = 0
-		Wc.CurrentSet("curStyle") = 0
+'		Wc.CurrentSet("curSize") = 0
+'		Wc.CurrentSet("curStyle") = 0
 
-		Wc.DefSet(0) = ""
-		Wc.DefSet(1) = ""
-		Wc.DefSet(2) = ""
-		Wc.DefSet(3) = ""
-		Wc.DefSet(4) = ""
-		Wc.DefSet(5) = ""
-		Wc.DefSet(6) = ""
-		Wc.DefSet(7) = ""
-		Wc.DefSet(8) = ""
+'		Wc.DefSet(0) = ""
+'		Wc.DefSet(1) = ""
+'		Wc.DefSet(2) = ""
+'		Wc.DefSet(3) = ""
+'		Wc.DefSet(4) = ""
+'		Wc.DefSet(5) = ""
+'		Wc.DefSet(6) = ""
+'		Wc.DefSet(7) = ""
+'		Wc.DefSet(8) = ""
+
+		'2013/10/6クリア方式を変更
+		Wc.WordClear(1)			'現在設定の用紙・文例
+		Wc.WordClear(2)			'用紙の初期設定値
+		Wc.WordClear(3)			'コンボ・テキストの値
+		
+		Wc.ComboTextPos.Clear()
+		Wc.ComboTextStr.Clear()
+		Wc.ComboTextPoint.Clear()
+		Wc.CmbTxtPntEnabled.Clear()
 		
 		Wc.TempCurrentWord.Clear()
-
 		Wc.curWord.Clear()
-		
 		Wc.mainTxt.Clear()
+		
+		'Wc.optWordClear()
 		
 	End Sub
 	
@@ -775,44 +800,3 @@ Public Partial Class PrintReport
 #End Region
 
 End Class
-
-#Region "Comment Out"
-
-'''''■Magnify
-'''' <summary>画像を拡大・縮小する。</summary>
-'''' <param name="Source">対象の画像</param>
-'''' <param name="Rate">拡大率。以下の値を指定した場合は縮小される。</param>
-'''' <param name="Quality">画質。省略時は最高画質。</param>
-'''' <returns>処理後の画像</returns>
-'''' 'http://homepage1.nifty.com/rucio/main/dotnet/Samples/Sample141ImageMagnify.htm
-'''' 'PictureBox1.Image = Magnify(PictureBox1.Image, 1.2F)
-''	Public Function Magnify(ByVal Source As Image, ByVal Rate As Double, _ 
-''	Optional ByVal Quality As Drawing2D.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic) As Image
-'	Public Function Magnify(ByVal Source As Image, ByVal Rate As Double, _ 
-'	Optional ByVal Quality As Drawing2D.InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor) As Image
-'
-'    	'▼引数のチェック
-'    	If IsNothing(Source) Then
-'        	Throw New NullReferenceException("Sourceに値が設定されていません。")
-'    	End If
-'    	If CInt(Source.Size.Width * Rate) <= 0 OrElse CInt(Source.Size.Height * Rate) <= 0 Then
-'        	Throw New ArgumentException("処理後の画像のサイズが0以下になります。Rateには十分大きな値を指定してください。")
-'    	End If
-'
-'    	'▼処理後の大きさの空の画像を作成
-'    	Dim NewRect As Rectangle
-'
-'    	NewRect.Width = CInt(Source.Size.Width * Rate)
-'    	NewRect.Height = CInt(Source.Size.Height * Rate)
-'    	Dim DestImage As New Bitmap(NewRect.Width, NewRect.Height)
-'
-'    	'▼拡大・縮小実行
-'    	Dim g As Graphics = Graphics.FromImage(DestImage)
-'    	g.InterpolationMode = Quality
-'    	g.DrawImage(Source, NewRect)
-'
-'    	Return DestImage
-'
-'	End Function
-
-#End Region

@@ -168,7 +168,6 @@ Partial Class PrintReport
 		Me.Btn_Print.TabIndex = 17
 		Me.Btn_Print.Text = "印刷"
 		Me.Btn_Print.UseVisualStyleBackColor = true
-		AddHandler Me.Btn_Print.Click, AddressOf Me.Btn_Print_Click
 		'
 		'Txt_SizeY
 		'
@@ -764,6 +763,7 @@ Partial Class PrintReport
 		Me.Cmb_Style.Name = "Cmb_Style"
 		Me.Cmb_Style.Size = New System.Drawing.Size(180, 20)
 		Me.Cmb_Style.TabIndex = 60
+		AddHandler Me.Cmb_Style.SelectedIndexChanged, AddressOf Me.Cmb_Style_SelectedIndexChanged
 		'
 		'Cmb_SeasonWord
 		'
@@ -1140,6 +1140,9 @@ Partial Class PrintReport
 	Private Lbl_HostType As System.Windows.Forms.Label
 	Private Lbl_Add2 As System.Windows.Forms.Label
 	Private Lbl_Add1 As System.Windows.Forms.Label
+	
+	Private Pic_Main As System.Windows.Forms.PictureBox
+
 	Private Lbl_CeremonyDate As System.Windows.Forms.Label
 	Private Lbl_EndWord As System.Windows.Forms.Label
 	Private Lbl_PS6 As System.Windows.Forms.Label
@@ -1164,6 +1167,5 @@ Partial Class PrintReport
 	Private Grb_Common As System.Windows.Forms.GroupBox
 	Private Pnl_Menu01 As System.Windows.Forms.Panel
 	'Private Pic_Main As System.Windows.Forms.PictureBox
-	Private Pic_Main As System.Windows.Forms.PictureBox
 
 End Class

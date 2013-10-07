@@ -8,21 +8,38 @@
 '
 Public Class ControlHandler
 	
-	Friend Sub ChangeCmb_Size(selector As Boolean, Pr As PrintReport)
+'''■ChangeCmb_Size
+''' <summary></summary>
+''' <param name="selector"></param>
+''' <param name="Pr"></param>
+	Friend Sub ChangeCmb_Size(ByVal selector As Boolean, ByVal Pr As PrintReport)
 		Select Case selector
 			Case True
 				AddHandler Pr.Cmb_Size.SelectedIndexChanged,AddressOf Pr.Cmb_SizeIndexChanged
 			Case False
-				RemoveHandler Pr.Cmb_Size.TextChanged,AddressOf Pr.Cmb_SizeIndexChanged
+				RemoveHandler Pr.Cmb_Size.SelectedIndexChanged,AddressOf Pr.Cmb_SizeIndexChanged
 		End Select
 	End Sub
 	
-''''■AllTCHandleShifter
+'''■ChangeCmb_Style
+''' <summary></summary>
+''' <param name="selector"></param>
+''' <param name="Pr"></param>
+	Friend Sub ChangeCmb_Style(ByVal selector As Boolean, ByVal Pr As PrintReport)
+		Select Case selector
+			Case True
+				AddHandler Pr.Cmb_Style.SelectedIndexChanged,AddressOf Pr.Cmb_Style_SelectedIndexChanged
+			Case False
+				RemoveHandler Pr.Cmb_Style.SelectedIndexChanged,AddressOf Pr.Cmb_Style_SelectedIndexChanged
+		End Select
+	End Sub
+	
+'''■AllTCHandleShifter
 ''' <summary>TextChangedのハンドラーを有効無効にする</summary>
 ''' <param name="selector">Boolean Add = True  or Remove = False</param>
 ''' <param name="fmr">Form PrintReport.vb</param>
 ''' <returns>Void</returns>
-	Friend Sub AllTCHandleShifter(selector As Boolean, Pr As PrintReport)
+	Friend Sub AllTCHandleShifter(ByVal selector As Boolean, ByVal Pr As PrintReport)
 		Select Case selector	
 			Case True
 				AddHandler Pr.Txt_Namae.TextChanged,AddressOf Pr.TextBoxChange_TextChanged
@@ -64,7 +81,7 @@ Public Class ControlHandler
 ''' <summary>SelectIndexChangedのハンドラーを有効・無効にする</summary>
 '''<param name="selector">Boolean Add = True, Remove = False</param>
 ''' <returns>Void</returns>
-	Friend Sub AllSICHandleShifter(selector As Boolean, Pr As PrintReport)
+	Friend Sub AllSICHandleShifter(ByVal selector As Boolean, ByVal Pr As PrintReport)
 		Select Case selector
 			Case True
 				AddHandler Pr.Cmb_SeasonWord.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged

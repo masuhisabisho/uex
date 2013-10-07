@@ -1096,7 +1096,6 @@ Public Sub ChangeFontSize(changeType As Integer, lineNo As Integer, _
 
 #Region "Position"
 
-
 '''■ShiftXpos
 ''' <summary>フォントサイズを変更した時の残りの行のx軸位置を増えた分だけずらす</summary>
 ''' <param name="lineNo">Integer 変更のあった行</param>

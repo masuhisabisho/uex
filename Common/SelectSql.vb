@@ -258,7 +258,8 @@ Public Class SelectSql
 	End Function
 '''■ SetDefaultVal
 ''' <summary>初期設定値を設定する</summary>
-''' <param name="sizeID">tbl_defsetのID</param>
+''' <param name="sizeID">用紙サイズID</param>
+''' <param name="styleID">文例ID</param>
 ''' <returns>WordContainer.vbに値を保存する</returns>	'2013/8/3 Function　-> Subへ全てまとめて処理するように変更 mb
 	Public Sub SetDefaultVal(sizeID As Integer, styleID As Integer, Wc As WordContainer)
 		
@@ -326,7 +327,7 @@ Public Class SelectSql
 		For i As Integer = 0 To splitList4.Length - 1 Step 1
 			getListAr4.Add(CInt(splitList4(i)))
 		Next i
-		Wc.ComboTextPoint = getListAr4
+		Wc.CmbTxtPntEnabled = getListAr4
 		
 	End Sub
 	

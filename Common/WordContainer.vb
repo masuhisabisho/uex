@@ -154,7 +154,7 @@ Public Class WordContainer
 	End Property
 	
 '''■ComboTextPos
-''' <summary></summary>
+''' <summary>可変文字の属する行番号を格納・呼び出し</summary>
 	Public Property ComboTextPos() As ArrayList
 		Get
 			Return cmbTxtPos
@@ -166,7 +166,7 @@ Public Class WordContainer
 	End Property
 	
 '''■ComboTextStr
-''' <summary></summary>
+''' <summary>コンボ及びテキストボックスの初期値を格納・呼び出し</summary>
 	Public Property ComboTextStr() As ArrayList
 		Get
 			Return cmbTxtStr
@@ -178,7 +178,7 @@ Public Class WordContainer
 	End Property
 	
 '''■ComboTextPoint
-''' <summary></summary>
+''' <summary>コンボ及びテキストボックスのフォントサイズを格納・呼び出し</summary>
 	Public Property ComboTextPoint() As ArrayList
 		Get
 			Return cmbTxtPoint
@@ -190,7 +190,7 @@ Public Class WordContainer
 	End Property
 	
 '''■CmbTxtPntEnabled
-''' <summary></summary>
+''' <summary>コンボ・テキストボックス・フォントサイズの使用可・不可設定を格納・呼び出し</summary>
 	Public Property CmbTxtPntEnabled() As ArrayList
 		Get
 			Return ctpEnabled

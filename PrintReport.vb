@@ -56,7 +56,7 @@ Public Partial Class PrintReport
 		
 #End Region
 
-#Region "Form load"
+#Region "フォームロード"
 
 	Private Sub Print_Load(sender As Object, e As EventArgs)
 		'ダブルバッファを入れる
@@ -69,7 +69,8 @@ Public Partial Class PrintReport
 		Ch.AllTCHandleShifter(False, Me)
 		Ch.AllSICHandleShifter(False, Me)
 		Ch.ChangeCmb_Size(False, Me)
-
+		Ch.ChangeCmb_Style(False, Me)
+		
 '		'初期設定の読み込み保存
 		Dim SctSql As New SelectSql
 		Call SctSql.SetDefaultVal(0, 0, Wc)
@@ -154,6 +155,7 @@ Public Partial Class PrintReport
 		Ch.AllTCHandleShifter(True, Me)
 		Ch.AllSICHandleShifter(True, Me)
 		Ch.ChangeCmb_Size(True, Me)
+		Ch.ChangeCmb_Style(True, Me)
 		
 		Ch = Nothing
 	End Sub
@@ -165,7 +167,29 @@ Public Partial Class PrintReport
 #Region "用紙サイズ変更"
 
 	Friend Sub Cmb_SizeIndexChanged(sender As Object, e As EventArgs)
-		'TODO:用紙が変わった時のイベント
+		Wc.CurrentSet("curSize") = CInt(Me.Cmb_Size.SelectedValue)
+		Call RefreshPanel(Wc.CurrentSet("curSize"), 0)
+	End Sub
+
+#End Region
+
+#Region "文例変更"
+
+	Friend Sub Cmb_Style_SelectedIndexChanged(sender As Object, e As EventArgs)
+		Wc.CurrentSet("curStyle") = CInt(Me.Cmb_Style.SelectedValue)
+		Call RefreshPanel(Wc.CurrentSet("curSize"), Wc.CurrentSet("curStyle"))
+	End Sub
+
+#End Region
+
+#Region "共通関数"
+
+'■RefreshPanel
+''' <summary></summary>
+''' <param name="sizeId"></param>
+''' <param name="styleId"></param>
+	Private Sub RefreshPanel(ByVal sizeId As Integer, ByVal styleId As Integer)
+		
 		Dim ClrFrm As New ClearForm
 		Dim SctSql As New SelectSql
 		Dim Cmn As New Common(Wc)
@@ -177,48 +201,41 @@ Public Partial Class PrintReport
 		Ch.AllTCHandleShifter(False, Me)
 		Ch.AllSICHandleShifter(False, Me)
 		
-		Select Case Me.Cmb_Size.SelectedValue.ToString()
-			Case "0"
-				Exit sub
-			Case "1"			'3ツ折り挨拶状
-				'初期値の読み込み
-				Call SctSql.SetDefaultVal(1, 0, Wc)
-				'フォームをクリア
-				Call ClrFrm.ClearForm(1, Me, Wc)
-				'現在用紙・文例を保存
-				Wc.CurrentSet("curSize") = CInt(Me.Cmb_Size.SelectedValue)
-				Wc.CurrentSet("curStyle") = CInt(Me.Cmb_Style.SelectedValue)
-				'センテンスの読み込み
-				Wc.mainTxt.Clear()
-				Wc.mainTxt = SctSql.GetSentence(CInt(Me.Cmb_Size.SelectedValue), 0)
-				'PicBoxの設定
-				Call ClearPicture(Me.Pic_Main, CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
-				'DB内の文章を単語に分割する
-				Dim storageWord As New ArrayList
-				storageWord = Cmn.WordPreparer(Wc.mainTxt)
-				'文字を描画していく
-				Call Cmn.WordArranger(Wc.mainTxt, storageWord, Me)
-				'濃度設定
-				Call ControlThickness(Me.Pic_Main, _
-										CInt(Me.Cmb_Thickness.SelectedValue), _
-										CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)) _
-									)
-				'ハンドラーを再度付与する
-				Ch.AllTCHandleShifter(True, Me)
-				Ch.AllSICHandleShifter(True, Me)
-			
-			Case Else
-				'ダミー
-				Exit Sub
-		End Select
+		'TODO: コンボの変更を入れる
+		
+		'初期値の読み込み
+		Call SctSql.SetDefaultVal(sizeId, styleId, Wc)
+		'フォームをクリア
+		Call ClrFrm.ClearForm(1, Me, Wc)
+		'現在用紙・文例を保存
+		Wc.CurrentSet("curSize") = CInt(Me.Cmb_Size.SelectedValue)
+		Wc.CurrentSet("curStyle") = CInt(Me.Cmb_Style.SelectedValue)
+		'センテンスの読み込み
+		Wc.mainTxt.Clear()
+		Wc.mainTxt = SctSql.GetSentence(CInt(Me.Cmb_Size.SelectedValue), styleId)
+		'PicBoxの設定
+		Call ClearPicture(Me.Pic_Main, CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
+		'DB内の文章を単語に分割する
+		Dim storageWord As New ArrayList
+		storageWord = Cmn.WordPreparer(Wc.mainTxt)
+		'文字を描画していく
+		Call Cmn.WordArranger(Wc.mainTxt, storageWord, Me)
+		'濃度設定
+		Call ControlThickness(Me.Pic_Main, _
+			CInt(Me.Cmb_Thickness.SelectedValue), _
+			CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)) _
+			)
+		'ハンドラーを再度付与する
+		Ch.AllTCHandleShifter(True, Me)
+		Ch.AllSICHandleShifter(True, Me)
 		
 		Clrfrm = Nothing
 		SctSql = Nothing
 		
 	End Sub
-	
+
 #End Region
-	
+
 #Region "SelectIndexChanged"
 
 	'コンボ変更
@@ -467,19 +484,6 @@ Public Partial Class PrintReport
 
 	Private Sub PrintReport_FormClosed(sender As Object, e As FormClosedEventArgs)
 		'保持内容のクリア
-'		Wc.CurrentSet("curSize") = 0
-'		Wc.CurrentSet("curStyle") = 0
-
-'		Wc.DefSet(0) = ""
-'		Wc.DefSet(1) = ""
-'		Wc.DefSet(2) = ""
-'		Wc.DefSet(3) = ""
-'		Wc.DefSet(4) = ""
-'		Wc.DefSet(5) = ""
-'		Wc.DefSet(6) = ""
-'		Wc.DefSet(7) = ""
-'		Wc.DefSet(8) = ""
-
 		'2013/10/6クリア方式を変更
 		Wc.WordClear(1)			'現在設定の用紙・文例
 		Wc.WordClear(2)			'用紙の初期設定値
@@ -493,8 +497,6 @@ Public Partial Class PrintReport
 		Wc.TempCurrentWord.Clear()
 		Wc.curWord.Clear()
 		Wc.mainTxt.Clear()
-		
-		'Wc.optWordClear()
 		
 	End Sub
 	
@@ -527,9 +529,7 @@ Public Partial Class PrintReport
 	
 	'画像拡大
 	Public Sub Cmb_Magnify_SelectedIndexChanged(sender As Object, e As EventArgs)
-		
 		Call ControlViewSize(Wc.curWord)
-		
 	End Sub
 	
 #End Region
@@ -541,8 +541,9 @@ Public Partial Class PrintReport
 '''■ControlViewSize
 ''' <summary></summary>
 ''' <param name="storageWord"></param>
-	Private Sub ControlViewSize(ByRef storageWord As ArrayList)
-	'TODO: フォントの増減レートを考える
+	Private Sub ControlViewSize(ByVal storageWord As ArrayList)
+		'TODO: フォントの増減レートを考える
+		'TODO:　描画位置を考える
 		If Me.Cmb_Magnify.SelectedValue.ToString() <> "50" Then
 			
 			Dim rate As Double = CDbl(Me.Cmb_Magnify.SelectedValue) * 0.02
@@ -569,11 +570,10 @@ Public Partial Class PrintReport
 ''' <summary></summary>
 ''' <param name="storageWord"></param>
 ''' <param name="rate"></param>
-	Private Sub CopyMagnifyData(ByRef storageWord As ArrayList, rate As Double)
+	Private Sub CopyMagnifyData(ByVal storageWord As ArrayList, ByVal rate As Double)
 		
-		Dim clearArrayList As New ArrayList(New String(){""})
-		Wc.TempCurrentWord(1) = clearArrayList
-				
+		Wc.TempCurrentWord.Clear()
+		
 		For Each item As ArrayList In Wc.curWord
 			Dim wordInLine As New ArrayList
 			For i As Integer = 0 To item.Count - 1 Step 1
@@ -585,7 +585,7 @@ Public Partial Class PrintReport
 				wordInLine.Add(wordDetail)
 				wordDetail = {"", "", "", ""}
 			Next i
-				Wc.TempCurrentWord(0) = wordInLine
+				Wc.TempCurrentWord = wordInLine
 		Next
 		
 	End Sub
@@ -639,7 +639,7 @@ Public Partial Class PrintReport
 ''' <param name="storageWord">ArrayList 文字情報配列（文字, フォントサイズ, y軸位置, x軸位置）</param>
 ''' <param name="font">String フォント</param>
 ''' <returns>Void</returns>
-	Public Sub ReCreateWord(storageWord As ArrayList, font As String)
+	Public Sub ReCreateWord(ByVal storageWord As ArrayList, ByVal font As String)
 '#If debug then
 '		'2013/8/20 不具合発生。再度確認
 '		Dim z As Integer = 0
@@ -658,11 +658,7 @@ Public Partial Class PrintReport
 '		Loop
 '#End If
 		If Me.Cmb_Magnify.SelectedValue.ToString() <> "50" Then
-			Dim rate As Double = CDbl(Me.Cmb_Magnify.SelectedValue) * 0.02
-			
-			Call CopyMagnifyData(storageWord, rate)
-			
-			For Each item As ArrayList In Wc.TempCurrentWord
+			For Each item As ArrayList In storageWord
 				For i As Integer = 0 To CInt(item.Count) -1 Step 1
 					'If DirectCast(item(i), ArrayList)(0) Is Nothing Then  							'空白行はスキップする
 					If DirectCast(item(i), String())(0) = "" Then
@@ -686,7 +682,6 @@ Public Partial Class PrintReport
 				Next i
 			Next
 		Else	
-
 			For Each item As ArrayList In storageWord
 				For i As Integer = 0 To CInt(item.Count) -1 Step 1
 					If DirectCast(item(i), String())(0) = "" Then  							'空白行はスキップする
@@ -709,6 +704,7 @@ Public Partial Class PrintReport
 				Next i
 
 			Next	
+			
 		End If
 		
 	End Sub
@@ -763,7 +759,7 @@ Public Partial Class PrintReport
 			
 		Next i
 		Wc.curWord = wordInLine
-
+		
 	End Sub
 	
 #End Region

@@ -15,7 +15,10 @@ Public Class ClearForm
 ''' <param name="Pr">PrintReport.vb</param>
 ''' <returns>Void</returns>	
 ''' 
-    Public Sub ClearForm(sizeID As Integer, Pr As PrintReport, Wc As WordContainer)
+Public Sub ClearForm(sizeID As Integer, Pr As PrintReport, Wc As WordContainer)
+#If Not Debug Then
+Try
+#End If
     	Dim SctSql As New SelectSql
     	Dim currentDt As String()
     	currentDt = Today.ToString("yyyy/M/d").Split("/"c)
@@ -25,11 +28,11 @@ Public Class ClearForm
     			With Pr
     				'END: 配列に基本設定を入れておく -> それをセレクトで選択して読む
     				'.Cmb_Size.SelectedValue = 0							'END: Indexで統一？ -> コレクションに直接値を入れているところは
-    				.Cmb_Font.SelectedIndex	= Wc.DefaultFontIndex			'CHK: 拡大率の問題
+    				.Cmb_Font.SelectedIndex	= Wc.DefaultFontIndex			'END: 拡大率の問題
     				.Cmb_Magnify.SelectedValue = 50
     				.Cmb_Thickness.SelectedIndex = 	Wc.DefaultThickness
     				'END: 1)初期値, Enabled -> 変数に置き換える
-    				.Cmb_Style.SelectedValue = 0
+    				'.Cmb_Style.SelectedValue = 0
     				'初期設定
     				.Cmb_Hyodai.SelectedValue = Wc.ComboTextStr(0) '"忌明志"						'add 2 lines 2013/9/22
     				.Txt_Namae.Text = Wc.ComboTextStr(1) '""
@@ -43,9 +46,9 @@ Public Class ClearForm
     				.Cmb_Donation.SelectedValue = Wc.ComboTextStr(9) '"御花料"
     				.Cmb_Imibi.SelectedValue = Wc.ComboTextStr(10) '"忌明の法要"
     				.Cmb_EndWord.SelectedValue = Wc.ComboTextStr(11) '"敬具"
-    				.Cmb_Year.SelectedValue = Wc.ComboTextStr(12) 'currentDt(0)
-    				.Cmb_Month.SelectedValue = Wc.ComboTextStr(13) 'currentDt(1)
-    				.Cmb_Day.SelectedValue = Wc.ComboTextStr(14) '""
+    				.Cmb_Year.SelectedValue = currentDt(0)
+    				.Cmb_Month.SelectedValue = currentDt(1)
+    				.Cmb_Day.SelectedValue = ""
     				.Txt_Add1.Text = Wc.ComboTextStr(15) '""
     				.Txt_Add2.Text = Wc.ComboTextStr(16) '""
     				.Cmb_HostType.SelectedValue = Wc.ComboTextStr(17) '"施主"
@@ -177,6 +180,11 @@ Public Class ClearForm
     		Case Else
     			'TODO: 追加する
     	End Select
+#If Not Debug Then
+Catch ex As Exception
+	
+End Try	
+#End If
 	End Sub
 	
 End Class

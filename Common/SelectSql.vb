@@ -262,6 +262,16 @@ Public Class SelectSql
 ''' <param name="styleID">文例ID</param>
 ''' <returns>WordContainer.vbに値を保存する</returns>	'2013/8/3 Function　-> Subへ全てまとめて処理するように変更 mb
 	Public Sub SetDefaultVal(sizeID As Integer, styleID As Integer, Wc As WordContainer)
+		'配列の初期化
+		Wc.TempCurrentWord.Clear()
+		Wc.curWord.Clear()
+		Wc.mainTxt.Clear()
+		Wc.TxtMultiLine.Clear()
+		Wc.CmbTxtPntEnabled.Clear()
+
+		Wc.ComboTextPos.Clear()
+		Wc.ComboTextStr.Clear()
+		Wc.ComboTextPoint.Clear()
 		
 		'現在の用紙サイズID															'2013/10/6 PrintReportより移動
 		Wc.CurrentSet("curSize") = sizeID
@@ -275,28 +285,29 @@ Public Class SelectSql
 		Dim splitList2() As String
 		Dim splitList3() As String
 		Dim splitList4() As String
+		Dim splitLIst5() As String
 		
 		Dim getListAr1 As New ArrayList
 		Dim getListAr2 As New ArrayList
 		Dim getListAr3 As New ArrayList
 		Dim getListAr4 As New ArrayList
+		Dim getListAr5 As New ArrayList
 		
 		sqlText =  "  SELECT "
-		sqlText &= "  tbl_defset.tbl_defset AS defset "
-		sqlText &= " ,tbl_curset.tbl_curset_line as line "
-		sqlText &= " ,tbl_curset.tbl_curset_str as str "
-		sqlText &= " ,tbl_curset.tbl_curset_point as point "
-		sqlText &= " ,tbl_curset.tbl_curset_enabled as ebl"
+		sqlText &= "  tbl_defset_base AS base "
+		sqlText &= " ,tbl_defset_line as line "
+		sqlText &= " ,tbl_defset_str as str "
+		sqlText &= " ,tbl_defset_point as point "
+		sqlText &= " ,tbl_defset_multi as multi "
+		sqlText &= " ,tbl_defset_enabled as ebl"
 		sqlText &= "  FROM tbl_defset "
-		sqlText &= "  LEFT JOIN tbl_curset ON "
-		sqlText &= "  tbl_defset.tbl_defset_id = tbl_curset.tbl_curset_defset_id "
 		sqlText &= "  WHERE tbl_defset.tbl_defset_id = " & sizeID
-		sqlText &= "  AND tbl_curset.tbl_curset_defset_id = " & sizeID
-		sqlText &= "  AND tbl_curset.tbl_curset_id = " & styleID
+		sqlText &= "  AND tbl_defset.tbl_defset_style_id = " & styleID
+		
 		getList = GetOneLineSql(sqlText)
 		
 		'用紙の初期設定
-		splitList0 = getList("defset").ToString().Split(","c)
+		splitList0 = getList("base").ToString().Split(","c)
 		For i As Integer = 0 To splitList0.Length -1 Step 1
 			Wc.DefSet(i) = splitList0(i)
 		Next i
@@ -322,34 +333,72 @@ Public Class SelectSql
 		Next i
 		Wc.ComboTextPoint = getListAr3
 		
-		'コンボ・テキストボックス可視性の初期値
-		splitList4 = getList("ebl").ToString().Split(","c)
-		For i As Integer = 0 To splitList4.Length - 1 Step 1
+		'複数行のフォントサイズ変更時の行数				追加 2013/10/16
+		splitList4 = getList("multi").ToString.Split(","c)
+		For i As Integer = 0 To splitList4.Length -1 Step 1
 			getListAr4.Add(CInt(splitList4(i)))
 		Next i
-		Wc.CmbTxtPntEnabled = getListAr4
+		Wc.TxtMultiLine = getListAr4
+
+		'コンボ・テキストボックス可視性の初期値
+		splitList5 = getList("ebl").ToString().Split(","c)
+		For i As Integer = 0 To splitList5.Length - 1 Step 1
+			getListAr5.Add(CInt(splitList5(i)))
+		Next i
+		Wc.CmbTxtPntEnabled = getListAr5
+		
+		getListAr1 = Nothing
+		getListAr2 = Nothing
+		getListAr3 = Nothing
+		getListAr4 = Nothing
+		getListAr5 = Nothing
+		
+		Dim ot As New ArrayList
+		ot.Add(Wc.ComboTextPos)
+		ot.Add(Wc.ComboTextStr)
+		ot.Add(Wc.ComboTextPoint)
+		ot.Add(Wc.TxtMultiLine)
+		ot.Add(Wc.CmbTxtPntEnabled)
+		
+		Dim outputStr As String = ""
+		
+		For i As Integer = 0 To ot.Count -1 Step 1
+			Select Case i
+				Case 0
+					outputStr &= "★コンボの値を入れる行番★" & vbCrLf
+				Case 1
+					outputStr &= "★コンボ（テキスト）の値★" & vbCrLf
+				Case 2
+					outputStr &= "★コンボ（フォントサイズ）の★" & vbCrLf
+				Case 3
+					outputStr &= "★コンボマルチ行の行数★" & vbCrLf
+				Case 4
+					outputStr &= "★コンボの可視性★" & vbCrLf
+			End Select
+			For j As Integer = 0 To ot(i).Count -1 Step 1
+				outputStr &= j & ") " & ot(i)(j) & vbCrLf
+			Next j
+		Next i
+		
+		Dim sw As System.IO.StreamWriter = Nothing
+		Try
+			sw = New System.IO.StreamWriter("C:\Users\madman190382\Desktop\DefinitionSetting.txt", _
+											 False,
+											 System.Text.Encoding.GetEncoding("UTF-8")
+										   )
+			sw.WriteLine(outputStr)
+		Catch e As Exception
+			MessageBox.Show("初期設定ログの保存に失敗しました")
+		Finally
+			If sw IsNot Nothing Then
+				sw.Close()
+				sw.Dispose()
+			End If
+		End Try
+		
 		
 	End Sub
 	
-''''■ GetTbl_TxtRow
-'''' <summary>tbl_txtの任意の1行の全ての値を返す</summary>
-'''' <param name="sizeID">Integer 用紙サイズID</param>
-'''' <param name="sytleID">Integer 文例ID</param>
-'''' <param name="orderNo">Integer 行番号</param>
-'''' <returns>Tbl_txtの任意の1行の全ての値をHashtableで返す</returns>
-'	Public Function GetTbl_TxtRow(sizeID As Integer, styleID As integer, orderNo As Integer) As Hashtable
-'		Dim sqlText as String = ""
-'		Dim resultTxt As New Hashtable
-'		
-'		sqlText &= " SELECT * FROM tbl_txt "
-'		sqlText &= " WHERE tbl_txt_sizeid = " & sizeID
-'		sqlText &= " AND tbl_txt_styleid = " & styleID
-'		sqlText &= " AND tbl_txt_order = " & orderNo
-'		
-'		resultTxt = GetOneLineSql(sqlText)
-'		
-'		Return resultTxt
-'	End Function
 	#End Region	
 	
 End Class

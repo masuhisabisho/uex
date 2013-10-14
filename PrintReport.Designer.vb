@@ -26,7 +26,7 @@ Partial Class PrintReport
 		End If
 		MyBase.Dispose(disposing)
 	End Sub
-	
+
 	''' <summary>
 	''' This method is required for Windows Forms designer support.
 	''' Do not change the method contents inside the source code editor. The Forms designer might
@@ -128,12 +128,15 @@ Partial Class PrintReport
 		Me.Lbl_Imibi = New System.Windows.Forms.Label()
 		Me.Pnl_Menu01 = New System.Windows.Forms.Panel()
 		Me.Pnl_Main = New System.Windows.Forms.Panel()
-		Pic_Main = New System.Windows.Forms.PictureBox()
+		Me.Pnl_PanelAdjuster = New System.Windows.Forms.Panel()
+		Me.Pic_Main = New System.Windows.Forms.PictureBox()
+		Me.Pnl_Frame = New System.Windows.Forms.Panel()
 		Me.Grb_Common.SuspendLayout
 		Me.Grb_Contents.SuspendLayout
 		Me.Pnl_Menu01.SuspendLayout
 		Me.Pnl_Main.SuspendLayout
-		CType(Pic_Main,System.ComponentModel.ISupportInitialize).BeginInit
+		Me.Pnl_PanelAdjuster.SuspendLayout
+		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).BeginInit
 		Me.SuspendLayout
 		'
 		'Grb_Common
@@ -168,6 +171,7 @@ Partial Class PrintReport
 		Me.Btn_Print.TabIndex = 17
 		Me.Btn_Print.Text = "印刷"
 		Me.Btn_Print.UseVisualStyleBackColor = true
+		AddHandler Me.Btn_Print.Click, AddressOf Me.Btn_Print_Click
 		'
 		'Txt_SizeY
 		'
@@ -364,7 +368,7 @@ Partial Class PrintReport
 		Me.Grb_Contents.Controls.Add(Me.Lbl_Imibi)
 		Me.Grb_Contents.Location = New System.Drawing.Point(6, 3)
 		Me.Grb_Contents.Name = "Grb_Contents"
-		Me.Grb_Contents.Size = New System.Drawing.Size(348, 676)
+		Me.Grb_Contents.Size = New System.Drawing.Size(348, 586)
 		Me.Grb_Contents.TabIndex = 2
 		Me.Grb_Contents.TabStop = false
 		Me.Grb_Contents.Text = "内容設定"
@@ -656,7 +660,6 @@ Partial Class PrintReport
 		Me.Txt_HostName2.Name = "Txt_HostName2"
 		Me.Txt_HostName2.Size = New System.Drawing.Size(180, 19)
 		Me.Txt_HostName2.TabIndex = 75
-		AddHandler Me.Txt_HostName2.TextChanged, AddressOf Me.TextBoxChange_TextChanged
 		'
 		'Txt_HostName3
 		'
@@ -763,7 +766,6 @@ Partial Class PrintReport
 		Me.Cmb_Style.Name = "Cmb_Style"
 		Me.Cmb_Style.Size = New System.Drawing.Size(180, 20)
 		Me.Cmb_Style.TabIndex = 60
-		AddHandler Me.Cmb_Style.SelectedIndexChanged, AddressOf Me.Cmb_Style_SelectedIndexChanged
 		'
 		'Cmb_SeasonWord
 		'
@@ -1013,7 +1015,7 @@ Partial Class PrintReport
 		Me.Pnl_Menu01.Controls.Add(Me.Grb_Contents)
 		Me.Pnl_Menu01.Location = New System.Drawing.Point(4, 153)
 		Me.Pnl_Menu01.Name = "Pnl_Menu01"
-		Me.Pnl_Menu01.Size = New System.Drawing.Size(359, 682)
+		Me.Pnl_Menu01.Size = New System.Drawing.Size(359, 592)
 		Me.Pnl_Menu01.TabIndex = 3
 		'
 		'Pnl_Main
@@ -1026,29 +1028,47 @@ Partial Class PrintReport
 		Me.Pnl_Main.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
 		Me.Pnl_Main.BackColor = System.Drawing.Color.White
 		Me.Pnl_Main.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-		Me.Pnl_Main.Controls.Add(Pic_Main)
+		Me.Pnl_Main.Controls.Add(Me.Pnl_PanelAdjuster)
 		Me.Pnl_Main.Location = New System.Drawing.Point(369, 10)
 		Me.Pnl_Main.Name = "Pnl_Main"
-		Me.Pnl_Main.Size = New System.Drawing.Size(795, 825)
+		Me.Pnl_Main.Size = New System.Drawing.Size(766, 685)
 		Me.Pnl_Main.TabIndex = 17
+		'
+		'Pnl_PanelAdjuster
+		'
+		Me.Pnl_PanelAdjuster.BackColor = System.Drawing.Color.Transparent
+		Me.Pnl_PanelAdjuster.Controls.Add(Me.Pic_Main)
+		Me.Pnl_PanelAdjuster.Controls.Add(Me.Pnl_Frame)
+		Me.Pnl_PanelAdjuster.Location = New System.Drawing.Point(0, 0)
+		Me.Pnl_PanelAdjuster.Name = "Pnl_PanelAdjuster"
+		Me.Pnl_PanelAdjuster.Size = New System.Drawing.Size(374, 333)
+		Me.Pnl_PanelAdjuster.TabIndex = 17
 		'
 		'Pic_Main
 		'
-		Pic_Main.BackColor = System.Drawing.Color.White
-		Pic_Main.ErrorImage = Nothing
-		Pic_Main.InitialImage = Nothing
-		Pic_Main.Location = New System.Drawing.Point(0, 0)
-		Pic_Main.Name = "Pic_Main"
-		Pic_Main.Size = New System.Drawing.Size(772, 805)
-		Pic_Main.TabIndex = 16
-		Pic_Main.TabStop = false
-		Pic_Main.WaitOnLoad = true
+		Me.Pic_Main.BackColor = System.Drawing.Color.Transparent
+		Me.Pic_Main.ErrorImage = Nothing
+		Me.Pic_Main.InitialImage = Nothing
+		Me.Pic_Main.Location = New System.Drawing.Point(0, 0)
+		Me.Pic_Main.Name = "Pic_Main"
+		Me.Pic_Main.Size = New System.Drawing.Size(296, 254)
+		Me.Pic_Main.TabIndex = 16
+		Me.Pic_Main.TabStop = false
+		Me.Pic_Main.WaitOnLoad = true
+		'
+		'Pnl_Frame
+		'
+		Me.Pnl_Frame.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+		Me.Pnl_Frame.Location = New System.Drawing.Point(0, 0)
+		Me.Pnl_Frame.Name = "Pnl_Frame"
+		Me.Pnl_Frame.Size = New System.Drawing.Size(339, 294)
+		Me.Pnl_Frame.TabIndex = 18
 		'
 		'PrintReport
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 12!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.ClientSize = New System.Drawing.Size(1176, 847)
+		Me.ClientSize = New System.Drawing.Size(1176, 750)
 		Me.Controls.Add(Me.Pnl_Main)
 		Me.Controls.Add(Me.Pnl_Menu01)
 		Me.Controls.Add(Me.Grb_Common)
@@ -1065,9 +1085,12 @@ Partial Class PrintReport
 		Me.Grb_Contents.PerformLayout
 		Me.Pnl_Menu01.ResumeLayout(false)
 		Me.Pnl_Main.ResumeLayout(false)
-		CType(Pic_Main,System.ComponentModel.ISupportInitialize).EndInit
+		Me.Pnl_PanelAdjuster.ResumeLayout(false)
+		CType(Me.Pic_Main,System.ComponentModel.ISupportInitialize).EndInit
 		Me.ResumeLayout(false)
 	End Sub
+	Private Pnl_Frame As System.Windows.Forms.Panel
+	Private Pnl_PanelAdjuster As System.Windows.Forms.Panel
 	Friend Txt_Namae As System.Windows.Forms.TextBox
 	Friend Cmb_PointHyodai As System.Windows.Forms.ComboBox
 	Friend Cmb_PointNamae As System.Windows.Forms.ComboBox
@@ -1141,8 +1164,6 @@ Partial Class PrintReport
 	Private Lbl_Add2 As System.Windows.Forms.Label
 	Private Lbl_Add1 As System.Windows.Forms.Label
 	
-	Private Pic_Main As System.Windows.Forms.PictureBox
-
 	Private Lbl_CeremonyDate As System.Windows.Forms.Label
 	Private Lbl_EndWord As System.Windows.Forms.Label
 	Private Lbl_PS6 As System.Windows.Forms.Label
@@ -1166,6 +1187,10 @@ Partial Class PrintReport
 	Private Grb_Contents As System.Windows.Forms.GroupBox
 	Private Grb_Common As System.Windows.Forms.GroupBox
 	Private Pnl_Menu01 As System.Windows.Forms.Panel
-	'Private Pic_Main As System.Windows.Forms.PictureBox
+	Private Pic_Main As System.Windows.Forms.PictureBox
+
+	
+
+	
 
 End Class

@@ -8,11 +8,13 @@
 '
 Imports System.Drawing.Printing
 Imports System.Data
+Imports System.Diagnostics.Debug
 
 Public Partial Class PrintSetting
 	
 	'Private img As Image = Nothing
-	Private Const inchUnit As Single = 0.254
+	Private Const inchUnit As Single = 25.4
+	Private Const dpiUnit As Single = 96
 	
 	Private selectedPaper As String = ""
 	Private selectedDirec As String = ""
@@ -71,16 +73,12 @@ Public Partial Class PrintSetting
 	
 	'PrintDocument Object
 	Private Sub PrintDocument1_PrintPage(sender As Object, e As System.Drawing.Printing.PrintPageEventArgs)
-		'e.Graphics.DrawImage(img, e.MarginBounds)
-		e.Graphics.DrawString("薔",New Font("ＭＳ Ｐ明朝", 36), New SolidBrush(Color.FromArgb(127, 127, 127)) 	, 0, 0)
-		'e.Graphics.DrawString("薇",New Font("ＭＳ Ｐ明朝", 100), New SolidBrush(Color.FromArgb(127, 127, 127)) 	, 100, 300)
-		'e.Graphics.FillRectangle(New SolidBrush(Color.FromArgb(80, Color.white)), 0, 0, 1800, 500)
+		e.Graphics.DrawString("Line 75 PrintSetting.vb テスト出力",New Font("ＭＳ Ｐ明朝", 24), New SolidBrush(Color.FromArgb(127, 127, 127)) 	, 0, 0)
 		
 		'END: 文字印刷はDrawImageでは無くDrawStringで（画像では汚いので）
 		'END: 濃淡は変数に置き換える
 		'TODO: 印刷不可能領域は10mmづつとる
-
-		Dim rgbRate As Integer = CInt(Math.Round(Wc.ColorRate * (CDbl(Wc.optWord("Thickness_Txt")) / 100)))
+		Dim rgbRate As Integer = CInt(Math.Round(Wc.ColorRate * CDbl(Wc.optWord("Cmb_Thickness_Txt")) / 100))
 		Dim addXPos As Single = 0
 		Dim addYPos As Single = 0
 		
@@ -95,18 +93,19 @@ Public Partial Class PrintSetting
 		
 		
 		For i As Integer = 0 To Wc.curWord.Count -1 Step 1
-			If Wc.curWord(i)(0)(0) = "" Then
+			If DirectCast(DirectCast(Wc.curWord(i), ArrayList)(0), String())(0) = "" Then
 				Continue For
 			End If
 			
-			For j As Integer = 0 To CInt(DirectCast(Wc.curWord(i), Hashtable).count) -1 Step 1
-				e.Graphics.DrawString(Wc.curWord(i)(j)(0), _
-										New Font(Wc.optWord("Cmb_Font").ToString(), CInt(Wc.curWord(i)(j)(1))), _
+			For j As Integer = 0 To CInt(DirectCast(Wc.curWord(i), ArrayList).count) -1 Step 1
+				e.Graphics.DrawString(DirectCast(DirectCast(Wc.curWord(i), ArrayList)(j), String())(0), _
+										New Font(Wc.optWord("Cmb_Font").ToString(), _
+										CInt(DirectCast(DirectCast(Wc.curWord(i), ArrayList)(j), String())(1))), _
 										New SolidBrush(Color.FromArgb(rgbRate, rgbRate, rgbRate)), _
-										CSng(Wc.curWord(i)(j)(3)) + addXPos, _
-										CSng(Wc.curWord(i)(j)(2)) + addYPos, _
+										CSng(DirectCast(DirectCast(Wc.curWord(i), ArrayList)(j), String())(3)) + addXPos, _
+										CSng(DirectCast(DirectCast(Wc.curWord(i), ArrayList)(j), String())(2)) + addYPos, _
 										New StringFormat(StringFormatFlags.DirectionVertical) _
-									)
+										)
 			Next j
 		Next i
 		e.HasMorePages = False
@@ -152,11 +151,13 @@ Public Partial Class PrintSetting
 					Call ErrorMsgBox()
 					Exit Sub
 				End If
+			'参考	
+			'http://paint.syumideget.com/index.php?%E8%A7%A3%E5%83%8F%E5%BA%A6%E3%83%BB%E3%83%94%E3%82%AF%E3%82%BB%E3%83%AB%E3%83%BB%E3%82%A4%E3%83%B3%E3%83%81
 			Case "奉書挨拶状"							'以下その他の特殊サイズ
-				Dim irrSize As New Printing.PaperSize("奉書挨拶状",195 / inchUnit, 530 / inchUnit)
+				Dim irrSize As New Printing.PaperSize("奉書挨拶状",CInt((195 / inchUnit) * dpiUnit　), CInt((530 / inchUnit)) * 96)
 				PrintDocument1.DefaultPageSettings.PaperSize = irrSize
 			Case "単カード"
-				Dim irrSize As New Printing.PaperSize("単カード", 1030, 1520)
+				Dim irrSize As New Printing.PaperSize("単カード", CInt((103 / inchUnit) * dpiUnit), CInt((152 /inchUnit) * dpiUnit))
 				PrintDocument1.DefaultPageSettings.PaperSize = irrSize
 			Case "二つ折りカード"
 				Dim irrSize As New Printing.PaperSize("二つ折りカード", 2050, 1520)

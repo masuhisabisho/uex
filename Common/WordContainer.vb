@@ -24,6 +24,7 @@ Public Class WordContainer
 	Private cmbTxtPos As New ArrayList
 	Private cmbTxtStr As New ArrayList
 	Private cmbTxtPoint As New ArrayList
+	Private txtMtLine As New ArrayList
 	Private ctpEnabled As New ArrayList
 	
 '''■ColorRate	
@@ -72,6 +73,8 @@ Public Class WordContainer
 		Set(value As ArrayList)
 			For i As Integer = 0 To value.Count -1 Step 1
 				mainSentence.Add(value(i))
+'				Writeline(value(i)("tbl_txt_txt"))
+'				writeline(value(i)("tbl_txt_ystyle"))
 			Next i
 		End Set
 	End Property
@@ -119,7 +122,7 @@ Public Class WordContainer
 				Case 0
 					defKeyWord("curWriteWay") = value
 				Case 1
-					defKeyWord("curFontSize") = value	
+					defKeyWord("curFontSize") = value
 			    Case 2
 			    	defKeyWord("curTopXPos") = value
 			    Case 3
@@ -189,6 +192,18 @@ Public Class WordContainer
 		End Set
 	End Property
 	
+'''■TxtMultiLine
+''' <summary>複数行のフォントサイズ変更時の行数を格納・呼び出し</summary>
+	Public Property TxtMultiLine() As ArrayList
+		Get
+			Return txtMtLine
+		End Get
+		
+		Set(ByVal value As ArrayList)
+			txtMtLine = value
+		End Set
+	End Property
+	
 '''■CmbTxtPntEnabled
 ''' <summary>コンボ・テキストボックス・フォントサイズの使用可・不可設定を格納・呼び出し</summary>
 	Public Property CmbTxtPntEnabled() As ArrayList
@@ -247,7 +262,7 @@ Public Class WordContainer
 		End Set
 	End Property
 	
-'■WordClear
+'''■WordClear
 ''' <summary></summary>
 ''' <param name="selector"></param>
 	Public Sub WordClear(selector As Integer)

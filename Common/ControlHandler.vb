@@ -84,6 +84,7 @@ Public Class ControlHandler
 	Friend Sub AllSICHandleShifter(ByVal selector As Boolean, ByVal Pr As PrintReport)
 		Select Case selector
 			Case True
+				AddHandler Pr.Cmb_Hyodai.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged  '2013/10/11 add
 				AddHandler Pr.Cmb_SeasonWord.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
 				AddHandler Pr.Cmb_Time1.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
 				AddHandler Pr.Cmb_Title.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
@@ -97,7 +98,10 @@ Public Class ControlHandler
 				AddHandler Pr.Cmb_Day.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
 				AddHandler Pr.Cmb_HostType.SelectedIndexChanged,	AddressOf Pr.Cmb_SelectedIndexChanged
 
+
 				AddHandler Pr.Cmb_Font.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
+				AddHandler Pr.Cmb_PointHyodai.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged 
+				AddHandler Pr.Cmb_PointNamae.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged 
 				AddHandler Pr.Cmb_PointTitle.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged
 				AddHandler Pr.Cmb_PointName.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
 				AddHandler Pr.Cmb_PointDeadName.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
@@ -117,6 +121,7 @@ Public Class ControlHandler
 				AddHandler Pr.Cmb_Magnify.SelectedIndexChanged, AddressOf Pr.Cmb_Magnify_SelectedIndexChanged
 
 			Case False
+				RemoveHandler Pr.Cmb_Hyodai.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged '2013/10/11 add
 				RemoveHandler Pr.Cmb_SeasonWord.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
 				RemoveHandler Pr.Cmb_Time1.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
 				RemoveHandler Pr.Cmb_Title.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
@@ -131,7 +136,9 @@ Public Class ControlHandler
 				RemoveHandler Pr.Cmb_HostType.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
 
 				RemoveHandler Pr.Cmb_Font.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged
-				RemoveHandler Pr.Cmb_PointTitle.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointHyodai.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointNamae.SelectedIndexChanged,AddressOf Pr.Cmb_SelectedIndexChanged 
+				RemoveHandler Pr.Cmb_PointTitle.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged
 				RemoveHandler Pr.Cmb_PointName.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
 				RemoveHandler Pr.Cmb_PointDeadName.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 
 				RemoveHandler Pr.Cmb_PointImibi.SelectedIndexChanged, AddressOf Pr.Cmb_SelectedIndexChanged 

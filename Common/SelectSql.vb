@@ -1,12 +1,15 @@
-﻿Imports System.Data.OleDb
-
-' SharpDevelopによって生成
+﻿' SharpDevelopによって生成
 ' ユーザ: madman190382
 ' 日付: 2013/06/15
 ' 時刻: 14:15
 ' 
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
+Option Strict On
+Option Explicit On
+
+Imports System.Data.OleDb
+
 Public Class SelectSql
 	
 #Region "SQL本体"
@@ -375,8 +378,8 @@ Public Class SelectSql
 				Case 4
 					outputStr &= "★コンボの可視性★" & vbCrLf
 			End Select
-			For j As Integer = 0 To ot(i).Count -1 Step 1
-				outputStr &= j & ") " & ot(i)(j) & vbCrLf
+			For j As Integer = 0 To CInt(DirectCast(ot(i), ArrayList).Count) - 1 Step 1
+				outputStr &= j & ") " & DirectCast(ot(i), ArrayList)(j).ToString() & vbCrLf
 			Next j
 		Next i
 		

@@ -11,15 +11,16 @@ Public Partial Class MainForm
 	Public shared dbSource As String = "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = C:\Users\madman190382\Documents\SharpDevelop Projects\uex\DataBase\uexdb.mdb"
 	
 	Dim Wc As New WordContainer
-	
 	Public Sub New()
-		' The Me.InitializeComponent call is required for Windows Forms designer support.
+		'TODO:サイズをDisplayに依存しない
 		Me.InitializeComponent()
-		'Dim f As New SetEnvList
-		'f.SelectEnvSql()
 		Dim El As New SetEnvList(Wc)
 		El.SelectEnvSql()
 		El = Nothing
+		Using g As Graphics = Me.CreateGraphics()
+			Wc.inchSize(1) = g.DpiX
+			Wc.inchSize(0) = g.DpiY
+		End Using
 	End Sub
 	
 	Sub MainFormLoad(sender As Object, e As EventArgs)
@@ -35,7 +36,6 @@ Public Partial Class MainForm
 	End Sub
 	
 	Public Sub Btn_Print_Click(sender As Object, e As EventArgs)
-		'Dim Pr As New PrintReport
 		Dim Pr As New PrintReport(Wc)
 		Pr.Showdialog()
 		Pr.Dispose()

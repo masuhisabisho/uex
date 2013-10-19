@@ -6,11 +6,14 @@
 ' 
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
+Option Strict On
+Option Explicit On
+
 Public Partial Class Calender
 	Dim Pr As PrintReport
 	Dim Wc As WordContainer
 	
-	Public Sub New(ConsPr As Form, ConsWc As WordContainer)
+	Public Sub New(ConsPr As PrintReport, ConsWc As WordContainer)
 		' The Me.InitializeComponent call is required for Windows Forms designer support.
 		Me.InitializeComponent()
 		'

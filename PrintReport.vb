@@ -6,8 +6,9 @@
 ' 
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
-Option Explicit
-'Option Strict
+Option Strict On
+Option Explicit On
+
 Imports System.Diagnostics.Debug
 
 Public Partial Class PrintReport
@@ -65,6 +66,10 @@ Public Partial Class PrintReport
 		Me.SetStyle(ControlStyles.UserPaint, True)
 		Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
 		
+'Using g As Graphics = Me.CreateGraphics()
+'   Dim scaleX As Single = 1440.0F / g.DpiX
+'   Dim scaleY As Single = 1440.0F / g.DpiY
+'End Using
 
 		'ハンドラーをキャンセルしておく
 		Dim Ch As New ControlHandler()
@@ -108,22 +113,11 @@ Public Partial Class PrintReport
 		Call ClrFrm.ClearForm(0, Me, Wc)
 		ClrFrm = Nothing
 		
-'		'現在の用紙サイズID
-'		Wc.CurrentSet("curSize") = 0	移動 2013/10/6
-'		Wc.CurrentSet("curStyle") = 0	移動 2013/10/6
-		
 		'DBより文章データの取り込み
 		Wc.mainTxt = SctSql.GetSentence(0, 0)
 		SctSql = Nothing
 
 		'描画用Bitmapを準備
-'		With Me.Pic_Main
-'			.Size = New Size(CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))				'END: New sizeはわかった、Bitmapの関連性
-'			.Image = New Bitmap(CInt(Wc.defset(2)), CInt(Wc.defset(4)))				'END: 可変にする　
-'		End With
-'Me.Pnl_Main.Controls.Clear()
-'Me.Pnl_PanelAdjuster.Size = New Size(3000, 800)
-'Me.Pnl_Main.Controls.Add(Me.Pnl_PanelAdjuster)
 		Call ClearPicture(Me.Pnl_Main, Me.Pnl_PanelAdjuster, Me.Pic_Main, CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
 
 		'DB内の文章を単語に分割する
@@ -165,7 +159,7 @@ Public Partial Class PrintReport
 		
 		Ch = Nothing
 		
-		'Me.Pnl_Main.HorizontalScroll.Value = CInt(Wc.DefSet(2))
+		Me.Pnl_Main.HorizontalScroll.Value = CInt(Me.Pic_Main.Size.Width)
 		
 	End Sub
 	
@@ -370,7 +364,7 @@ Public Partial Class PrintReport
 						'END:行数を制御 2013/10/16
 					Case sender Is Me.Cmb_PointAdd1
 						Wc.optWord("Cmb_PointAdd1") = Me.Cmb_PointAdd1.SelectedIndex.ToString()
-						Call Cmn.ChangeFontSize(2, CInt(Wc.ComboTextPos(15)), Cmb_PointAdd1, Me, Wc.TxtMultiLine(0))
+						Call Cmn.ChangeFontSize(2, CInt(Wc.ComboTextPos(15)), Cmb_PointAdd1, Me, CInt(Wc.TxtMultiLine(0)))
 						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 						
 					'Case sender Is Me.Cmb_PointHostType				
@@ -400,7 +394,7 @@ Public Partial Class PrintReport
 						'END:行数を制御 2013/10/16
 					Case sender Is Me.Cmb_PointPS1
 						Wc.optWord("Cmb_PointPS1") = Me.Cmb_PointPS1.SelectedIndex.ToString()
-						Call Cmn.ChangeFontSize(2, CInt(Wc.ComboTextPos(22)), Cmb_PointPS1, Me, Wc.TxtMultiLine(1))
+						Call Cmn.ChangeFontSize(2, CInt(Wc.ComboTextPos(22)), Cmb_PointPS1, Me, CInt(Wc.TxtMultiLine(1)))
 						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 						
 				End Select
@@ -712,10 +706,7 @@ Public Partial Class PrintReport
 		End With
 
 	End Sub
-	
-	
-	
-	
+
 	'''■ReCreateWord
 ''' <summary>文字を再描画していく(フォントサイズ, y軸位置（絶対位置), x軸位置（絶対位置）がある時用）</summary>
 ''' <param name="storageWord">ArrayList 文字情報配列（文字, フォントサイズ, y軸位置, x軸位置）</param>
@@ -793,8 +784,8 @@ Public Partial Class PrintReport
 	
 '''■CreateWord
 ''' <summary>文字を描画して行く（同じフォントサイズ）</summary>
-''' <param name="storageWord">文字配列</param>
-''' <param name="font">フォント</param>
+''' <param name="storageWord">ArrayList 文字配列</param>
+''' <param name="font">String フォント</param>
 ''' <returns>Void</returns>
 	Public Sub CreateWord(storageWord As ArrayList, font As String)
 		Dim wordDetail(3) As String							'文字詳細情報
@@ -865,7 +856,12 @@ Public Partial Class PrintReport
 		'Dim stringFont As New Font(font, point, GraphicsUnit.Pixel)
 		Dim stringFont As New Font(font, point)
 		Dim stringSize As New SizeF
-		'TODO:口で文字が無い時の処理をここでする
+		
+		'END:口で文字が無い時の処理をここでする
+		If storageWord = "" Then
+			storageWord = "口"
+		End If
+		
 		Dim gr As Graphics = CreateGraphics()
 		stringSize = gr.MeasureString(storageWord, stringFont)
 		resultAl(0) = stringSize.Height

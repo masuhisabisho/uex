@@ -6,7 +6,11 @@
 ' 
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
+Option Strict On
+Option Explicit On
+
 Imports System.Diagnostics.Debug
+
 Public Class WordContainer
 	
 	Private Const colRate As Single = 255
@@ -17,6 +21,8 @@ Public Class WordContainer
 	Private curSetting As New Hashtable
 	Private defKeyWord As New Hashtable
 	private optionalWord As New Hashtable
+	
+	Private dpiSize(1) As Single
 	
 	Private tempCurWord As New arraylist
 	Private currentWord As New ArrayList
@@ -51,6 +57,18 @@ Public Class WordContainer
 		End Get
 	End Property
 	
+'''■inchSize
+'''<summary></summary>
+	Public Property inchSize(selector As Integer) As Single
+		Get
+			Return dpiSize(selector)
+		End Get
+		
+		Set(value As Single)
+			dpiSize(selector) = value
+		End Set
+	End Property
+	
 '''■EnviromentList
 ''' <summary></summary>
 	Public property SetEnvList(hashKey As String) As ArrayList
@@ -73,8 +91,6 @@ Public Class WordContainer
 		Set(value As ArrayList)
 			For i As Integer = 0 To value.Count -1 Step 1
 				mainSentence.Add(value(i))
-'				Writeline(value(i)("tbl_txt_txt"))
-'				writeline(value(i)("tbl_txt_ystyle"))
 			Next i
 		End Set
 	End Property

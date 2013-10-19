@@ -1189,8 +1189,4 @@ Partial Class PrintReport
 	Private Pnl_Menu01 As System.Windows.Forms.Panel
 	Private Pic_Main As System.Windows.Forms.PictureBox
 
-	
-
-	
-
 End Class

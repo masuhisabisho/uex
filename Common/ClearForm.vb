@@ -6,6 +6,9 @@
 ' 
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
+Option Strict On
+Option Explicit On
+
 Public Class ClearForm
 
 	'TODO: 全ての用紙を実装する	
@@ -35,49 +38,49 @@ Try
     				'.Cmb_Style.SelectedValue = 0
     				'初期設定
     				.Cmb_Hyodai.SelectedValue = Wc.ComboTextStr(0) '"忌明志"						'add 2 lines 2013/9/22
-    				.Txt_Namae.Text = Wc.ComboTextStr(1) '""
+    				.Txt_Namae.Text = Wc.ComboTextStr(1).ToString() '""
     				.Cmb_SeasonWord.SelectedValue = Wc.ComboTextStr(2) '"厳寒の候"
     				.Cmb_Time1.SelectedValue = Wc.ComboTextStr(3) '"先般"
     				.Cmb_Title.SelectedValue = Wc.ComboTextStr(4) '" 亡父 "
-    				.Txt_Name.Text = Wc.ComboTextStr(5) '"儀"
+    				.Txt_Name.Text = Wc.ComboTextStr(5).ToString() '"儀"
     				.Cmb_DeathWay.SelectedValue = Wc.ComboTextStr(6) '"死去"
     				.Cmb_Time2.SelectedValue = Wc.ComboTextStr(7) '"本日"
-    				.Txt_DeadName.Text = Wc.ComboTextStr(8) '""
+    				.Txt_DeadName.Text = Wc.ComboTextStr(8).ToString() '""
     				.Cmb_Donation.SelectedValue = Wc.ComboTextStr(9) '"御花料"
     				.Cmb_Imibi.SelectedValue = Wc.ComboTextStr(10) '"忌明の法要"
     				.Cmb_EndWord.SelectedValue = Wc.ComboTextStr(11) '"敬具"
     				.Cmb_Year.SelectedValue = currentDt(0)
     				.Cmb_Month.SelectedValue = currentDt(1)
     				.Cmb_Day.SelectedValue = ""
-    				.Txt_Add1.Text = Wc.ComboTextStr(15) '""
-    				.Txt_Add2.Text = Wc.ComboTextStr(16) '""
-    				.Cmb_HostType.SelectedValue = Wc.ComboTextStr(17) '"施主"
-    				.Txt_HostName1.Text = Wc.ComboTextStr(18) '""
-    				.txt_HostName2.Text = Wc.ComboTextStr(19) '""
-    				.Txt_HostName3.Text = Wc.ComboTextStr(20) '""
-    				.Txt_HostName4.Text = Wc.ComboTextStr(21) '""
-    				.Txt_PS1.Text = Wc.ComboTextStr(22) '"追伸" 
-    				.Txt_PS2.Text = Wc.ComboTextStr(23) '"ｘｘｘｘｘｘｘｘｘｘｘのお印までに粗品を"
-    				.Txt_PS3.Text = Wc.ComboTextStr(24) '"お届けさせて頂きました"
-    				.Txt_PS4.Text = Wc.ComboTextStr(25) '"御受納下さいます様お願い申し上げます"
-    				.Txt_PS5.Text = Wc.ComboTextStr(26) '""
-    				.Txt_PS6.Text = Wc.ComboTextStr(27) '""
+    				.Txt_Add1.Text = Wc.ComboTextStr(15).ToString() '""
+    				.Txt_Add2.Text = Wc.ComboTextStr(16).ToString() '""
+    				.Cmb_HostType.SelectedValue = Wc.ComboTextStr(17).ToString() '"施主"
+    				.Txt_HostName1.Text = Wc.ComboTextStr(18).ToString() '""
+    				.txt_HostName2.Text = Wc.ComboTextStr(19).ToString() '""
+    				.Txt_HostName3.Text = Wc.ComboTextStr(20).ToString() '""
+    				.Txt_HostName4.Text = Wc.ComboTextStr(21).ToString() '""
+    				.Txt_PS1.Text = Wc.ComboTextStr(22).ToString() '"追伸" 
+    				.Txt_PS2.Text = Wc.ComboTextStr(23).ToString() '"ｘｘｘｘｘｘｘｘｘｘｘのお印までに粗品を"
+    				.Txt_PS3.Text = Wc.ComboTextStr(24).ToString() '"お届けさせて頂きました"
+    				.Txt_PS4.Text = Wc.ComboTextStr(25).ToString() '"御受納下さいます様お願い申し上げます"
+    				.Txt_PS5.Text = Wc.ComboTextStr(26).ToString() '""
+    				.Txt_PS6.Text = Wc.ComboTextStr(27).ToString() '""
     				'フォントサイズ
-    				.Cmb_PointHyodai.SelectedIndex = Wc.ComboTextPoint(0) '0
-    				.Cmb_PointNamae.SelectedIndex = Wc.ComboTextPoint(1) '0
-    				.Cmb_PointTitle.SelectedIndex = Wc.ComboTextPoint(2) '34
-    				.Cmb_PointName.SelectedIndex = Wc.ComboTextPoint(3) '34
-    				.Cmb_PointDeadName.SelectedIndex = Wc.ComboTextPoint(4) '0
-    				.Cmb_PointImibi.SelectedIndex = Wc.ComboTextPoint(5) '34
-    				.Cmb_PointEndWord.SelectedIndex = Wc.ComboTextPoint(6) '34
-    				.Cmb_PointCeremonyDate.SelectedIndex = Wc.ComboTextPoint(7) '22
-    				.Cmb_PointAdd1.SelectedIndex = Wc.ComboTextPoint(8) '19
-    				.Cmb_PointHostType.SelectedIndex = Wc.ComboTextPoint(9) '0
-    				.Cmb_PointHostName1.SelectedIndex = Wc.ComboTextPoint(10) '34
-    				.Cmb_PointHostName2.SelectedIndex = Wc.ComboTextPoint(11) '34
-    				.Cmb_PointHostName3.SelectedIndex = Wc.ComboTextPoint(12) '34
-    				.Cmb_PointHostName4.SelectedIndex = Wc.ComboTextPoint(13) '34
-    				.Cmb_PointPS1.SelectedIndex = Wc.ComboTextPoint(14) '17
+    				.Cmb_PointHyodai.SelectedIndex = CInt(Wc.ComboTextPoint(0)) '0
+    				.Cmb_PointNamae.SelectedIndex = CInt(Wc.ComboTextPoint(1)) '0
+    				.Cmb_PointTitle.SelectedIndex = CInt(Wc.ComboTextPoint(2)) '34
+    				.Cmb_PointName.SelectedIndex = CInt(Wc.ComboTextPoint(3)) '34
+    				.Cmb_PointDeadName.SelectedIndex = CInt(Wc.ComboTextPoint(4)) '0
+    				.Cmb_PointImibi.SelectedIndex = CInt(Wc.ComboTextPoint(5)) '34
+    				.Cmb_PointEndWord.SelectedIndex = CInt(Wc.ComboTextPoint(6)) '34
+    				.Cmb_PointCeremonyDate.SelectedIndex = CInt(Wc.ComboTextPoint(7)) '22
+    				.Cmb_PointAdd1.SelectedIndex = CInt(Wc.ComboTextPoint(8)) '19
+    				.Cmb_PointHostType.SelectedIndex = CInt(Wc.ComboTextPoint(9)) '0
+    				.Cmb_PointHostName1.SelectedIndex = CInt(Wc.ComboTextPoint(10)) '34
+    				.Cmb_PointHostName2.SelectedIndex = CInt(Wc.ComboTextPoint(11)) '34
+    				.Cmb_PointHostName3.SelectedIndex = CInt(Wc.ComboTextPoint(12)) '34
+    				.Cmb_PointHostName4.SelectedIndex = CInt(Wc.ComboTextPoint(13)) '34
+    				.Cmb_PointPS1.SelectedIndex = CInt(Wc.ComboTextPoint(14)) '17
     				'使用可・不可設定
     				.Cmb_Hyodai.Enabled = CBool(Wc.CmbTxtPntEnabled(0))
     				.Txt_Namae.Enabled = CBool(Wc.CmbTxtPntEnabled(1))

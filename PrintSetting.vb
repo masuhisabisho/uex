@@ -6,6 +6,9 @@
 ' 
 ' このテンプレートを変更する場合「ツール→オプション→コーディング→標準ヘッダの編集」
 '
+Option Strict On
+Option Explicit On
+
 Imports System.Drawing.Printing
 Imports System.Data
 Imports System.Diagnostics.Debug

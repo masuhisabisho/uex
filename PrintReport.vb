@@ -15,7 +15,8 @@ Public Partial Class PrintReport
 	'TODO: 発注画面を組み込む
 	'TODO: 印刷設定を保持しておく
 	'TODO: CSVやEXCELを読み込めるようにする
-	'TODO: PictureBoxの位置を可変に
+	'END: PictureBoxの位置を可変に
+	
 	'END: mainTxtのカプセル化
 	'遅延バインディング
 	'http://okwave.jp/qa/q4781160.html
@@ -122,30 +123,12 @@ Public Partial Class PrintReport
 
 		'DB内の文章を単語に分割する
 		Dim Cmn As New Common(Wc)
-		Dim storageWord As New ArrayList
-		storageWord = Cmn.WordPreparer(Wc.mainTxt)
+		Dim word As New ArrayList
+		word = Cmn.WordPreparer(Wc.mainTxt)
 		'文字を描画していく
-		Call Cmn.WordArranger(Wc.mainTxt, storageWord, Me)
+		Call Cmn.WordArranger(Wc.mainTxt, word, Me)
 		Cmn = Nothing
 		
-'#If Debug Then
-'		Dim z As Integer = 0
-'		For Each item As Arraylist In storageWord
-'			Do until z = item.Count
-'				System.Diagnostics.Debug.Write(item(z)(0))
-'				System.Diagnostics.Debug.Write("<>")
-'				System.Diagnostics.Debug.Write(item(z)(1))
-'				System.Diagnostics.Debug.Write("<>")
-'				System.Diagnostics.Debug.Write(item(z)(2))
-'				System.Diagnostics.Debug.Write("<>")
-'				System.Diagnostics.Debug.Write(item(z)(3))
-'				System.Diagnostics.Debug.Write(",")
-'				System.Diagnostics.Debug.WriteLine(vbCrLf)
-'				z += 1
-'			Loop	
-'		 	z =0 
-'		Next
-'#End if	
 		Call ControlThickness(Me.Pic_Main, _
 								CInt(Me.Cmb_Thickness.SelectedValue), _
 								CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)) _
@@ -160,7 +143,7 @@ Public Partial Class PrintReport
 		Ch = Nothing
 		
 		Me.Pnl_Main.HorizontalScroll.Value = CInt(Me.Pic_Main.Size.Width)
-		
+
 	End Sub
 	
 
@@ -219,10 +202,10 @@ Public Partial Class PrintReport
 		'PicBoxの設定
 		Call ClearPicture(Me.Pnl_Main, Me.Pnl_PanelAdjuster, Me.Pic_Main, CInt(Wc.DefSet(2)), CInt(Wc.DefSet(4)))
 		'DB内の文章を単語に分割する
-		Dim storageWord As New ArrayList
-		storageWord = Cmn.WordPreparer(Wc.mainTxt)
+		Dim word As New ArrayList
+		word = Cmn.WordPreparer(Wc.mainTxt)
 		'文字を描画していく
-		Call Cmn.WordArranger(Wc.mainTxt, storageWord, Me)
+		Call Cmn.WordArranger(Wc.mainTxt, word, Me)
 		'濃度設定
 		Call ControlThickness(Me.Pic_Main, _
 			CInt(Me.Cmb_Thickness.SelectedValue), _
@@ -234,7 +217,7 @@ Public Partial Class PrintReport
 		
 		Clrfrm = Nothing
 		SctSql = Nothing
-		
+
 	End Sub
 
 #End Region
@@ -323,12 +306,19 @@ Public Partial Class PrintReport
 						SctSql = Nothing
 						
 					'Case sender Is	Me.Cmb_HostType
-					'	Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue				'TODO: フォントサイズの変更（開発途中で未使用のため）
+					'	Wc.optWord("Cmb_HostType") = Me.Cmb_HostType.SelectedValue				'TODO: 開発途中で未使用のため
+					
+					'★★フォントサイズ
+					'フォントサイズ（数字）
 					'TODO:インデックスで取っているので + 1にして通常表示にする
-					'フォントサイズ（数字）	
 					Case sender Is Me.Cmb_PointHyodai
 						Wc.optWord("Cmb_PointHyodai") = Me.Cmb_PointHyodai.SelectedIndex.ToString()
-						Call Cmn.ChangeFontSize(1, CInt(Wc.ComboTextPos(0)), Cmb_PointHyodai, Me, )
+						Call Cmn.ChangeFontSize(3, CInt(Wc.ComboTextPos(0)), Cmb_PointHyodai, Me,,1)
+						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
+						
+					Case sender Is Me.Cmb_PointNamae
+						Wc.optWord("Cmb_PointNamae") = Me.Cmb_PointNamae.SelectedIndex.ToString()			'2013/11/2 add
+						Call Cmn.ChangeFontSize(3, CInt(Wc.ComboTextPos(1)), Cmb_PointNamae, Me,,2)
 						Call ReCreateWord(Wc.curWord, Wc.optWord("Cmb_Font").ToString())
 						
 					Case sender Is Me.Cmb_PointTitle
@@ -610,8 +600,8 @@ Public Partial Class PrintReport
 ''' <param name="picWidth">Integer BitMapの幅</param>
 ''' <param name="picHeight">Integer BitMapの高さ</param>
 ''' <returns>Void</returns>
-	Private Sub ControlThickness(picBox As PictureBox, whiteRate As Integer, _
-		picWidth As Integer, picHeight As Integer)
+	Private Sub ControlThickness(ByVal picBox As PictureBox, ByVal whiteRate As Integer, _
+								 ByVal picWidth As Integer, ByVal picHeight As Integer)
 		
 		Dim g As System.Drawing.Graphics
 		g = System.Drawing.Graphics.FromImage(picBox.Image)
@@ -634,7 +624,7 @@ Public Partial Class PrintReport
 ''' <param name="picWidth">画像の幅</param>
 ''' <param name="picHeight">画像の高さ</param>
 ''' <returns>Void</returns>
-	Private Sub ClearPicture(mainPanel As Panel, panelAdjuster As Panel, picBox As PictureBox, picWidth As Integer, picHeight As Integer)
+	Private Sub ClearPicture(ByVal mainPanel As Panel, ByVal panelAdjuster As Panel, ByVal picBox As PictureBox, ByVal picWidth As Integer, ByVal picHeight As Integer)
 		'END: メインパネルを広げるパネルの大きさを設定
 		'Ex 1900 720
 		'END: PictureBox -> 最小枠　印刷 -> 初期位置移動
@@ -709,29 +699,15 @@ Public Partial Class PrintReport
 
 	'''■ReCreateWord
 ''' <summary>文字を再描画していく(フォントサイズ, y軸位置（絶対位置), x軸位置（絶対位置）がある時用）</summary>
-''' <param name="storageWord">ArrayList 文字情報配列（文字, フォントサイズ, y軸位置, x軸位置）</param>
+''' <param name="word">ArrayList 文字情報配列（文字, フォントサイズ, y軸位置, x軸位置）</param>
 ''' <param name="font">String フォント</param>
 ''' <returns>Void</returns>
-	Public Sub ReCreateWord(ByVal storageWord As ArrayList, ByVal font As String)
-'#If debug then
-'		'2013/8/20 不具合発生。再度確認
-'		Dim z As Integer = 0
-'		Do Until z = storageWord.Count-1
-'			Dim q As Integer = 0
-'			WriteLine(z & "行目")
-'			Do Until q = storageWord(z).Count
-'				Write(storageWord(z)(q)(0) & "★")
-'				Write(storageWord(z)(q)(1) & "★")
-'				Write(storageWord(z)(q)(2) & "★")
-'				Writeline(storageWord(z)(q)(3))
-'				q += 1
-'			Loop
-'			WriteLine("")
-'			z += 1
-'		Loop
-'#End If
+Public Sub ReCreateWord(ByVal word As ArrayList, ByVal font As String)
+#If Debug then
+	Call CheckErrSentence(Wc.curWord, "LOG", False)
+#End If
 		If Me.Cmb_Magnify.SelectedValue.ToString() <> "50" Then
-			For Each item As ArrayList In storageWord
+			For Each item As ArrayList In word
 				For i As Integer = 0 To CInt(item.Count) -1 Step 1
 					'If DirectCast(item(i), ArrayList)(0) Is Nothing Then  							'空白行はスキップする
 					If DirectCast(item(i), String())(0) = "" Then
@@ -755,7 +731,7 @@ Public Partial Class PrintReport
 				Next i
 			Next
 		Else	
-			For Each item As ArrayList In storageWord
+			For Each item As ArrayList In word
 				For i As Integer = 0 To CInt(item.Count) -1 Step 1
 					If DirectCast(item(i), String())(0) = "" Then  							'空白行はスキップする
 						Continue For
@@ -779,15 +755,14 @@ Public Partial Class PrintReport
 			Next	
 			
 		End If
-		
 	End Sub
 	
 '''■CreateWord
 ''' <summary>文字を描画して行く（同じフォントサイズ）</summary>
-''' <param name="storageWord">ArrayList 文字配列</param>
+''' <param name="word">ArrayList 文字配列(行単位)</param>
 ''' <param name="font">String フォント</param>
 ''' <returns>Void</returns>
-	Public Sub CreateWord(storageWord As ArrayList, font As String)
+	Public Sub CreateWord(ByVal word As ArrayList, ByVal font As String)
 		Dim wordDetail(3) As String							'文字詳細情報
 		Dim wordInLine As New ArrayList						'文字詳細情報を配列に格納
 		'http://paint.syumideget.com/index.php?%E8%A7%A3%E5%83%8F%E5%BA%A6%E3%83%BB%E3%83%94%E3%82%AF%E3%82%BB%E3%83%AB%E3%83%BB%E3%82%A4%E3%83%B3%E3%83%81
@@ -798,72 +773,72 @@ Public Partial Class PrintReport
 		'PageUnit = Display 表示デバイスの長さの単位を指定します。
 		'通常、ビデオ ディスプレイにはピクセル、プリンタには 1/100 インチを指定します。
 		'ただし、.NET Framework 1.1以前では、1/75インチを長さの単位に指定します。
-		For i As Integer = 0 To storageWord.Count - 1 Step 1
+		For i As Integer = 0 To word.Count - 1 Step 1
+			'空白行はスキップする
+			If DirectCast(word(0), String())(0) = "" Then
+				wordDetail(0) = DirectCast(word(i), String())(0)						'2013/11/4 空文字の出力位置もここで
+				wordDetail(1) = DirectCast(word(i), String())(1)
+				wordDetail(2) = DirectCast(word(i), String())(2)
+				wordDetail(3) = DirectCast(word(i), String())(3)
+				wordInLine.Add(wordDetail)
+				Wc.curWord = wordInLine
+				wordDetail = {"", "", "", ""}
+				Continue For
+			End If
+			
 			Dim g As System.Drawing.Graphics
 			g = System.Drawing.Graphics.FromImage(Me.Pic_Main.Image)
 			g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 			g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
 			'New Font(font, item(i)(1),GraphicsUnit.Pixel), _ 
 			
-			
-			g.DrawString(Directcast(storageWord(i), String())(0), _
-						New Font(font, CSng(DirectCast(storageWord(i), String())(1))) , _ 
-						Brushes.Black, _ 
-						CSng(DirectCast(storageWord(i), String())(3)), _ 
-						Csng(DirectCast(storageWord(i), String())(2)), _
-						New StringFormat(StringFormatFlags.DirectionVertical) _
-						)
+			g.DrawString(Directcast(word(i), String())(0), _
+						 New Font(font, CSng(DirectCast(word(i), String())(1))) , _ 
+						 Brushes.Black, _ 
+						 CSng(DirectCast(word(i), String())(3)), _ 
+						 Csng(DirectCast(word(i), String())(2)), _
+						 New StringFormat(StringFormatFlags.DirectionVertical) _
+						 )
 			
 			g.Dispose()
 			g = Nothing
 			
-			wordDetail(0) = DirectCast(storageWord(i), String())(0)						'出力位置を格納（絶対値）
-			wordDetail(1) = DirectCast(storageWord(i), String())(1)
-			wordDetail(2) = DirectCast(storageWord(i), String())(2)
-			wordDetail(3) = DirectCast(storageWord(i), String())(3)
+			wordDetail(0) = DirectCast(word(i), String())(0)						'出力位置を格納（絶対値）
+			wordDetail(1) = DirectCast(word(i), String())(1)
+			wordDetail(2) = DirectCast(word(i), String())(2)
+			wordDetail(3) = DirectCast(word(i), String())(3)
 			wordInLine.Add(wordDetail)
-			
-'#If Debug Then
-'				System.Diagnostics.Debug.Write(wordDetail(0))
-'				System.Diagnostics.Debug.Write("<>")
-'				System.Diagnostics.Debug.Write(wordDetail(1))
-'				System.Diagnostics.Debug.Write("<>")
-'				System.Diagnostics.Debug.Write(wordDetail(2))
-'				System.Diagnostics.Debug.Write("<>")
-'				System.Diagnostics.Debug.Write(wordDetail(3))
-'				System.Diagnostics.Debug.Write(",")
-'				System.Diagnostics.Debug.WriteLine(vbCrLf)
-'#End if	
 			
 			wordDetail = {"", "", "", ""}
 			
 		Next i
-		Wc.curWord = wordInLine
-		
+		If DirectCast(word(0), String())(0) <> "" Then
+			Wc.curWord = wordInLine
+		End If
 	End Sub
-	
+
 #End Region
 
 #Region "文字サイズ計測"
 ''''■FontSizeCal
 ''' <summary>文字の縦横高さを測る</summary>
-''' <param name="storageWord">String 計測したい文字</param>
+''' <param name="word">String 計測したい文字</param>
 ''' <param name="font">String フォント</param>
 ''' <param name="point">Integer ポイント</param>
 ''' <returns>Single() 文字の 縦 = 0・横 = 1 を返す</returns>
-	Public Function FontSizeCal(storageWord As String, font As String, point As Integer) As Single()
+	Public Function FontSizeCal(ByVal word As String, ByVal font As String, ByVal point As Integer) As Single()
 		Dim resultAl(1) As Single 
 		'Dim stringFont As New Font(font, point, GraphicsUnit.Pixel)
 		Dim stringFont As New Font(font, point)
 		Dim stringSize As New SizeF
 		
 		'END:口で文字が無い時の処理をここでする
-		If storageWord = "" Then
-			storageWord = "口"
+		If word = "" Then
+			word = "口"
 		End If
 		
 		Dim gr As Graphics = CreateGraphics()
-		stringSize = gr.MeasureString(storageWord, stringFont)
+		stringSize = gr.MeasureString(word, stringFont)
 		resultAl(0) = stringSize.Height
 		resultAl(1) = stringSize.Width
 

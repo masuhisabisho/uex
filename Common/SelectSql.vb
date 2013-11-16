@@ -356,52 +356,8 @@ Public Class SelectSql
 		getListAr4 = Nothing
 		getListAr5 = Nothing
 		
-		Dim ot As New ArrayList
-		ot.Add(Wc.ComboTextPos)
-		ot.Add(Wc.ComboTextStr)
-		ot.Add(Wc.ComboTextPoint)
-		ot.Add(Wc.TxtMultiLine)
-		ot.Add(Wc.CmbTxtPntEnabled)
-		
-		Dim outputStr As String = ""
-		
-		For i As Integer = 0 To ot.Count -1 Step 1
-			Select Case i
-				Case 0
-					outputStr &= "★コンボの値を入れる行番★" & vbCrLf
-				Case 1
-					outputStr &= "★コンボ（テキスト）の値★" & vbCrLf
-				Case 2
-					outputStr &= "★コンボ（フォントサイズ）の★" & vbCrLf
-				Case 3
-					outputStr &= "★コンボマルチ行の行数★" & vbCrLf
-				Case 4
-					outputStr &= "★コンボの可視性★" & vbCrLf
-			End Select
-			For j As Integer = 0 To CInt(DirectCast(ot(i), ArrayList).Count) - 1 Step 1
-				outputStr &= j & ") " & DirectCast(ot(i), ArrayList)(j).ToString() & vbCrLf
-			Next j
-		Next i
-		
-		Dim sw As System.IO.StreamWriter = Nothing
-		Try
-			sw = New System.IO.StreamWriter("C:\Users\madman190382\Desktop\DefinitionSetting.txt", _
-											 False,
-											 System.Text.Encoding.GetEncoding("UTF-8")
-										   )
-			sw.WriteLine(outputStr)
-		Catch e As Exception
-			MessageBox.Show("初期設定ログの保存に失敗しました")
-		Finally
-			If sw IsNot Nothing Then
-				sw.Close()
-				sw.Dispose()
-			End If
-		End Try
-		
-		
 	End Sub
 	
-	#End Region	
+#End Region
 	
 End Class

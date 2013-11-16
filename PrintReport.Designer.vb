@@ -1184,9 +1184,9 @@ Partial Class PrintReport
 	Friend Cmb_Magnify As System.Windows.Forms.ComboBox
 	Friend Cmb_Size As System.Windows.Forms.ComboBox
 	Friend Cmb_Font As System.Windows.Forms.ComboBox
-	Private Grb_Contents As System.Windows.Forms.GroupBox
+	Friend Grb_Contents As System.Windows.Forms.GroupBox
 	Private Grb_Common As System.Windows.Forms.GroupBox
-	Private Pnl_Menu01 As System.Windows.Forms.Panel
+	Friend Pnl_Menu01 As System.Windows.Forms.Panel
 	Private Pic_Main As System.Windows.Forms.PictureBox
 
 End Class
